@@ -62,11 +62,11 @@ public class PlayerInventory : GameObject
     {
         var itemData = ItemDatabase.Instance.GetItemData(itemName);
 
-        InventoryItem item = itemData.ItemType == "weapon"
-            ? new InventoryWeapon(itemName)
-            : new InventoryItem(itemName, amount);
-
-        return item;
+        return itemData.ItemType switch
+        {
+            ItemType.Weapon => new InventoryWeapon(itemName),
+            _ => new InventoryItem(itemName, amount),
+        };
     }
 
     public static InventoryWeapon CreateWeapon(string weaponName)

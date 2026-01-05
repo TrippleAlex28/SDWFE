@@ -10,7 +10,7 @@ public class WeaponData : ItemData
 
     public WeaponData()
     {
-        ItemType = "weapon";
+        ItemType = ItemType.Weapon;
         MaxStackSize = 1;
     }
 }

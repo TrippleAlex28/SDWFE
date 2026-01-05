@@ -47,14 +47,13 @@ public class ItemDatabase
             foreach (var itemData in itemDataList)
             {
                 // Convert to WeaponData if item type is weapon
-                if (itemData.ItemType.ToLower() == "weapon" && itemData is not WeaponData)
+                if (itemData.ItemType == ItemType.Weapon && itemData is not WeaponData)
                 {
                     var weaponData = new WeaponData
                     {
                         Name = itemData.Name,
-                        ItemType = itemData.ItemType,
-                        MaxStackSize = itemData.MaxStackSize,
                         IconPath = itemData.IconPath,
+                        UseActionId = itemData.UseActionId
                     };
                     
                     // Try to extract weapon properties if they exist

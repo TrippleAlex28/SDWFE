@@ -109,6 +109,9 @@ public class SDWFEGame : ExtendedGame
             .LocalClientId);
         if (pawn is Player player)
         {
+            var lookDirection = (ScreenToWorld(InputManager.Instance.MousePosition.ToVector2()) -
+                                 (player.GlobalPosition + player.CameraOffset));
+            
             #region Movement
             
             // ===== WALKING =====
@@ -154,8 +157,7 @@ public class SDWFEGame : ExtendedGame
                 createLeapCommand = true;
                 if (walkDirection == Vector2.Zero)
                 {
-                    leapDirection = (ScreenToWorld(InputManager.Instance.MousePosition.ToVector2()) -
-                                     (player.GlobalPosition + player.CameraOffset));
+                    leapDirection = lookDirection;
                 }
                 else
                 {
@@ -170,17 +172,17 @@ public class SDWFEGame : ExtendedGame
 
             if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_USE))
             {
-                if (player.Inventory.GetSelectedItem() != null)
+                if (player.Inventory.GetSelectedItem() != null && player.Inventory.GetSelectedItem()!.Data.UseActionId != null)
                 {
-                    commands.Add(new UseCommand(player.Inventory.GetSelectedItem()!.Name));
+                    commands.Add(new UseCommand(player.Inventory.GetSelectedItem()!.Name, lookDirection));
                 }
             }
 
             if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_SHOOT))
             {
-                if (player.Inventory.GetEquippedWeapon() != null)
+                if (player.Inventory.GetEquippedWeapon() != null && player.Inventory.GetEquippedWeapon()!.WeaponData.UseActionId != null)
                 {
-                    commands.Add(new UseCommand(player.Inventory.GetEquippedWeapon()!.Name));
+                    commands.Add(new UseCommand(player.Inventory.GetEquippedWeapon()!.Name, lookDirection));
                 }
             }
 

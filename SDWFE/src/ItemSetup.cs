@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
 
@@ -75,27 +76,28 @@ public static class ItemSetup
 
     public static void Initialize()
     {
-        ItemActionRegistry.RegisterUse(ACTION_HEAL, (player, data) =>
+        ItemActionRegistry.RegisterUse(ACTION_HEAL, (player, data, direction) =>
         {
-            Console.WriteLine(data);
+            Console.WriteLine($"Heal Player{player.OwningClientId}: {direction}");
         });
-        ItemActionRegistry.RegisterUse(ACTION_HEAL_SUPERIOR, (player, data) =>
+        ItemActionRegistry.RegisterUse(ACTION_HEAL_SUPERIOR, (player, data, direction) =>
         {
-            Console.WriteLine(data);
+            Console.WriteLine($"Heal Superior Player{player.OwningClientId}: {direction}");
         });
-        ItemActionRegistry.RegisterUse(ACTION_SHOOT, (player, data) =>
+        ItemActionRegistry.RegisterUse(ACTION_SHOOT, (player, data, direction) =>
         {
-            Console.WriteLine(data as WeaponData);
+            var weaponData = data as WeaponData;
+            Console.WriteLine($"Shoot Player{player.OwningClientId}: {direction}");
         });
     }
 }
 
 public static class ItemActionRegistry
 {
-    private static readonly Dictionary<string, Action<Player, ItemData>> _use = new();
+    private static readonly Dictionary<string, Action<Player, ItemData, Vector2>> _use = new();
 
-    public static void RegisterUse(string id, Action<Player, ItemData> action) => _use[id] = action;
+    public static void RegisterUse(string id, Action<Player, ItemData, Vector2> action) => _use[id] = action;
 
-    public static Action<Player, ItemData> GetUse(string? id) =>
+    public static Action<Player, ItemData, Vector2> GetUse(string? id) =>
         (id != null && _use.TryGetValue(id, out var a)) ? a : null;
 }

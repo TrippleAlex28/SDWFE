@@ -10,7 +10,10 @@ namespace SDWFE.Objects.Inventory;
 public class InventorySlotData
 {
     public string Name { get; set; }
-    public string ItemType { get; set; }
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ItemType ItemType { get; set; }
+    
     public int StackSize { get; set; }
 }
 
@@ -28,7 +31,7 @@ public class InventorySlot
 
             return new InventorySlotData
             {
-                ItemType = Item is InventoryWeapon ? "weapon" : "item",
+                ItemType = Item.Data.ItemType,
                 Name = Item.Name,
                 StackSize = Item.StackSize,
             };
@@ -41,11 +44,11 @@ public class InventorySlot
                 return;
             }
 
-            InventoryItem newItem = value.ItemType.ToLower() == "weapon"
-                ? new InventoryWeapon(value.Name)
-                : new InventoryItem(value.Name, value.StackSize);
-
-            Item = newItem;
+            Item = value.ItemType switch
+            {
+                ItemType.Weapon => new InventoryWeapon(value.Name),
+                _ => new InventoryItem(value.Name, value.StackSize),
+            };
         }
     }
 

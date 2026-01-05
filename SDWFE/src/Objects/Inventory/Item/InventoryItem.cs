@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection.Metadata;
+using System.Runtime.Intrinsics.X86;
 using System.Text.Json.Serialization;
 using Engine;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,12 +8,21 @@ using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Objects.Inventory.Item;
 
+public enum ItemType
+{
+    Item = 0,
+    Weapon = 1,
+}
+
 public class ItemData
 {
     public string Name { get; set; } = "Item";
-    public string ItemType { get; set; } = "item"; // "item" or "weapon"
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ItemType ItemType { get; set; } = ItemType.Item;
+    
     public int MaxStackSize { get; set; } = 16;
-    public string IconPath { get; set; } = ""; // TODO: Point to placeholder texture
+    public string IconPath { get; set; } = "SD_MedKitPlaceholder"; // TODO: Point to placeholder texture
     
     public string? UseActionId { get; set; }
 }

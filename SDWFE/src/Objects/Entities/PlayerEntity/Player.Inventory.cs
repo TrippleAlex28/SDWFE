@@ -13,6 +13,10 @@ public partial class Player
         // Inventory Setup
         Inventory = new PlayerInventory();
         this.AddChild(Inventory);
+
+        Inventory.AddWeaponByName(ItemSetup.ASSAULT_RIFLE);
+        Inventory.AddItemByName(ItemSetup.HEALTH_POTION,
+            ItemSetup.ItemDataMap.TryGetValue(ItemSetup.HEALTH_POTION, out var data) ? data.MaxStackSize : 1);
     }
 
     private void UpdateInventory()
@@ -38,13 +42,13 @@ public partial class Player
             Inventory.SelectHotbarSlot(4);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_LEFT))
         {
-            int prevIndex = Inventory.SelectedHotbarIndex - 1;
-            Inventory.SelectHotbarSlot(prevIndex < 0 ? 4 : prevIndex);
+            int nextIndex = Inventory.SelectedHotbarIndex + 1;
+            Inventory.SelectHotbarSlot(nextIndex > Inventory.Hotbar.Length - 1 ? 0 : nextIndex);
         }
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_RIGHT))
         {
-            int nextIndex = Inventory.SelectedHotbarIndex + 1;
-            Inventory.SelectHotbarSlot(nextIndex > Inventory.Hotbar.Length - 1 ? 0 : nextIndex);
+            int nextIndex = Inventory.SelectedHotbarIndex - 1;
+            Inventory.SelectHotbarSlot(nextIndex < 0 ? 4 : nextIndex);
         }
     }
 }
