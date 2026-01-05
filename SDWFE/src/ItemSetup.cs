@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
 
 namespace SDWFE;
@@ -12,6 +14,10 @@ public static class ItemSetup
 
     public const string ASSAULT_RIFLE = "Assault Rifle";
     public const string SHOTGUN = "Shotgun";
+
+    public const string ACTION_HEAL = "Heal";
+    public const string ACTION_HEAL_SUPERIOR = "HealSuperior";
+    public const string ACTION_SHOOT = "Shoot";
     
     public static readonly Dictionary<string, ItemData> ItemDataMap = new()
     {
@@ -34,6 +40,7 @@ public static class ItemSetup
             {
                 Name = HEALTH_POTION,
                 MaxStackSize = 8,
+                UseActionId = ACTION_HEAL,
             }
         },
         {
@@ -41,6 +48,7 @@ public static class ItemSetup
             {
                 Name = SUPERIOR_HEALTH_POTION,
                 MaxStackSize = 4,
+                UseActionId = ACTION_HEAL_SUPERIOR,
             }
         },
         {
@@ -50,7 +58,7 @@ public static class ItemSetup
                 Damage = 15f,
                 AttackSpeed = 5f,
                 Range = 80f,
-                MagSize = 30,
+                UseActionId = ACTION_SHOOT,
             }
         },
         {
@@ -60,8 +68,34 @@ public static class ItemSetup
                 Damage = 5f,
                 AttackSpeed = 1f,
                 Range = 20f,
-                MagSize = 6,
+                UseActionId = ACTION_SHOOT,
             }
         },
     };
+
+    public static void Initialize()
+    {
+        ItemActionRegistry.RegisterUse(ACTION_HEAL, (player, data) =>
+        {
+            Console.WriteLine(data);
+        });
+        ItemActionRegistry.RegisterUse(ACTION_HEAL_SUPERIOR, (player, data) =>
+        {
+            Console.WriteLine(data);
+        });
+        ItemActionRegistry.RegisterUse(ACTION_SHOOT, (player, data) =>
+        {
+            Console.WriteLine(data as WeaponData);
+        });
+    }
+}
+
+public static class ItemActionRegistry
+{
+    private static readonly Dictionary<string, Action<Player, ItemData>> _use = new();
+
+    public static void RegisterUse(string id, Action<Player, ItemData> action) => _use[id] = action;
+
+    public static Action<Player, ItemData> GetUse(string? id) =>
+        (id != null && _use.TryGetValue(id, out var a)) ? a : null;
 }

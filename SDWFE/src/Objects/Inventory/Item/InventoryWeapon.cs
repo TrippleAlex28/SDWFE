@@ -7,7 +7,6 @@ public class WeaponData : ItemData
     public float Damage { get; set; } = 10f;
     public float AttackSpeed { get; set; } = 1f; // Shots per second
     public float Range { get; set; } = 100f;
-    public int MagSize { get; set; } = 8;
 
     public WeaponData()
     {

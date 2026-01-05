@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Reflection.Metadata;
 using System.Text.Json.Serialization;
 using Engine;
 using Microsoft.Xna.Framework.Graphics;
+using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Objects.Inventory.Item;
 
@@ -11,6 +13,8 @@ public class ItemData
     public string ItemType { get; set; } = "item"; // "item" or "weapon"
     public int MaxStackSize { get; set; } = 16;
     public string IconPath { get; set; } = ""; // TODO: Point to placeholder texture
+    
+    public string? UseActionId { get; set; }
 }
 
 public class InventoryItem

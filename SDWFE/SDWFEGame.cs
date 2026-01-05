@@ -66,6 +66,7 @@ public class SDWFEGame : ExtendedGame
         InputManager.LoadFromFile(InputManager.GetDefaultConfigPath(GAME_NAME));
         
         // Load items
+        ItemSetup.Initialize();
         ItemDatabase.Instance.LoadDatabase();
     }
 
@@ -102,13 +103,15 @@ public class SDWFEGame : ExtendedGame
     private List<NetCommand> CreateNetCommands()
     {
         var commands = new List<NetCommand>();
-        
-        var pawn = GameState.Instance.CurrentScene!.GetPawn(GameState.Instance.SessionManager.CurrentSession!
+
+        var scene = GameState.Instance.CurrentScene!;
+        var pawn = scene.GetPawn(GameState.Instance.SessionManager.CurrentSession!
             .LocalClientId);
         if (pawn is Player player)
         {
             #region Movement
             
+            // ===== WALKING =====
             bool createWalkCommand = false;
             var walkDirection = new Vector2();
             if (InputManager.Instance.IsActionDown(InputSetup.ACTION_MOVE_UP))
@@ -143,6 +146,7 @@ public class SDWFEGame : ExtendedGame
                 commands.Add(new WalkCommand(Vector2.Zero));
             }
             
+            // ===== LEAPING =====
             bool createLeapCommand = false;
             var leapDirection = new Vector2();
             if (InputManager.Instance.IsActionDown(InputSetup.ACTION_LEAP))
@@ -159,9 +163,30 @@ public class SDWFEGame : ExtendedGame
                 }
             }
             if (createLeapCommand && player.CanLeap) commands.Add(new LeapCommand(leapDirection));
+            
+            #endregion
+            
+            #region Inventory
+
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_USE))
+            {
+                if (player.Inventory.GetSelectedItem() != null)
+                {
+                    commands.Add(new UseCommand(player.Inventory.GetSelectedItem()!.Name));
+                }
+            }
+
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_SHOOT))
+            {
+                if (player.Inventory.GetEquippedWeapon() != null)
+                {
+                    commands.Add(new UseCommand(player.Inventory.GetEquippedWeapon()!.Name));
+                }
+            }
+
+            #endregion
         }
 
-        #endregion
         
         return commands;
     }

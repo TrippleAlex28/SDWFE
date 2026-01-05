@@ -112,7 +112,7 @@ public static class InputSetup
             .AddBinding(new GamePadButtonBinding(Buttons.X));
         var interact = new InputAction(ACTION_INTERACT)
             .AddBinding(new KeyboardBinding(Keys.F))
-            .AddBinding(new GamePadButtonBinding(Buttons.DPadUp));
+            .AddBinding(new GamePadButtonBinding(Buttons.LeftTrigger));
 
         var pause = new InputAction(ACTION_PAUSE)
             .AddBinding(new KeyboardBinding(Keys.Escape))

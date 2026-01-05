@@ -65,8 +65,6 @@ public class ItemDatabase
                         weaponData.AttackSpeed = attackSpeed.GetSingle();
                     if (element.TryGetProperty("Range", out var range))
                         weaponData.Range = range.GetSingle();
-                    if (element.TryGetProperty("MagSize", out var magSize))
-                        weaponData.MagSize = magSize.GetInt32();
 
                     _itemDataMap[itemData.Name] = weaponData;
                 }

@@ -36,7 +36,7 @@ public partial class Player : GameObject
     {
         base.EnterSelf();
         
-        Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Blue : Color.Red;
+        Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Red : Color.Blue;
         
         GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIHotbar(Inventory));
         GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIWeapons(Inventory));
