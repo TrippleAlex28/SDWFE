@@ -1,0 +1,168 @@
+﻿using System;
+using System.Collections.Generic;
+using Engine;
+using Engine.Input;
+using Engine.Network.Shared.Command;
+using Engine.Network.Shared.Object;
+using Engine.Network.Shared.Session;
+using Engine.Scene;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using SDWFE.Commands;
+using SDWFE.Objects;
+using SDWFE.Objects.Entities.PlayerEntity;
+using SDWFE.Objects.Inventory.Item;
+using SDWFE.Scenes;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+
+namespace SDWFE;
+
+public class SDWFEGame : ExtendedGame
+{
+    public SDWFEGame()
+    {
+        GAME_NAME = "Song Dynasty: Warrior of the Fallen Empire";
+        
+        // --- NET OBJECTS SETUP ---
+        NetObjectRegistry.Register<Player>((uint)NetObjects.Player);
+        
+        // --- NET COMMANDS SETUP ---
+        NetCommandRegistry.Register<WalkCommand>((uint)NetCommands.Move);
+        NetCommandRegistry.Register<LeapCommand>((uint)NetCommands.Leap);
+        
+        // --- SCENES SETUP ---
+        SceneRegistry.Register<MainMenuScene>(MainMenuScene.KEY);
+        SceneRegistry.Register<GameplayScene>(GameplayScene.KEY);
+    }
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+        
+        // Initialize Input System
+        InputSetup.Initialize(InputSetup.PROFILE_UI);
+        
+        // Bind to GameState events
+        GameState.Instance.OnDisconnected += async (reason) =>
+        {
+            Console.WriteLine($"Disconnect: {reason}");
+            GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);
+        };
+        
+        // Initialize Scene & Session
+        GameState.Instance.SwitchScene(MainMenuScene.KEY);
+        GameState.Instance.SwitchSession(SessionType.Singleplayer);
+        
+        this.IsMouseVisible = true;
+    }
+
+    protected override void LoadContent()
+    {
+        base.LoadContent();
+        
+        Resources.LoadContent();
+        
+        // Load saved inputs
+        InputManager.LoadFromFile(InputManager.GetDefaultConfigPath(GAME_NAME));
+        
+        // Load items
+        ItemDatabase.Instance.LoadDatabase();
+    }
+
+    protected override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+        
+        // Update the GameState
+        GameState.Instance.HandleInput(CreateNetCommands());
+        GameState.Instance.AdvanceClientTick();
+        GameState.Instance.Update(gameTime);
+        
+        FollowCamera.Update(gameTime);
+        
+        // Attach camera to player
+        if (GameState.Instance.CurrentScene != null && GameState.Instance.SessionManager.CurrentSession != null)
+        {
+            Vector2 followPosition;
+            var pawn = GameState.Instance.CurrentScene!.GetPawn(GameState.Instance.SessionManager.CurrentSession!
+                .LocalClientId);
+            if (pawn != null)
+                followPosition = pawn.GlobalPosition + pawn.CameraOffset;
+            else
+                followPosition = Vector2.Zero;
+            
+            FollowCamera.Follow(followPosition);
+        }
+        
+        if (InputManager.Instance.GetInputState().CurrentKeyboard.IsKeyDown(Keys.P) && InputManager.Instance.GetInputState().PreviousKeyboard.IsKeyUp(Keys.P))
+            GameState.Instance.SwitchScene(GameplayScene.KEY);
+    }
+
+    private bool _createdWalkCommand = false;
+    private List<NetCommand> CreateNetCommands()
+    {
+        var commands = new List<NetCommand>();
+        
+        var pawn = GameState.Instance.CurrentScene!.GetPawn(GameState.Instance.SessionManager.CurrentSession!
+            .LocalClientId);
+        if (pawn is Player player)
+        {
+            #region Movement
+            
+            bool createWalkCommand = false;
+            var walkDirection = new Vector2();
+            if (InputManager.Instance.IsActionDown(InputSetup.ACTION_MOVE_UP))
+            {
+                createWalkCommand = true;
+                walkDirection.Y -= 1;
+            }
+            if (InputManager.Instance.IsActionDown(InputSetup.ACTION_MOVE_DOWN))
+            {
+                createWalkCommand = true;
+                walkDirection.Y += 1;
+            }
+            if (InputManager.Instance.IsActionDown(InputSetup.ACTION_MOVE_LEFT))
+            {
+                createWalkCommand = true;
+                walkDirection.X -= 1;
+            }
+            if (InputManager.Instance.IsActionDown(InputSetup.ACTION_MOVE_RIGHT))
+            {
+                createWalkCommand = true;
+                walkDirection.X += 1;
+            }
+            
+            if (createWalkCommand && player.CanWalk)
+            {
+                _createdWalkCommand = true;
+                commands.Add(new WalkCommand(walkDirection));
+            }
+            else if (_createdWalkCommand)
+            {
+                _createdWalkCommand = false;
+                commands.Add(new WalkCommand(Vector2.Zero));
+            }
+            
+            bool createLeapCommand = false;
+            var leapDirection = new Vector2();
+            if (InputManager.Instance.IsActionDown(InputSetup.ACTION_LEAP))
+            {
+                createLeapCommand = true;
+                if (walkDirection == Vector2.Zero)
+                {
+                    leapDirection = (ScreenToWorld(InputManager.Instance.MousePosition.ToVector2()) -
+                                     (player.GlobalPosition + player.CameraOffset));
+                }
+                else
+                {
+                    leapDirection = walkDirection;
+                }
+            }
+            if (createLeapCommand && player.CanLeap) commands.Add(new LeapCommand(leapDirection));
+        }
+
+        #endregion
+        
+        return commands;
+    }
+}
