@@ -18,10 +18,13 @@ public class MainMenuScene : Scene
     public const string KEY = "MainMenuScene";
 
     private bool _isLoading = false;
+
+    private readonly Texture2D _ChineseUITexture;
     
     public MainMenuScene() : base(KEY)
     {
-        BackgroundColor = Color.Orange;
+        BackgroundColor = new Color(0xEA, 0xD2, 0xAD);
+        _ChineseUITexture = ExtendedGame.AssetManager.LoadTexture("SD_Chinese_UI", "UI/");
         SetDefaultPlayerClassNull(); // useless default player
     }
 
@@ -89,98 +92,109 @@ public class MainMenuScene : Scene
         // Clear any existing UI
         UIRoot.Children.Clear();
 
-        // Title at top
-        var titleContainer = new UIContainer();
-        titleContainer.DesiredSize = new Vector2(600, 80);
-        titleContainer.AlignmentPoint = Alignment.TopMiddle;
-        titleContainer.Margin = new Vector4(0, 40, 0, 0);
-        UIRoot.AddChild(titleContainer);
+        // HBOX Layout
+        var mainHBox = new UIVBoxContainer();
+        mainHBox.DesiredSize = ExtendedGame.DrawResolution.ToVector2();
+        mainHBox.AlignmentPoint = Alignment.TopLeft;
+        UIRoot.AddChild(mainHBox);
 
-        // Title background
-        var titleBg = UIVisual.FromColor(new Color(40, 40, 60));
-        titleBg.DesiredSize = new Vector2(600, 80);
-        titleBg.AlignmentPoint = Alignment.TopLeft;
-        titleContainer.AddChild(titleBg);
+        // Title at top
+        var titleContainer = new UIElement();
+        titleContainer.MaxSize = UIExtensionMethods.ScreenPercent(100, 10);
+        titleContainer.AlignmentPoint = Alignment.TopLeft;
+        mainHBox.AddChild(titleContainer);
+
 
         // Title text
-        var titleText = UIVisual.FromText(ExtendedGame.GAME_NAME, Resources.TitleFont, Color.White);
+        var titleText = UIVisual.FromText("Song Dynasty", Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 24), Color.White);
         titleText.AlignmentPoint = Alignment.MiddleCenter;
-        titleContainer.AddChild(titleText);
+        titleText.DesiredSize = UIExtensionMethods.ScreenPercent(100, 20);
+        mainHBox.AddChild(titleText);
+
+        // Title subtitle text
+        var subtitleText = UIVisual.FromText(ExtendedGame.GAME_NAME_SUBTITLE, Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 8), Color.White);
+        subtitleText.AlignmentPoint = Alignment.TopMiddle;
+        subtitleText.DesiredSize = UIExtensionMethods.ScreenPercent(100, 10);
+        mainHBox.AddChild(subtitleText);
 
         // Center container for play buttons
-        var playButtonsContainer = new UIContainer();
-        playButtonsContainer.DesiredSize = new Vector2(600, 80);
+        var playButtonsContainer = new UIHBoxContainer();
+        playButtonsContainer.DesiredSize = UIExtensionMethods.ScreenPercent(100, 50);
         playButtonsContainer.AlignmentPoint = Alignment.MiddleCenter;
-        UIRoot.AddChild(playButtonsContainer);
+        mainHBox.AddChild(playButtonsContainer);
 
         // Play Button (left)
-        var playButton = CreateButton("PLAY", new Vector2(180, 70));
-        playButton.AlignmentPoint = Alignment.MiddleLeft;
-        playButton.Margin = new Vector4(10, 5, 10, 5);
+        var playButton = CreateButton("PLAY", new Rectangle(128, 0, 128, 128));
+        playButton.AlignmentPoint = Alignment.MiddleCenter;
         playButton.Released += (control) => OnPlayClicked();
         playButtonsContainer.AddChild(playButton);
 
         // Host Button (center)
-        var hostButton = CreateButton("HOST", new Vector2(180, 70));
-        hostButton.AlignmentPoint = Alignment.MiddleCenter;
-        hostButton.Margin = new Vector4(10, 5, 10, 5);
+        var hostButton = CreateButton("HOST", new Rectangle(128, 0, 128, 128));
+        hostButton.AlignmentPoint = Alignment.MiddleLeft;
         hostButton.Released += (control) => OnHostClicked();
         playButtonsContainer.AddChild(hostButton);
 
         // Join Button (right)
-        var joinButton = CreateButton("JOIN", new Vector2(180, 70));
-        joinButton.AlignmentPoint = Alignment.MiddleRight;
-        joinButton.Margin = new Vector4(10, 5, 10, 5);
+        var joinButton = CreateButton("JOIN", new Rectangle(128, 0, 128, 128));
+        joinButton.AlignmentPoint = Alignment.MiddleCenter;
         joinButton.Released += (control) => OnJoinClicked();
         playButtonsContainer.AddChild(joinButton);
 
         // Bottom container for settings and quit
-        var bottomContainer = new UIContainer();
-        bottomContainer.DesiredSize = new Vector2(500, 70);
-        bottomContainer.AlignmentPoint = Alignment.BottomMiddle;
-        bottomContainer.Margin = new Vector4(0, 0, 0, 40);
-        UIRoot.AddChild(bottomContainer);
+        var bottomContainer = new UIHBoxContainer();
+        bottomContainer.DesiredSize = UIExtensionMethods.ScreenPercent(100, 20);
+        bottomContainer.AlignmentPoint = Alignment.MiddleCenter;
+        mainHBox.AddChild(bottomContainer);
 
         // Settings Button (left)
-        var settingsButton = CreateButton("SETTINGS", new Vector2(220, 60));
+        var settingsButton = CreateButton("SETTINGS", new Rectangle(256, 72, 64, 16), new Vector4(7, 7, 7, 7), fontSize: 12);
         settingsButton.AlignmentPoint = Alignment.MiddleLeft;
-        settingsButton.Margin = new Vector4(10, 5, 10, 5);
+        settingsButton.MaxSize = UIExtensionMethods.ScreenPercent(25, 100);
         settingsButton.Released += (control) => OnSettingsClicked();
         bottomContainer.AddChild(settingsButton);
 
+        // filling
+        var filler = new UIElement();
+        bottomContainer.AddChild(filler);
         // Quit Button (right)
-        var quitButton = CreateButton("QUIT", new Vector2(220, 60));
+        var quitButton = CreateButton("QUIT", new Rectangle(256, 104, 64, 16), new Vector4(7, 7, 7, 7), fontSize: 12);
         quitButton.AlignmentPoint = Alignment.MiddleRight;
-        quitButton.Margin = new Vector4(10, 5, 10, 5);
+        quitButton.MaxSize = UIExtensionMethods.ScreenPercent(25, 100);
         quitButton.Released += (control) => OnQuitClicked();
         bottomContainer.AddChild(quitButton);
     }
     
-    private UIControl CreateButton(string text, Vector2 size)
+    private UIControl CreateButton(string text, Rectangle? sourceRect = null, Vector4? sliceRect = null, int fontSize = 24)
     {
         var button = new UIControl();
-        button.DesiredSize = size;
+        button.Padding = new Vector4(8, 8, 8, 8);
 
+        Vector4 slice = sliceRect ?? new Vector4(32, 32, 32, 32);
         // Button background - default state
-        var buttonBg = UIVisual.FromColor(new Color(60, 60, 80));
-        buttonBg.DesiredSize = size;
-        buttonBg.AlignmentPoint = Alignment.TopLeft;
+        var buttonBg = UIVisual.FromStretchableTexture(_ChineseUITexture, slice, sourceRect);
+        buttonBg.AlignmentPoint = Alignment.MiddleCenter;
+        buttonBg.DesiredSize = UIExtensionMethods.ScreenPercent(100, 100);
         button.AddChild(buttonBg);
 
         // Button text
-        var buttonText = UIVisual.FromText(text, Resources.TextFont, Color.White);
+        var buttonText = UIVisual.FromText(text, Resources.GetFont(Resources.UPHEAVEL_FONTNAME, fontSize), Color.White);
+        buttonText.DesiredSize = UIExtensionMethods.ScreenPercent(100, 100);
+
         buttonText.AlignmentPoint = Alignment.MiddleCenter;
-        button.AddChild(buttonText);
+        buttonBg.AddChild(buttonText);
 
         // Hover effects
         button.HoverEntered += (control) =>
         {
             buttonBg.Tint = new Color(80, 80, 120);
+            buttonText.Tint = new Color(80, 80, 120);
         };
 
         button.HoverExited += (control) =>
         {
-            buttonBg.Tint = new Color(60, 60, 80);
+            buttonBg.Tint = Color.White;
+            buttonText.Tint = Color.White;
         };
 
         button.Pressed += (control) =>

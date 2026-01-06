@@ -180,7 +180,7 @@ public class UIElement : GameObject
         SetChildLayout();
     }
 
-    private Vector2 ResolveAlignment()
+    protected Vector2 ResolveAlignment()
     {
         Vector2 anchor = AlignmentPoint switch
         {

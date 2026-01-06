@@ -27,6 +27,7 @@ public static class ItemSetup
             {
                 Name = WOOD,
                 MaxStackSize = 64,
+                IconPath = "SD_MedKitPlaceholder",
             }
         },
         {
@@ -34,6 +35,7 @@ public static class ItemSetup
             {
                 Name = IRON,
                 MaxStackSize = 16,
+                IconPath = "SD_MedKitPlaceholder",
             }
         },
         {
@@ -41,6 +43,7 @@ public static class ItemSetup
             {
                 Name = HEALTH_POTION,
                 MaxStackSize = 8,
+                IconPath = "SD_MedKitPlaceholder",
                 UseActionId = ACTION_HEAL,
             }
         },
@@ -49,6 +52,7 @@ public static class ItemSetup
             {
                 Name = SUPERIOR_HEALTH_POTION,
                 MaxStackSize = 4,
+                IconPath = "SD_MedKitPlaceholder",
                 UseActionId = ACTION_HEAL_SUPERIOR,
             }
         },
@@ -59,6 +63,7 @@ public static class ItemSetup
                 Damage = 15f,
                 AttackSpeed = 5f,
                 Range = 80f,
+                IconPath = "SD_MedKitPlaceholder",
                 UseActionId = ACTION_SHOOT,
             }
         },
@@ -69,6 +74,7 @@ public static class ItemSetup
                 Damage = 5f,
                 AttackSpeed = 1f,
                 Range = 20f,
+                IconPath = "SD_MedKitPlaceholder",
                 UseActionId = ACTION_SHOOT,
             }
         },

@@ -167,8 +167,9 @@ public enum VisualType
                     spriteBatch.Draw(source, GetDestRect(), SourceRect, color, 0f, Vector2.Zero, SpriteEffects.None, DrawLayer);
                     break;
                 case VisualType.Text:
-                    Vector2 roundedPosition = new Vector2((int)GlobalPosition.X, (int)GlobalPosition.Y);
-                    spriteBatch.DrawString(font, Text, roundedPosition, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, DrawLayer);
+                    Vector2 textPos = GetTextDrawPosition();
+                    
+                    spriteBatch.DrawString(font, Text, textPos, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, DrawLayer);
                     break;
                 case VisualType.Color:
                     spriteBatch.Draw(EngineResources.BlankSquare, GetDestRect(), SourceRect, color, 0f, Vector2.Zero, SpriteEffects.None, DrawLayer);
@@ -179,7 +180,22 @@ public enum VisualType
                     break;
             }
         }
-
+        private Vector2 GetTextDrawPosition(){
+            Rectangle actualSlot = CalculateActualSlot();
+            Vector2 textSize = font!.MeasureString(Text);
+            Vector2 alignmentAnchor = ResolveAlignment();
+            
+            // Calculate the offset based on alignment and text size
+            Vector2 textOffset = -textSize * alignmentAnchor;
+            
+            // Position text at the center of the actual slot with alignment offset
+            Vector2 textPosition = new Vector2(
+                GlobalPosition.X + actualSlot.Width * alignmentAnchor.X,
+                GlobalPosition.Y + actualSlot.Height * alignmentAnchor.Y
+            );
+            
+            return textPosition + textOffset;
+        }
         private Rectangle GetDestRect()
         {
             Rectangle actualSlot = CalculateActualSlot();

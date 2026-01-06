@@ -25,12 +25,26 @@
 /processorParam:TextureFormat=Color
 /build:Entities/Player/16x32 Idle v2-Sheet.png
 
-#begin Fonts/Upheavel.spritefont
+#begin Fonts/Upheavel12.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/Upheavel.spritefont
+/build:Fonts/Upheavel12.spritefont
+
+#begin Fonts/Upheavel16.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Upheavel16.spritefont
+
+#begin Fonts/Upheavel20.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Upheavel20.spritefont
 
 #begin Fonts/Upheavel24.spritefont
 /importer:FontDescriptionImporter
@@ -38,6 +52,20 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Upheavel24.spritefont
+
+#begin Fonts/Upheavel6.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Upheavel6.spritefont
+
+#begin Fonts/Upheavel8.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Upheavel8.spritefont
 
 #begin Fonts/Visitor.spritefont
 /importer:FontDescriptionImporter

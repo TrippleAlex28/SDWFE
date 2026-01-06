@@ -13,6 +13,7 @@ public class ExtendedGame : Game
 {
     // public virtual string GAME_NAME { get; protected set; } = "SDWFE";
     public static string GAME_NAME { get; protected set; } = "SDWFE";
+    public static string GAME_NAME_SUBTITLE { get; protected set; } = "Warrior of the Fallen Empire";
 
     public static AssetManager AssetManager { get; private set; }
     public static Random Random { get; private set; }

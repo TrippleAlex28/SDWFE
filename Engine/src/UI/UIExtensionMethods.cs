@@ -64,92 +64,6 @@ public static class UIExtensionMethods
         spriteBatch.Draw(texture, DestBottomCenter, BottomCenter, color, 0f, Vector2.Zero, SpriteEffects.None, layerDepth);
         spriteBatch.Draw(texture, DestBottomRight, BottomRight, color, 0f, Vector2.Zero, SpriteEffects.None, layerDepth);
     }
-
-    // this function makes child size distribution work with max sizes and min sizes
-    public static float[] DistributeSizes(this float[] minSize, float totalWidth, float[] maxSizes)
-    {
-        int n = minSize.Length;
-        float[] size = new float[n];
-        float[] maxsize = new float[n];
-
-        for (int i = 0; i < n; i++)
-        {
-            maxsize[i] = maxSizes[i] <= 0 ? float.MaxValue : maxSizes[i];
-        }
-        // Assign all min sizes first
-        float used = 0f;
-        for (int i = 0; i < n; i++)
-        {
-            size[i] = minSize[i];
-            used += size[i];
-        }
-
-        float extra = totalWidth - used;
-        if (extra <= 0)
-            return size; // nothing to distribute
-
-        // Create index list for sorting and grouping
-        List<int> order = Enumerable.Range(0, n)
-            .OrderBy(i => size[i])
-            .ToList();
-
-        for (int i = 0; i < n; i++)
-        {
-            // Find the group of lowest sized elements
-            float current = size[order[i]];
-            int groupCount = i + 1;
-
-            // Expand group: all items with same size
-            while (groupCount < order.Count && size[order[groupCount]] == current)
-                groupCount++;
-
-            // Determine next target size for the group
-            float nextSize = float.MaxValue;
-
-            // Next distinct size
-            if (groupCount < order.Count)
-                nextSize = Math.Min(nextSize, size[order[groupCount]]);
-
-            // Group max constraint
-            for (int k = i; k < groupCount; k++)
-                nextSize = Math.Min(nextSize, maxsize[order[k]]);
-
-            if (nextSize <= current)
-            {
-                // Everything is stuck; no child in this group can grow
-                break;
-            }
-
-            // Cost to raise group to nextSize
-            float delta = nextSize - current;
-            float cost = delta * (groupCount - i);
-
-            if (extra >= cost)
-            {
-                // Fully raise group
-                for (int k = i; k < groupCount; k++)
-                    size[order[k]] = nextSize;
-
-                extra -= cost;
-            }
-            else
-            {
-                // Only partially raise them
-                float add = extra / (groupCount - i);
-                for (int k = 0; k < groupCount; k++)
-                {
-                    float limit = maxsize[order[k]] - size[order[k]];
-                    float apply = Math.Min(add, limit);
-                    size[order[k]] += apply;
-                    extra -= apply;
-                }
-                break;
-            }
-            // Resort order for next iteration
-            order = order.OrderBy(i => size[i]).ToList();
-        }
-        return size;
-    }
     /// <summary>
     /// Distributes horizontal space between children in an HBox-style layout.
     ///
@@ -303,5 +217,33 @@ public static class UIExtensionMethods
         }
 
         return availableWidth;
+    }
+
+    public static Vector2 GetScreenPercentage(float percentage)
+    {
+        Vector2 screenSize = ExtendedGame.DrawResolution.ToVector2();
+        float factor = percentage / 100f;
+        return screenSize * factor;
+    }
+    public static float GetScreenPercentageWidth(float percentage)
+    {
+        return ExtendedGame.DrawResolution.X * (percentage / 100f);
+    }
+
+    public static float GetScreenPercentageHeight(float percentage)
+    {
+        return ExtendedGame.DrawResolution.Y * (percentage / 100f);
+    }
+
+    /// <summary>
+    /// Creates a Vector2 from screen width and height percentages.
+    /// Usage: ScreenPercent(50, 20) for 50% width, 20% height
+    /// </summary>
+    /// <param name="widthPercent">The percentage of screen width (0-100)</param>
+    /// <param name="heightPercent">The percentage of screen height (0-100)</param>
+    /// <returns>A Vector2 with the specified screen percentages</returns>
+    public static Vector2 ScreenPercent(float widthPercent, float heightPercent)
+    {
+        return new Vector2(GetScreenPercentageWidth(widthPercent), GetScreenPercentageHeight(heightPercent));
     }
 }
