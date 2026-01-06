@@ -62,7 +62,7 @@ public class MainMenuScene : Scene
         _isLoading = true;
         GameState.Instance.SwitchSession(SessionType.MultiplayerClient);
         if (!await ((MultiplayerClientSession)GameState.Instance.SessionManager.CurrentSession!).ConnectAsync(
-                "192.168.2.23"))
+                "192.168.68.125"))
         {
             // Re-enter this scene as SinglePlayer
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, KEY);
