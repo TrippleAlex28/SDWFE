@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Inventory;
 using SDWFE.UI.Inventory;
+using SDWFE.UI.PlayerData;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
@@ -29,6 +30,7 @@ public partial class Player : GameObject
         this.AddChild(Sprite);
         this.CameraOffset = new Vector2(8, 16); // hardcoded numbers from the spritesheet, because brain fog
 
+        ConstructStats();
         ConstructInventory();
     }
 
@@ -39,6 +41,7 @@ public partial class Player : GameObject
         Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Red : Color.Blue;
         
         GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIHotbar(Inventory));
+        GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIStats(Stats));
         GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIWeapons(Inventory));
     }
 

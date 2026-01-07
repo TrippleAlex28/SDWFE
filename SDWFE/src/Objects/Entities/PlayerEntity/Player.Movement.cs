@@ -1,5 +1,6 @@
 ﻿using System;
 using Engine;
+using Engine.Input;
 using Microsoft.Xna.Framework;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
@@ -23,8 +24,10 @@ public partial class Player
     public void Leap(Vector2 direction)
     {
         if (!CanLeap) return;
+        if (Stats.CurrentStamina < 50f) return;
         if (direction.IsApproximatelyZero()) return;
 
+        Stats.CurrentStamina -= 50f;
         _isLeaping = true;
         _currentLeapTime = LeapDuration;
         _currentLeapVelocity = direction * _leapVelocity;
@@ -35,7 +38,11 @@ public partial class Player
         float dt = gameTime.DeltaSeconds();
         
         _currentLeapTime -= dt;
-
+        //// DEBUGGGING CODE, REMOVE LATER
+        if (IsLocallyOwned() && InputManager.Instance.IsActionPressed(InputSetup.ACTION_USE)){
+            Stats.CurrentHealth -= 10f;
+        }
+        //// END DEBUGGING CODE
         if (_currentLeapTime <= 0f)
         {
             _isLeaping = false;
