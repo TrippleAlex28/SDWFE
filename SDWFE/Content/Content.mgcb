@@ -25,6 +25,13 @@
 /processorParam:TextureFormat=Color
 /build:Entities/Player/16x32 Idle v2-Sheet.png
 
+#begin Fonts/Upheavel.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Upheavel.spritefont
+
 #begin Fonts/Upheavel12.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
