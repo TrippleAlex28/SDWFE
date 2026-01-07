@@ -30,13 +30,14 @@ public partial class Player : GameObject
         this.AddChild(Sprite);
         this.CameraOffset = new Vector2(8, 16); // hardcoded numbers from the spritesheet, because brain fog
 
-        ConstructStats();
         ConstructInventory();
     }
 
     protected override void EnterSelf()
     {
         base.EnterSelf();
+        
+        ConstructStats();
         
         Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Red : Color.Blue;
         
