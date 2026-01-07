@@ -131,13 +131,13 @@ public class UIStats : UIContainer
     }
     public void SetPlayerIndex()
     {
-        int index = MathHelper.Clamp(_stats._ownerIndex, 0, 1);
+        int index = MathHelper.Clamp(_stats._ownerIndex, 1, 2);
         switch (index)
         {
-            case 0:
+            case 1:
                 _playerIndex = UIVisual.FromTexture(_barsSheet, new Rectangle(64, 64, 14, 9));
                 break;
-            case 1:
+            case 2:
                 _playerIndex = UIVisual.FromTexture(_barsSheet, new Rectangle(64, 32, 14, 9));
                 break;
         }

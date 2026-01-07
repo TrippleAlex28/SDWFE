@@ -40,9 +40,13 @@ public partial class Player : GameObject
         
         Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Red : Color.Blue;
         
-        GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIHotbar(Inventory));
-        GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIStats(Stats));
-        GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIWeapons(Inventory));
+        // Only create UI for the locally owned player
+        if (IsLocallyOwned())
+        {
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIHotbar(Inventory));
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIStats(Stats));
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIWeapons(Inventory));
+        }
     }
 
     protected override void UpdateSelf(GameTime gameTime)
