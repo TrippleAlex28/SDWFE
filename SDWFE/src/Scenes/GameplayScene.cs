@@ -38,7 +38,8 @@ public class GameplayScene : Scene
     public override void Enter()
     {
         base.Enter();
-    
+        Tilemap map = new Tilemap("TestMap.tmj");
+        this.AddObject(map);
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);
     }
 

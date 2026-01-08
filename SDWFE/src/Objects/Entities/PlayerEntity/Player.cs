@@ -53,7 +53,7 @@ public partial class Player : GameObject
     protected override void UpdateSelf(GameTime gameTime)
     {
         base.UpdateSelf(gameTime);
-
+        Sprite.BaseDrawLayer = (float)(0.8f / ExtendedGame.DrawResolution.Y) * (this.GlobalPosition.Y + 24); // 16 is half the height of the sprite
         UpdateInventory();
         UpdateMovement(gameTime);
     }

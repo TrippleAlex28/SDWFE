@@ -72,6 +72,7 @@ public class GameObject : NetObject
         }
     }
     public Vector2 LocalPosition { get; set; } = Vector2.Zero;
+
     public Vector2 Direction
     {
         get
