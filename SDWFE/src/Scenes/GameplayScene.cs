@@ -4,6 +4,7 @@ using Engine.Input;
 using Engine.Network.Shared.Session;
 using Engine.Particle;
 using Engine.Scene;
+using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities;
@@ -37,7 +38,7 @@ public class GameplayScene : Scene
     public override void Enter()
     {
         base.Enter();
-
+    
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);
     }
 
