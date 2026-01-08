@@ -32,6 +32,9 @@ public class MainMenuScene : Scene
     {
         base.Enter();
 
+        // Switch input profile back to UI for menu navigation
+        InputManager.Instance.SetActiveProfile(InputSetup.PROFILE_UI);
+
         CreateMainMenuUI();
     }
     

@@ -38,11 +38,7 @@ public partial class Player
         float dt = gameTime.DeltaSeconds();
         
         _currentLeapTime -= dt;
-        //// DEBUGGGING CODE, REMOVE LATER
-        if (IsLocallyOwned() && InputManager.Instance.IsActionPressed(InputSetup.ACTION_USE)){
-            Stats.CurrentHealth -= 10f;
-        }
-        //// END DEBUGGING CODE
+
         if (_currentLeapTime <= 0f)
         {
             _isLeaping = false;

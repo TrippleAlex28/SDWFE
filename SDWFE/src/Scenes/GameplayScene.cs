@@ -1,5 +1,6 @@
 ﻿using System;
 using Engine;
+using Engine.Hitbox;
 using Engine.Input;
 using Engine.Network.Shared.Session;
 using Engine.Particle;
@@ -17,7 +18,8 @@ public class GameplayScene : Scene
     public const string KEY = "GameplayScene";
 
     private ParticleSystem _bulletTrailSystem = new();
-    
+    private HitboxManager _hitboxManager = new();
+    private Tilemap map;
     public GameplayScene() : base(KEY)
     {
         // Set dynamic background color based on the session type
@@ -38,9 +40,27 @@ public class GameplayScene : Scene
     public override void Enter()
     {
         base.Enter();
-        Tilemap map = new Tilemap("TestMap.tmj");
+        map = new Tilemap("TestMap.tmj");
+        
+        var stairTrigger = _hitboxManager.AddTrigger(map.Stairs[0].GroundStepCollider, detectsLayers: HitboxLayer.All);
+        map.SetStairTriggers(_hitboxManager);
+        SetUpHitboxes();
         this.AddObject(map);
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);
+    }
+    private void SetUpHitboxes()
+    {
+        var session = GameState.Instance.SessionManager.CurrentSession;
+        if (session == null) return;
+        
+        var playerObject = GetPawn(session.LocalClientId);
+        if (playerObject is Player player)
+        {
+            player.HitboxManager = _hitboxManager;
+            player.HitboxLayer = HitboxLayer.Player;
+            player.CollisionSize = new Vector2(16, 8);
+            player.CollisionOffset = new Vector2(0, 24);
+        }
     }
 
     public override void Update(GameTime gameTime)
@@ -48,7 +68,28 @@ public class GameplayScene : Scene
         base.Update(gameTime);
 
         _bulletTrailSystem.Update(gameTime.DeltaSeconds());
-        
+        // Access the local player
+        var session = GameState.Instance.SessionManager.CurrentSession;
+        if (session != null)
+        {
+            var playerObject = GetPawn(session.LocalClientId);
+            if (playerObject is Player player)
+            {
+                if (playerObject.HitboxManager == null)
+                {
+                    SetUpHitboxes();
+                }
+                
+                Rectangle playerHitbox = new Rectangle((int)player.GlobalPosition.X, (int)player.GlobalPosition.Y + 24, 16, 8);
+
+                _hitboxManager.UpdateTriggersForObject(player, playerHitbox, HitboxLayer.All);
+
+                foreach (var stair in map.Stairs)
+                {
+                    stair.CheckIfPlayerColliderIntersectsRailing(playerHitbox);
+                }
+            }
+        }
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);
     }

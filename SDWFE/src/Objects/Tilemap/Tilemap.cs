@@ -5,12 +5,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Engine.Sprite;
 using System.Linq;
+using Engine.Hitbox;
+using SDWFE.Objects.Entities.PlayerEntity;
 
 #nullable enable
 public class Tilemap : GameObject
 {
     public List<Rectangle> Colliders;
     public List<RoomDoor> Doors => _doors;
+    public List<Stair> Stairs = new();
 
     private HashSet<int> _topWallId = new HashSet<int>() {1, 22, 23, 24, 25, 26, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 87, 88};
     private HashSet<int> _ySortables = new HashSet<int>() {2, 3, 4, 5, 85, 86, 89, 90, 91};
@@ -36,7 +39,7 @@ public class Tilemap : GameObject
         Colliders = new List<Rectangle>();
 
         Dictionary<int, TiledObject> objectsById = GetObjectLookup(map);
-        ResolveObjectHitboxes(objectsById);
+        InitializeStairs(objectsById);
 
         TryBuildTileColliders(map);
 
@@ -53,7 +56,44 @@ public class Tilemap : GameObject
         return objectLayer?.objects?.ToDictionary(o => o.id)
             ?? new Dictionary<int, TiledObject>();
     }
+    private void InitializeStairs(Dictionary<int, TiledObject> objectsById)
+    {
+        foreach (var obj in objectsById.Values)
+        {
+            if (obj.name != "Stair")
+                continue;
 
+            Stair stair = new(
+                new Vector2(obj.x, obj.y),
+                0,
+                7,
+                48,
+                4,
+                8
+            );
+
+            Stairs.Add(stair);
+        }
+    }
+    public void SetStairTriggers(HitboxManager hitboxManager)
+    {
+        foreach (var stair in Stairs)
+        {
+            stair.SetStairTriggers(hitboxManager);
+        }
+        SetStairStaticHitboxes(hitboxManager);
+    }
+
+    private void SetStairStaticHitboxes(HitboxManager hitboxManager)
+    {
+        foreach (var stair in Stairs)
+        {
+            foreach (var col in stair.RailingColliders)
+            {
+                hitboxManager.AddStatic(col, layer:HitboxLayer.Environment, blocksLayers:HitboxLayer.All);
+            }
+        }
+    }
     private void ResolveObjectHitboxes(Dictionary<int, TiledObject> objectsById)
     {
         foreach (var obj in objectsById.Values)
@@ -104,7 +144,7 @@ public class Tilemap : GameObject
     {
         foreach (var obj in objectsById.Values)
         {
-            if (obj.type != "Door" || obj.properties == null)
+            if (obj.name != "Door" || obj.properties == null)
                 continue;
 
             foreach (var prop in obj.properties)
@@ -287,7 +327,7 @@ public class Layer
 public class TiledObject
 {
     public int id { get; set; }
-    public string? type { get; set; }
+    public string? name { get; set; }
     public int height { get; set; }
     public int width { get; set; }
     public int x { get; set; }

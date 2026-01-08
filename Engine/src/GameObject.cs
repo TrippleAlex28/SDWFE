@@ -1,6 +1,8 @@
 ﻿using Engine.Network.Shared.Object;
+using Engine.Hitbox;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+
 
 namespace Engine;
 
@@ -87,6 +89,87 @@ public class GameObject : NetObject
     private Vector2 _direction = Vector2.Zero;
     public float Velocity { get; set; } = 0;
     public Vector2 Displacement => this.Direction * this.Velocity;
+    
+    #endregion
+
+    #region Stairs & Elevation
+    
+    /// <summary>
+    /// Whether this object is currently on stairs.
+    /// </summary>
+    public bool IsOnStairs { get; set; } = false;
+    
+    /// <summary>
+    /// Reference to the stair object this entity is currently on (if any).
+    /// </summary>
+    public object? CurrentStairs { get; set; } = null;
+    
+    /// <summary>
+    /// The direction the current stairs are oriented (normalized).
+    /// For example: (1, 0) for right stairs, (0, -1) for up stairs, (1, -1).normalized for diagonal.
+    /// </summary>
+    public Vector2 StairDirection { get; set; } = Vector2.Zero;
+    
+    /// This will maybe be implemented later for multi-story buildings.
+    /// <summary>
+    /// The vertical elevation/height of this object (for multi-story support).
+    /// Used for Y-sorting and stair climbing.
+    /// </summary>
+    public float Elevation { get; set; } = 0f;
+    
+    /// <summary>
+    /// Target elevation for smooth stair climbing.
+    /// </summary>
+    public float TargetElevation { get; set; } = 0f;
+    
+    /// <summary>
+    /// Which floor/story this object is on.
+    /// </summary>
+    public int FloorIndex { get; set; } = 0;
+    
+    /// <summary>
+    /// Constrains direction to stair direction by projecting input onto stair axis.
+    /// </summary>
+    public void ConstrainDirectionToStairs()
+    {
+        if (StairDirection == Vector2.Zero) return;
+        
+        Direction = StairDirection;
+        
+    }
+    
+    #endregion
+
+    #region Collision
+    
+    /// <summary>
+    /// Reference to the HitboxManager for collision detection.
+    /// Set this if you want the object to use physics-based collision.
+    /// </summary>
+    public Engine.Hitbox.HitboxManager? HitboxManager { get; set; }
+    
+    /// <summary>
+    /// The hitbox layer this object belongs to.
+    /// Used for collision filtering.
+    /// </summary>
+    public HitboxLayer HitboxLayer { get; set; } = HitboxLayer.Default;
+    
+    /// <summary>
+    /// The size of this object's collision bounds (width, height).
+    /// Used with GlobalPosition to determine the collision rectangle.
+    /// </summary>
+    public Vector2 CollisionSize { get; set; } = new Vector2(16, 16);
+    
+    public Vector2 CollisionOffset { get; set; } = Vector2.Zero;
+    /// <summary>
+    /// Gets the current collision bounds for this object.
+    /// </summary>
+    public Rectangle CollisionBounds => new Rectangle(
+        (int)this.GlobalPosition.X + (int)this.CollisionOffset.X,
+        (int)this.GlobalPosition.Y + (int)this.CollisionOffset.Y,
+        (int)this.CollisionSize.X,
+        (int)this.CollisionSize.Y
+    );
     
     #endregion
 
@@ -319,11 +402,36 @@ public class GameObject : NetObject
     
     /// <summary>
     /// Updates the position according to a generic formula.
+    /// Uses HitboxManager for collision detection if available.
     /// </summary>
     /// <param name="deltaSeconds">The time between the previous and current frame in seconds.</param>
     private void UpdatePosition(float deltaSeconds)
     {
-        this.GlobalPosition += this.Displacement * deltaSeconds;
+        Vector2 displacement = this.Displacement * deltaSeconds;
+        
+
+        // If HitboxManager is set, use physics-based collision
+        if (HitboxManager != null)
+        {
+            if (IsOnStairs){
+                ConstrainDirectionToStairs();
+                Console.WriteLine("stair direction: " + StairDirection);
+                displacement = this.Displacement * deltaSeconds;
+            }
+            Vector2 newPos = HitboxManager.MoveAndSlide(
+                CollisionBounds,
+                displacement,
+                HitboxLayer,
+                out bool hitX,
+                out bool hitY
+            );
+            this.GlobalPosition = (newPos - CollisionOffset);
+        }
+        else
+        {
+            // No collision system - just move freely
+            this.GlobalPosition += displacement;
+        }
     }
     #endregion
 }
