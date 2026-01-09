@@ -58,7 +58,6 @@ public partial class Player : GameObject
         if (IsOnStairs && StairYSort > 0f)
         {
             Sprite.BaseDrawLayer = StairYSort;
-            Console.WriteLine("Using stair Y-sort value: " + StairYSort);
         }
         else
         {
