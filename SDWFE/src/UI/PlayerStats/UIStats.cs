@@ -10,6 +10,7 @@ namespace SDWFE.UI.PlayerData;
 
 public class UIStats : UIContainer
 {
+    private Player _owner;
     private PlayerStats _stats;
 
     private UIHBoxContainer _mainHBox;
@@ -35,9 +36,10 @@ public class UIStats : UIContainer
 
     private int Scalefactor = 1;
 
-    public UIStats(PlayerStats stats)
+    public UIStats(Player owner)
     {
-        _stats = stats;
+        _owner = owner;
+        _stats = _owner.Stats;
         _stats.OnStatsChanged += UpdateStats;
 
         // Load Textures
@@ -131,7 +133,7 @@ public class UIStats : UIContainer
     }
     public void SetPlayerIndex()
     {
-        int index = MathHelper.Clamp(_stats._ownerIndex, 1, 2);
+        int index = MathHelper.Clamp(_owner.OwningClientId, 1, 2);
         switch (index)
         {
             case 1:

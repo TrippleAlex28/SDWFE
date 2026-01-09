@@ -22,7 +22,7 @@ public class ItemData
     public ItemType ItemType { get; set; } = ItemType.Item;
     
     public int MaxStackSize { get; set; } = 16;
-    public string IconPath { get; set; } = "SD_MedKitPlaceholder"; // TODO: Point to placeholder texture
+    public string IconPath { get; set; } = "Medkit";
     
     public string? UseActionId { get; set; }
 }

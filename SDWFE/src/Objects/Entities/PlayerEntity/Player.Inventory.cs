@@ -14,9 +14,9 @@ public partial class Player
         Inventory = new PlayerInventory();
         this.AddChild(Inventory);
 
-        Inventory.AddWeaponByName(ItemSetup.ASSAULT_RIFLE);
-        Inventory.AddItemByName(ItemSetup.HEALTH_POTION,
-            ItemSetup.ItemDataMap.TryGetValue(ItemSetup.HEALTH_POTION, out var data) ? data.MaxStackSize : 1);
+        Inventory.AddWeaponByName(ItemSetup.SHOTGUN);
+        Inventory.AddItemByName(ItemSetup.BANDAGE,
+            ItemSetup.ItemDataMap.TryGetValue(ItemSetup.BANDAGE, out var data) ? data.MaxStackSize : 1);
     }
 
     private void UpdateInventory()

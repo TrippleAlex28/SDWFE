@@ -2,11 +2,22 @@
 
 namespace SDWFE.Objects.Inventory.Item;
 
+public enum BulletType
+{
+    Generic,
+    Shotgun,
+    FireworkRocket,
+}
+
 public class WeaponData : ItemData
 {
     public float Damage { get; set; } = 10f;
     public float AttackSpeed { get; set; } = 1f; // Shots per second
-    public float Range { get; set; } = 100f;
+    public float Range { get; set; } = 500f;
+    public float Velocity { get; set; } = 250f;
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public BulletType BulletType { get; set; } = BulletType.Generic;
 
     public WeaponData()
     {
@@ -17,8 +28,8 @@ public class WeaponData : ItemData
 
 public class InventoryWeapon : InventoryItem
 {
-    [JsonIgnore] private ItemData? _weaponData = null;
-    [JsonIgnore] public ItemData WeaponData => _weaponData ??= ItemDatabase.Instance.GetWeaponData(Name);
+    [JsonIgnore] private WeaponData? _weaponData = null;
+    [JsonIgnore] public WeaponData WeaponData => _weaponData ??= ItemDatabase.Instance.GetWeaponData(Name);
     
     public InventoryWeapon(string name) : base(name, 1)
     {

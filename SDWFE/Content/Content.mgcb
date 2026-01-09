@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:Entities/Player/16x32 Idle v2-Sheet.png
 
+#begin Entities/Projectiles/GenericBullet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/Projectiles/GenericBullet.png
+
 #begin Fonts/Upheavel.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -81,7 +93,7 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Visitor.spritefont
 
-#begin Items/SD_MedKitPlaceholder.png
+#begin Items/Medkit.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -91,7 +103,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Items/SD_MedKitPlaceholder.png
+/build:Items/Medkit.png
+
+#begin Items/Pistol.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Items/Pistol.png
 
 #begin Tilemap/TM_Collision.png
 /importer:TextureImporter

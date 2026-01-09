@@ -19,6 +19,30 @@ public partial class Player : GameObject
     {
         this.ReplicatesOverNetwork = true;
         
+        RegisterProperty(
+            nameof(Stats.MaxHealth),
+            () => Stats.MaxHealth,
+            (v) => Stats.MaxHealth = v
+        );
+        
+        RegisterProperty(
+            nameof(Stats.CurrentHealth),
+            () => Stats.CurrentHealth,
+            (v) => Stats.CurrentHealth = v
+        );
+        
+        RegisterProperty(
+            nameof(Stats.MaxStamina),
+            () => Stats.MaxStamina,
+            (v) => Stats.MaxStamina = v
+        );
+        
+        RegisterProperty(
+            nameof(Stats.CurrentStamina),
+            () => Stats.CurrentStamina,
+            (v) => Stats.CurrentStamina = v
+        );
+        
         // Animated Sprite Setup
         Texture2D spriteSheet = ExtendedGame.AssetManager.LoadTexture("16x32 Idle v2-Sheet", "Entities/Player/");
         Sprite = new AnimatedSprite(spriteSheet, 16, 32)
@@ -37,15 +61,13 @@ public partial class Player : GameObject
     {
         base.EnterSelf();
         
-        ConstructStats();
-        
-        Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Red : Color.Blue;
+        Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Blue : Color.Red;
         
         // Only create UI for the locally owned player
         if (IsLocallyOwned())
         {
             GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIHotbar(Inventory));
-            GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIStats(Stats));
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIStats(this));
             GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIWeapons(Inventory));
         }
     }

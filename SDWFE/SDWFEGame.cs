@@ -21,14 +21,16 @@ public class SDWFEGame : ExtendedGame
 {
     public SDWFEGame()
     {
-        GAME_NAME = "Song Dynasty: Warrior of the Fallen Empire";
+        GAME_NAME = "Song Dynasty Warrior of the Fallen Empire";
         
         // --- NET OBJECTS SETUP ---
         NetObjectRegistry.Register<Player>((uint)NetObjects.Player);
+        // NetObjectRegistry.Register<GenericBullet>((uint)NetObjects.GenericBullet);
         
         // --- NET COMMANDS SETUP ---
         NetCommandRegistry.Register<WalkCommand>((uint)NetCommands.Move);
         NetCommandRegistry.Register<LeapCommand>((uint)NetCommands.Leap);
+        NetCommandRegistry.Register<UseCommand>((uint)NetCommands.Use);
         
         // --- SCENES SETUP ---
         SceneRegistry.Register<MainMenuScene>(MainMenuScene.KEY);
@@ -188,7 +190,6 @@ public class SDWFEGame : ExtendedGame
 
             #endregion
         }
-
         
         return commands;
     }

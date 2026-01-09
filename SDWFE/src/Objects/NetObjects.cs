@@ -6,4 +6,7 @@
 public enum NetObjects : uint
 {
     Player = 1,
-}
+    GenericBullet = 2,
+    ShotgunBullet = 3,
+    FireworkRocket = 4,
+} 

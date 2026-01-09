@@ -8,20 +8,11 @@ namespace SDWFE.Objects.Entities.PlayerEntity;
 
 public partial class Player
 {
-    public PlayerStats Stats;
-
-
-
-    private void ConstructStats()
-    {
-        Stats = new PlayerStats(this.OwningClientId);
-    }
+    public PlayerStats Stats = new PlayerStats();
 }
 
 public class PlayerStats
 {
-    public int _ownerIndex;
-
     // Set max values
     private float _maxHealth = 500f;
     public float MaxHealth
@@ -59,11 +50,6 @@ public class PlayerStats
     }
 
     public event Action? OnStatsChanged;
-
-    public PlayerStats(int ownerIndex)
-    {
-        _ownerIndex = ownerIndex;
-    }
 
     private void SetField<T>(ref T field, T value){
         if (EqualityComparer<T>.Default.Equals(field, value)) return;

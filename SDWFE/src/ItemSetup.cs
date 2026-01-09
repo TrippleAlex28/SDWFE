@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Engine;
+using Engine.Scene;
 using Microsoft.Xna.Framework;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
+using SDWFE.Objects.Projectiles.Bullets;
 
 namespace SDWFE;
 
@@ -10,11 +13,13 @@ public static class ItemSetup
 {
     public const string WOOD = "Wood";
     public const string IRON = "Iron";
-    public const string HEALTH_POTION = "Health Potion";
-    public const string SUPERIOR_HEALTH_POTION = "Superior Health Potion";
+    public const string BANDAGE = "Bandage";
+    public const string MEDKIT = "Medkit";
 
+    public const string PISTOL = "Pistol";
     public const string ASSAULT_RIFLE = "Assault Rifle";
     public const string SHOTGUN = "Shotgun";
+    public const string FIREWORK_LAUNCHER = "Firework Launcher";
 
     public const string ACTION_HEAL = "Heal";
     public const string ACTION_HEAL_SUPERIOR = "HealSuperior";
@@ -27,7 +32,7 @@ public static class ItemSetup
             {
                 Name = WOOD,
                 MaxStackSize = 64,
-                IconPath = "SD_MedKitPlaceholder",
+                IconPath = "Medkit",
             }
         },
         {
@@ -35,25 +40,37 @@ public static class ItemSetup
             {
                 Name = IRON,
                 MaxStackSize = 16,
-                IconPath = "SD_MedKitPlaceholder",
+                IconPath = "Medkit",
             }
         },
         {
-            HEALTH_POTION, new ItemData
+            BANDAGE, new ItemData
             {
-                Name = HEALTH_POTION,
+                Name = BANDAGE,
                 MaxStackSize = 8,
-                IconPath = "SD_MedKitPlaceholder",
+                IconPath = "Medkit",
                 UseActionId = ACTION_HEAL,
             }
         },
         {
-            SUPERIOR_HEALTH_POTION, new ItemData
+            MEDKIT, new ItemData
             {
-                Name = SUPERIOR_HEALTH_POTION,
+                Name = MEDKIT,
                 MaxStackSize = 4,
-                IconPath = "SD_MedKitPlaceholder",
+                IconPath = "Medkit",
                 UseActionId = ACTION_HEAL_SUPERIOR,
+            }
+        },
+        {
+            PISTOL, new WeaponData
+            {
+                Name = PISTOL,
+                Damage = 15f,
+                AttackSpeed = 5f,
+                Range = 250f,
+                Velocity = 200f,
+                IconPath = "Pistol",
+                UseActionId = ACTION_SHOOT,
             }
         },
         {
@@ -62,8 +79,9 @@ public static class ItemSetup
                 Name = ASSAULT_RIFLE,
                 Damage = 15f,
                 AttackSpeed = 5f,
-                Range = 80f,
-                IconPath = "SD_MedKitPlaceholder",
+                Range = 500f,
+                Velocity = 350f,
+                IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
             }
         },
@@ -73,8 +91,23 @@ public static class ItemSetup
                 Name = SHOTGUN,
                 Damage = 5f,
                 AttackSpeed = 1f,
-                Range = 20f,
-                IconPath = "SD_MedKitPlaceholder",
+                Range = 80f,
+                Velocity = 500f,
+                BulletType = BulletType.Shotgun,
+                IconPath = "Medkit",
+                UseActionId = ACTION_SHOOT,
+            }
+        },
+        {
+            FIREWORK_LAUNCHER, new WeaponData
+            {
+                Name = FIREWORK_LAUNCHER,
+                Damage = 5f,
+                AttackSpeed = 1f,
+                Range = 1000f,
+                Velocity = 100f,
+                BulletType = BulletType.FireworkRocket,
+                IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
             }
         },
@@ -93,7 +126,44 @@ public static class ItemSetup
         ItemActionRegistry.RegisterUse(ACTION_SHOOT, (player, data, direction) =>
         {
             var weaponData = data as WeaponData;
-            Console.WriteLine($"Shoot Player{player.OwningClientId}: {direction}");
+            
+            Scene scene = GameState.Instance.CurrentScene;
+            if (scene == null) return;
+            
+            switch (weaponData!.BulletType)
+            {
+                case BulletType.Generic:
+                    scene.AddObject(new GenericBullet(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player));
+                    break;
+                case BulletType.Shotgun:
+                    const int pelletCount = 12;
+                    const float angleSpread = 20f;
+                    float angleSpreadRad = MathHelper.ToRadians(angleSpread);
+                    float angleStep = angleSpreadRad / (pelletCount - 1);
+                    float startAngle = -angleSpreadRad / 2f;
+                    
+                    for (int i = 0; i < pelletCount; i++)
+                    {
+                        float jitter = MathF.Sin(i * 12.9898f) * 0.002f; // Deterministic jitter
+                        float angleOffset = startAngle + angleStep * i + jitter;
+                        Vector2 pelletDirection = Vector2.Rotate(direction, angleOffset);
+                        
+                        scene.AddObject(new ShotgunBullet(
+                            player.GlobalPosition + player.CameraOffset, 
+                            pelletDirection, 
+                            weaponData.Velocity, 
+                            weaponData.Range, 
+                            weaponData.Damage, 
+                            player
+                        ));
+                    }
+                    break;
+                case BulletType.FireworkRocket:
+                    scene.AddObject(new FireworkRocket(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player));
+                    break;
+                default:
+                    break;
+            }
         });
     }
 }

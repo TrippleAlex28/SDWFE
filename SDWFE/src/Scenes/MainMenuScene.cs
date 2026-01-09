@@ -37,7 +37,7 @@ public class MainMenuScene : Scene
 
         CreateMainMenuUI();
     }
-    
+
     #region Handlers
     
     private void OnPlayClicked()

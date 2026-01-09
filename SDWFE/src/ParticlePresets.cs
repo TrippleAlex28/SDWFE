@@ -16,6 +16,7 @@ public static class ParticlePresets
         .WithVelocityX(-10f, 10f)
         .WithRotationVelocity(-1f, 1f)
         .WithColorRange(Color.Yellow, Color.Red)
+        .WithConstantScale(0.1f)
         .WithScaleCurve(curve => curve
             .AddKey(0f, 0.5f)
             .AddKey(0.5f, 0.7f)

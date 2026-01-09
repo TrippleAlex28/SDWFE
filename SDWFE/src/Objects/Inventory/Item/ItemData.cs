@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SDWFE.Objects.Inventory.Item;
 
@@ -28,51 +29,41 @@ public class ItemDatabase
 
             // Load the database
             string json = File.ReadAllText(_databasePath);
+            
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
                 ReadCommentHandling = JsonCommentHandling.Skip,
             };
+            options.Converters.Add(new JsonStringEnumConverter());
 
-            // Deserialize a list of ItemData's from the database
-            var itemDataList = JsonSerializer.Deserialize<List<ItemData>>(json, options);
-            if (itemDataList == null)
+            var elements = JsonSerializer.Deserialize<List<JsonElement>>(json, options);
+            if (elements == null) throw new Exception("Item Database is Empty");
+            
+            _itemDataMap.Clear();
+
+            foreach (var el in elements)
             {
-                Console.WriteLine("ItemDatabase.LoadDatabase: Failed to deserialize item database.");
-                return false;
+                ItemType itemType = ItemType.Item;
+                if (el.TryGetProperty("ItemType", out var itemTypeEl))
+                {
+                    itemType = itemTypeEl.ValueKind switch
+                    {
+                        JsonValueKind.String => Enum.TryParse<ItemType>(itemTypeEl.GetString(), true, out var it)
+                            ? it
+                            : ItemType.Item,
+                        JsonValueKind.Number => (ItemType)itemTypeEl.GetInt32(), 
+                        _ => ItemType.Item,
+                    };
+                }
+
+                ItemData data = itemType == ItemType.Weapon
+                    ? el.Deserialize<WeaponData>(options)!
+                    : el.Deserialize<ItemData>(options)!;
+
+                _itemDataMap[data.Name] = data;
             }
             
-            // Load ItemData into map by item name
-            _itemDataMap.Clear();
-            foreach (var itemData in itemDataList)
-            {
-                // Convert to WeaponData if item type is weapon
-                if (itemData.ItemType == ItemType.Weapon && itemData is not WeaponData)
-                {
-                    var weaponData = new WeaponData
-                    {
-                        Name = itemData.Name,
-                        IconPath = itemData.IconPath,
-                        UseActionId = itemData.UseActionId
-                    };
-                    
-                    // Try to extract weapon properties if they exist
-                    var element = JsonSerializer.SerializeToElement(itemData);
-                    if (element.TryGetProperty("Damage", out var damage))
-                        weaponData.Damage = damage.GetSingle();
-                    if (element.TryGetProperty("AttackSpeed", out var attackSpeed))
-                        weaponData.AttackSpeed = attackSpeed.GetSingle();
-                    if (element.TryGetProperty("Range", out var range))
-                        weaponData.Range = range.GetSingle();
-
-                    _itemDataMap[itemData.Name] = weaponData;
-                }
-                else
-                {
-                    _itemDataMap[itemData.Name] = itemData;
-                }
-            }
-
             Console.WriteLine($"ItemDatabase.LoadDatabase: Successfully loaded {_itemDataMap.Count} items from the database");
             return true;
         }

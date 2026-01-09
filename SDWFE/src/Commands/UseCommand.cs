@@ -17,6 +17,11 @@ public class UseCommand : NetCommand
     public string ItemName { get; set; }
     public Vector2 Direction { get; set; }
 
+    public UseCommand()
+    {
+        
+    }
+    
     public UseCommand(string itemName, Vector2 direction)
     {
         ItemName = itemName;

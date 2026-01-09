@@ -5,7 +5,7 @@ namespace Engine.Particle;
 
 public class ParticleEmitter
 {
-    private ParticleEmitterConfig config;
+    public ParticleEmitterConfig Config { get; private set; }
     private Particle[] particles;
     private Texture2D texture;
     private Random random;
@@ -19,7 +19,7 @@ public class ParticleEmitter
     public ParticleEmitter(Texture2D texture, ParticleEmitterConfig config)
     {
         this.texture = texture;
-        this.config = config;
+        this.Config = config;
         this.particles = new Particle[config.MaxParticles];
         this.random = new Random();
 
@@ -35,14 +35,14 @@ public class ParticleEmitter
 
         age += deltaTime;
 
-        if (config.Duration > 0 && age >= config.Duration)
+        if (Config.Duration > 0 && age >= Config.Duration)
         {
             isEmitting = false;
         }
 
         if (isEmitting)
         {
-            emissionAccumulator += config.EmissionRate * deltaTime;
+            emissionAccumulator += Config.EmissionRate * deltaTime;
             int particlesToEmit = (int)emissionAccumulator;
             emissionAccumulator -= particlesToEmit;
 
@@ -76,24 +76,24 @@ public class ParticleEmitter
         ref Particle p = ref particles[index];
         p.IsActive = true;
         p.Age = 0f;
-        p.Lifetime = Lerp(config.LifetimeMin, config.LifetimeMax, (float)random.NextDouble());
+        p.Lifetime = Lerp(Config.LifetimeMin, Config.LifetimeMax, (float)random.NextDouble());
 
         float angle = (float)(random.NextDouble() * Math.PI * 2);
-        float distance = (float)random.NextDouble() * config.SpawnRadius;
-        p.Position = Position + config.SpawnOffset + new Vector2(
+        float distance = (float)random.NextDouble() * Config.SpawnRadius;
+        p.Position = Position + Config.SpawnOffset + new Vector2(
             (float)Math.Cos(angle) * distance,
             (float)Math.Sin(angle) * distance
         );
 
         p.Velocity = new Vector2(
-            Lerp(config.VelocityMin.X, config.VelocityMax.X, (float)random.NextDouble()),
-            Lerp(config.VelocityMin.Y, config.VelocityMax.Y, (float)random.NextDouble())
+            Lerp(Config.VelocityMin.X, Config.VelocityMax.X, (float)random.NextDouble()),
+            Lerp(Config.VelocityMin.Y, Config.VelocityMax.Y, (float)random.NextDouble())
         );
 
-        p.Rotation = Lerp(config.RotationMin, config.RotationMax, (float)random.NextDouble());
-        p.RotationVelocity = Lerp(config.RotationVelocityMin, config.RotationVelocityMax, (float)random.NextDouble());
+        p.Rotation = Lerp(Config.RotationMin, Config.RotationMax, (float)random.NextDouble());
+        p.RotationVelocity = Lerp(Config.RotationVelocityMin, Config.RotationVelocityMax, (float)random.NextDouble());
 
-        p.Color = config.StartColor;
+        p.Color = Config.StartColor;
         p.Scale = 1f;
     }
 
@@ -107,15 +107,15 @@ public class ParticleEmitter
             return;
         }
 
-        p.Velocity += config.Gravity * deltaTime;
+        p.Velocity += Config.Gravity * deltaTime;
         p.Position += p.Velocity * deltaTime;
         p.Rotation += p.RotationVelocity * deltaTime;
 
         float normalizedAge = p.NormalizedAge;
-        p.Scale = config.ScaleOverLifetime.Evaluate(normalizedAge);
-        float alpha = config.AlphaOverLifetime.Evaluate(normalizedAge);
+        p.Scale = Config.ScaleOverLifetime.Evaluate(normalizedAge);
+        float alpha = Config.AlphaOverLifetime.Evaluate(normalizedAge);
 
-        p.Color = Color.Lerp(config.StartColor, config.EndColor, normalizedAge);
+        p.Color = Color.Lerp(Config.StartColor, Config.EndColor, normalizedAge);
         p.Color *= alpha;
     }
 
