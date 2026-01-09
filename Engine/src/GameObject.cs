@@ -99,10 +99,6 @@ public class GameObject : NetObject
     /// </summary>
     public bool IsOnStairs { get; set; } = false;
     
-    /// <summary>
-    /// Reference to the stair object this entity is currently on (if any).
-    /// </summary>
-    public object? CurrentStairs { get; set; } = null;
     
     /// <summary>
     /// The direction the current stairs are oriented (normalized).
@@ -110,33 +106,11 @@ public class GameObject : NetObject
     /// </summary>
     public Vector2 StairDirection { get; set; } = Vector2.Zero;
     
-    /// This will maybe be implemented later for multi-story buildings.
     /// <summary>
-    /// The vertical elevation/height of this object (for multi-story support).
-    /// Used for Y-sorting and stair climbing.
+    /// The elevation level of this object.
+    /// Used to now on which floor the object is. (0 = ground floor, 1 = first floor, etc.)
     /// </summary>
-    public float Elevation { get; set; } = 0f;
-    
-    /// <summary>
-    /// Target elevation for smooth stair climbing.
-    /// </summary>
-    public float TargetElevation { get; set; } = 0f;
-    
-    /// <summary>
-    /// Which floor/story this object is on.
-    /// </summary>
-    public int FloorIndex { get; set; } = 0;
-    
-    /// <summary>
-    /// Constrains direction to stair direction by projecting input onto stair axis.
-    /// </summary>
-    public void ConstrainDirectionToStairs()
-    {
-        if (StairDirection == Vector2.Zero) return;
-        
-        Direction = StairDirection;
-        
-    }
+    public int ElevationLevel { get; set; } = 0;
     
     #endregion
 
@@ -409,15 +383,16 @@ public class GameObject : NetObject
     {
         Vector2 displacement = this.Displacement * deltaSeconds;
         
+        // When on stairs, bypass collision and move directly along stair direction
+        if (IsOnStairs && StairDirection.LengthSquared() > 0f)
+        {
+            this.GlobalPosition += displacement;
+            return;
+        }
 
         // If HitboxManager is set, use physics-based collision
         if (HitboxManager != null)
         {
-            if (IsOnStairs){
-                ConstrainDirectionToStairs();
-                Console.WriteLine("stair direction: " + StairDirection);
-                displacement = this.Displacement * deltaSeconds;
-            }
             Vector2 newPos = HitboxManager.MoveAndSlide(
                 CollisionBounds,
                 displacement,

@@ -42,8 +42,7 @@ public class GameplayScene : Scene
         base.Enter();
         map = new Tilemap("TestMap.tmj");
         
-        var stairTrigger = _hitboxManager.AddTrigger(map.Stairs[0].GroundStepCollider, detectsLayers: HitboxLayer.All);
-        map.SetStairTriggers(_hitboxManager);
+        map.SetStairHitboxes(_hitboxManager);
         SetUpHitboxes();
         this.AddObject(map);
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);
@@ -84,10 +83,6 @@ public class GameplayScene : Scene
 
                 _hitboxManager.UpdateTriggersForObject(player, playerHitbox, HitboxLayer.All);
 
-                foreach (var stair in map.Stairs)
-                {
-                    stair.CheckIfPlayerColliderIntersectsRailing(playerHitbox);
-                }
             }
         }
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))

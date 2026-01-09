@@ -33,7 +33,30 @@ public class WalkCommand : NetCommand
         var obj = scene.GetPawn(clientId);
         if (obj == null) return;
         
-        obj.Direction = this.Direction;
+        // This is for the stairs logic, if you don't like it, change it back
+        if (obj.IsOnStairs && obj.StairDirection.LengthSquared() > 0f && this.Direction.LengthSquared() > 0f)
+        {
+            // Dot product to determine up vs down the stairs
+            float dot = Vector2.Dot(this.Direction, obj.StairDirection);
+            
+            if (Math.Abs(dot) > 0.1f)
+            {
+                // Directly assign the stair direction vector (sign based on dot)
+                Vector2 stairDir = obj.StairDirection;
+                if (dot < 0) stairDir = new Vector2(-stairDir.X, -stairDir.Y);
+                
+                // Bypass the normalizing setter by setting the backing field value directly
+                obj.Direction = stairDir;
+            }
+            else
+            {
+                obj.Direction = Vector2.Zero;
+            }
+        }
+        else
+        {
+            obj.Direction = this.Direction;
+        }
     }
 
     public override void Serialize(BinaryWriter bw)

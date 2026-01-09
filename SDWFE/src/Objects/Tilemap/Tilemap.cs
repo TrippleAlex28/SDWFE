@@ -64,36 +64,21 @@ public class Tilemap : GameObject
                 continue;
 
             Stair stair = new(
-                new Vector2(obj.x, obj.y),
-                0,
-                7,
-                48,
-                4,
-                8
+                new Vector2(obj.x, obj.y)
             );
 
             Stairs.Add(stair);
         }
     }
-    public void SetStairTriggers(HitboxManager hitboxManager)
+    public void SetStairHitboxes(HitboxManager hitboxManager)
     {
         foreach (var stair in Stairs)
         {
-            stair.SetStairTriggers(hitboxManager);
+            stair.SetHitboxes(hitboxManager);
         }
-        SetStairStaticHitboxes(hitboxManager);
     }
 
-    private void SetStairStaticHitboxes(HitboxManager hitboxManager)
-    {
-        foreach (var stair in Stairs)
-        {
-            foreach (var col in stair.RailingColliders)
-            {
-                hitboxManager.AddStatic(col, layer:HitboxLayer.Environment, blocksLayers:HitboxLayer.All);
-            }
-        }
-    }
+
     private void ResolveObjectHitboxes(Dictionary<int, TiledObject> objectsById)
     {
         foreach (var obj in objectsById.Values)
