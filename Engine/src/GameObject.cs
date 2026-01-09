@@ -112,6 +112,12 @@ public class GameObject : NetObject
     /// </summary>
     public int ElevationLevel { get; set; } = 0;
     
+    /// <summary>
+    /// The Y-sort value to use when on stairs. Set by the stair trigger.
+    /// When IsOnStairs is true, use this value instead of position-based Y-sorting.
+    /// </summary>
+    public float StairYSort { get; set; } = 0f;
+    
     #endregion
 
     #region Collision

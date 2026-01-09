@@ -82,7 +82,6 @@ public class GameplayScene : Scene
                 Rectangle playerHitbox = new Rectangle((int)player.GlobalPosition.X, (int)player.GlobalPosition.Y + 24, 16, 8);
 
                 _hitboxManager.UpdateTriggersForObject(player, playerHitbox, HitboxLayer.All);
-
             }
         }
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))

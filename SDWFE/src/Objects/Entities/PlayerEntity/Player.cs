@@ -53,7 +53,18 @@ public partial class Player : GameObject
     protected override void UpdateSelf(GameTime gameTime)
     {
         base.UpdateSelf(gameTime);
-        Sprite.BaseDrawLayer = (float)(0.8f / ExtendedGame.DrawResolution.Y) * (this.GlobalPosition.Y + 24); // 16 is half the height of the sprite
+        
+        // Use stair-based Y-sort when on stairs, otherwise use position-based
+        if (IsOnStairs && StairYSort > 0f)
+        {
+            Sprite.BaseDrawLayer = StairYSort;
+            Console.WriteLine("Using stair Y-sort value: " + StairYSort);
+        }
+        else
+        {
+            Sprite.BaseDrawLayer = (float)(0.8f / 1000f) * (this.GlobalPosition.Y + 24);
+        }
+        
         UpdateInventory();
         UpdateMovement(gameTime);
     }

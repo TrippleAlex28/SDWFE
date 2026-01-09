@@ -15,8 +15,28 @@ public class Tilemap : GameObject
     public List<RoomDoor> Doors => _doors;
     public List<Stair> Stairs = new();
 
-    private HashSet<int> _topWallId = new HashSet<int>() {1, 22, 23, 24, 25, 26, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 87, 88};
-    private HashSet<int> _ySortables = new HashSet<int>() {2, 3, 4, 5, 85, 86, 89, 90, 91};
+    private HashSet<int> _topWallId = new HashSet<int>() {1, 22, 23, 24, 25, 26, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 87, 88, 135, 136, 137, 138, 139, 140, 141, 142};
+    private HashSet<int> _ySortables = new HashSet<int>() {2, 3, 4, 5, 85, 86, 89, 90, 91, 156, 157, 158, 159, 160, 161, 162, 163};
+    
+    // Stair tile IDs - background tiles that should draw BEHIND player when on stairs
+    private HashSet<int> _stairBackgroundIds = new HashSet<int>() 
+    { 
+        219, 220, 221, 222, 223, 224, 225, 226,
+        198, 199, 200, 201, 202, 203, 204, 205,
+        177, 178, 179, 180, 181, 182, 183, 184,
+        156, 157, 158, 159, 160, 161, 162, 163,
+        135, 136, 137, 138, 139, 140, 141, 142,
+    };
+    // Stair front railing tile IDs - should ALWAYS draw in front of player when on stairs
+    private HashSet<int> _stairForegroundIds = new HashSet<int>()
+    {
+        9, 10, 11, 12, 13, 30, 31, 32, 33, 34
+    };
+    
+    private HashSet<int> _stairBackRailings = new HashSet<int>()
+    {
+        165, 166, 167, 186, 187, 188, 207, 208, 209, 228, 229, 230
+    };
     private Dictionary<string, Dictionary<Vector2, TileData>> _layers = new();
     private List<RoomDoor> _doors = new();
     private int tileSize = 16;
@@ -95,8 +115,8 @@ public class Tilemap : GameObject
                     continue;
 
                 prop.Hitbox = new Rectangle(
-                    target.x,
-                    target.y,
+                    (int)target.x,
+                    (int)target.y,
                     target.width,
                     target.height
                 );
@@ -153,8 +173,13 @@ public class Tilemap : GameObject
     }
     private void BuildTileSprites()
     {
+        // Build all sprites and store them by layer and tile position
+        Dictionary<string, Dictionary<Vector2, Sprite>> spritesByLayerAndTilePos = new();
+        
         foreach (var layer in _layers)
         {
+            spritesByLayerAndTilePos[layer.Key] = new Dictionary<Vector2, Sprite>();
+            
             foreach (var tile in layer.Value)
             {
                 Rectangle dest = getDestRect(tile.Key);
@@ -169,13 +194,72 @@ public class Tilemap : GameObject
                     GlobalPosition = new Vector2(dest.X, dest.Y),
                     SourceRectangle = getSourceRect(tile.Value),
                     BaseDrawLayer = drawLayer,
-                    OriginType = OriginType.TopLeft
+                    OriginType = OriginType.TopLeft,
+                    YSortOrigin = new Vector2(0, tile.Value.YSortPoint)
                 };
 
+                spritesByLayerAndTilePos[layer.Key][tile.Key] = sprite;
                 AddChild(sprite);
             }
         }
+        
+        // Now configure stair sprites based on their tile region
+        ConfigureStairSprites(spritesByLayerAndTilePos);
     }
+    
+    /// <summary>
+    /// Configures stair tile sprites with fixed Y-sort values based on their stair region.
+    /// </summary>
+    private void ConfigureStairSprites(Dictionary<string, Dictionary<Vector2, Sprite>> spritesByLayerAndTilePos)
+    {
+        foreach (var stair in Stairs)
+        {
+            Rectangle tileRegion = stair.GetTileRegion();
+            float stairYSortBase = stair.GetStairYSortBase();
+            
+            // Iterate through all tiles in the stair region
+            for (int tx = tileRegion.X; tx < tileRegion.X + tileRegion.Width; tx++)
+            {
+                for (int ty = tileRegion.Y; ty < tileRegion.Y + tileRegion.Height; ty++)
+                {
+                    Vector2 tilePos = new Vector2(tx, ty);
+                    
+                    // Check all layers for tiles at this position
+                    foreach (var layerName in _layers.Keys)
+                    {
+                        if (!_layers[layerName].TryGetValue(tilePos, out TileData tileData))
+                            continue;
+                        
+                        if (!spritesByLayerAndTilePos[layerName].TryGetValue(tilePos, out Sprite? sprite))
+                            continue;
+                        
+                        int tileIndex = tileData.Index;
+                        
+                        if (_stairForegroundIds.Contains(tileIndex))
+                        {
+                            // Front railing - draws in front of player
+                            sprite.BaseDrawLayer = stairYSortBase - Stair.FRONT_RAILING_OFFSET;
+                            stair.FrontRailingSprites.Add(sprite);
+                            Console.WriteLine("Added front railing sprite at ysort " + sprite.BaseDrawLayer);
+                        }
+                        else if (_stairBackRailings.Contains(tileIndex))
+                        {
+                            // Check if it's in the top row (back railing) or main stair area
+                            sprite.BaseDrawLayer = stairYSortBase - Stair.BACK_RAILING_OFFSET;
+                            stair.BackRailingSprites.Add(sprite);
+                        }
+                        else if (_stairBackgroundIds.Contains(tileIndex))
+                        {
+                            sprite.BaseDrawLayer = stairYSortBase - Stair.STAIR_LAYER_OFFSET;
+                            stair.StairSprites.Add(sprite);
+                        
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     private void AddDoorsToScene()
     {
         foreach (RoomDoor door in _doors)

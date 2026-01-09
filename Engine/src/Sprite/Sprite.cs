@@ -32,6 +32,12 @@ public class Sprite : GameObject
     /// It is set to top left by default (as you would expect from MonoGame).
     /// </summary>
     public OriginType OriginType { get; set; } = OriginType.TopLeft;
+
+    /// <summary>
+    /// The point used for Y-sorting.
+    /// </summary>
+    public Vector2 YSortOrigin { get; set; } = Vector2.Zero;
+
     /// <summary>
     /// How much the sprite is rotated. Monogame uses radians for rotation.
     /// Modulo (2 PI) is applied on a provided value to ensure that values
