@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities;
 using SDWFE.Objects.Entities.PlayerEntity;
+using SDWFE.Objects.Tilemap;
 
 namespace SDWFE.Scenes;
 
@@ -42,7 +43,7 @@ public class GameplayScene : Scene
         base.Enter();
         map = new Tilemap("level_hub.tmj");
         
-        map.SetHitboxes(_hitboxManager);
+        map.RegisterHitboxes(_hitboxManager);
         SetUpHitboxes();
         this.AddObject(map);
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);

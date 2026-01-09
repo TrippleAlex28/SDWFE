@@ -93,9 +93,9 @@ public class FollowCamera
     /// <returns></returns>
     public Matrix GetTransformMatrix()
     {
-        // Get and snap camera position
+        // Get and snap camera position to pixel-perfect rendering
         Vector2 camPos = _position + _shakeOffset;
-        // camPos = new Vector2(MathF.Round(camPos.X), MathF.Round(camPos.Y)); // snapping currently makes the camera tweak, I'm suspecting because of the change from Vector2 tracking coordinates to a Point position 
+        camPos = new Vector2(MathF.Round(camPos.X), MathF.Round(camPos.Y)); // Snap to pixel grid to prevent tilemap jittering
         
         var origin = new Vector2(_viewport.Width / 2f, _viewport.Height / 2f);
 

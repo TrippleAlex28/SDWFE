@@ -5,254 +5,234 @@ using Engine.Hitbox;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
 
+namespace SDWFE.Objects.Tilemap;
+
+public enum StairFacing
+{
+    Right = 0,
+    Left = 1
+}
+
 public class Stair : GameObject
 {
-    public List<Rectangle> StaticColliders = new();
-
-    public TriggerHitbox GroundStepEnterCollider;
-    public TriggerHitbox TopStepEnterCollider;
-    public TriggerHitbox GroundStepExitCollider;
-    public TriggerHitbox TopStepExitCollider;
-
-    private Vector2 _stairDirection;
-    private int COLLIDEROFFSET = 8;
-    private int STATICCOLLIDERSIZE = 4;
-    private int EXITSAFEGUARDSIZE = 100;
-
-    // Floors
-    public int _beginFloor = 0;
-    public int _endFloor = 1;
-
-    // Property
-    public int _direction = 0; // 0 = right, 1 = left
-    public int _stepWidth = 8;
-    public int _stepLength = 48;
-    public int _stepHeight = 4;
-    public int _numberOfSteps = 8;
+    #region Layer Offsets (for Y-sorting)
     
-    // Tile region properties (in tiles, not pixels)
-    public int TileWidth = 4;  // 4 tiles wide
-    public int TileHeight = 6; // 5 tiles high (6 including top railing)
-    public int TileSize = 16;  // 16 pixels per tile
+    public const float STAIR_LAYER_OFFSET = 0.004f;
+    public const float BACK_RAILING_LAYER_OFFSET = 0.003f;
+    public const float PLAYER_LAYER_OFFSET = 0.002f;
+    public const float FRONT_RAILING_LAYER_OFFSET = 0.001f;
     
-    // Y-Sort layer values (relative to stair point Y)
-    public const float STAIR_LAYER_OFFSET = 0.004f;       
-    public const float BACK_RAILING_OFFSET = 0.003f;   
-    public const float PLAYER_ON_STAIR_OFFSET = 0.002f; 
-    public const float FRONT_RAILING_OFFSET = 0.001f;  
+    #endregion
+
+    #region Step Configuration
     
-    // Sprites in this stair's region
-    public List<Sprite> StairSprites = new();
-    public List<Sprite> BackRailingSprites = new();
-    public List<Sprite> FrontRailingSprites = new();
+    private const int STEP_WIDTH = 8;
+    private const int STEP_LENGTH = 48;
+    private const int STEP_HEIGHT = 4;
+    private const int STEP_COUNT = 8;
+    private const int TILE_SIZE = 16;
+    
+    private const int TRIGGER_OFFSET = 8;
+    private const int EXIT_SAFEGUARD_SIZE = 100;
+    
+    private const int TILE_WIDTH = 4;
+    private const int TILE_HEIGHT = 6;
+    
+    #endregion
 
-    /// <summary>
-    /// Creates a stair object with colliders for ground and when walking up from below.
-    /// </summary>
-    /// <param name="stepWidth">The width of each step in the stair in pixels</param>
-    /// <param name="stepHeight">The height of each step in the stair in pixels</param>
-    /// <param name="numberOfSteps">The total number of steps in the stair</param>
-    /// <param name="direction">The direction the stair is facing (0 for right, 1 for left)</param>
-    /// <param name="globalPosition">The global position of the stair in the game world</param>
-    public Stair(Vector2 globalPosition, int direction)
+    #region Public Properties
+    
+    public new StairFacing Direction { get; }
+    public int BottomFloor { get; set; } = 0;
+    public int TopFloor { get; set; } = 1;
+    
+    public List<Sprite> StairSprites { get; } = new();
+    public List<Sprite> BackRailingSprites { get; } = new();
+    public List<Sprite> FrontRailingSprites { get; } = new();
+    
+    #endregion
+
+    #region Private Fields
+    
+    private readonly Vector2 _movementDirection;
+    
+    private TriggerHitbox _bottomEnterTrigger = null!;
+    private TriggerHitbox _bottomExitTrigger = null!;
+    private TriggerHitbox _topEnterTrigger = null!;
+    private TriggerHitbox _topExitTrigger = null!;
+    
+    #endregion
+
+    #region Constructor
+    
+    public Stair(Vector2 position, StairFacing direction)
     {
-        _direction = direction;
-        // Direction = 0 - Right
-        float horizontalComponent = _stepWidth * _numberOfSteps;
-        float verticalComponent = -_stepHeight * _numberOfSteps;
-
-        // Direction = 1 - Left
-        if (_direction == 1)
-        {
-            horizontalComponent = -horizontalComponent;
-        }
+        GlobalPosition = position;
+        Direction = direction;
+        _movementDirection = CalculateMovementDirection();
         
-        _stairDirection = new Vector2(horizontalComponent, verticalComponent);
-        _stairDirection.Normalize();
-        
-        this.GlobalPosition = globalPosition;
-
-        InitializeTriggerHitboxes();
-        
+        CreateTriggers();
     }
-    private void InitializeTriggerHitboxes()
+    
+    #endregion
+
+    #region Public Methods
+    
+    public void RegisterHitboxes(HitboxManager hitboxManager)
     {
-
-        Rectangle baseGroundColl = new Rectangle(
-            (int)GlobalPosition.X,
-            (int)GlobalPosition.Y - _stepLength - _stepHeight + COLLIDEROFFSET / 2,
-            _stepWidth,
-            _stepLength - COLLIDEROFFSET
-        );
-        if (_direction == 1)
-        {
-            baseGroundColl.X = (int)GlobalPosition.X - _stepWidth;
-        }
-        GroundStepEnterCollider = new TriggerHitbox(
-            baseGroundColl
-        );
-        GroundStepEnterCollider.DetectsLayers = HitboxLayer.All;
-
-        GroundStepExitCollider = new TriggerHitbox(
-            baseGroundColl.X,
-            baseGroundColl.Y - (EXITSAFEGUARDSIZE / 2),
-            baseGroundColl.Width,
-            baseGroundColl.Height + EXITSAFEGUARDSIZE
-        );
-
-        // Top step colliders
-        Rectangle baseTopColl = new Rectangle(
-            (int)GlobalPosition.X + (_numberOfSteps - 1) * _stepWidth,
-            (int)GlobalPosition.Y - _stepLength - _numberOfSteps * _stepHeight + COLLIDEROFFSET / 2,
-            _stepWidth,
-            _stepLength - COLLIDEROFFSET
-        );
-        if (_direction == 1)
-        {
-            baseTopColl.X = (int)GlobalPosition.X - _numberOfSteps * _stepWidth;
-        }
-        TopStepEnterCollider = new TriggerHitbox(
-            baseTopColl
-        );
-        TopStepEnterCollider.DetectsLayers = HitboxLayer.All;
-
-        TopStepExitCollider = new TriggerHitbox(
-            baseTopColl.X,
-            baseTopColl.Y - (EXITSAFEGUARDSIZE / 2),
-            baseTopColl.Width,
-            baseTopColl.Height + EXITSAFEGUARDSIZE
-        );
-    }
-    public void SetHitboxes(HitboxManager hitboxManager)
-    {
+        hitboxManager.AddTrigger(_bottomEnterTrigger);
+        hitboxManager.AddTrigger(_bottomExitTrigger);
+        hitboxManager.AddTrigger(_topEnterTrigger);
+        hitboxManager.AddTrigger(_topExitTrigger);
         
-        SetStaticColliders(hitboxManager);
-        SetStairTriggers(hitboxManager);
-        hitboxManager.AddTrigger(GroundStepEnterCollider);
-        hitboxManager.AddTrigger(GroundStepExitCollider);
-        hitboxManager.AddTrigger(TopStepEnterCollider);
-        hitboxManager.AddTrigger(TopStepExitCollider);
+        SetupTriggerCallbacks();
     }
-    public void SetStaticColliders(HitboxManager hitboxManager)
+
+    public Rectangle GetTileRegion()
     {
-        foreach (var collider in StaticColliders)
-        {
-            hitboxManager.AddStatic(collider, HitboxLayer.Environment, HitboxLayer.All);
-        }
+        int tileX = (int)(GlobalPosition.X / TILE_SIZE);
+        int tileY = (int)(GlobalPosition.Y / TILE_SIZE);
+
+        return Direction == StairFacing.Right
+            ? new Rectangle(tileX, tileY - TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT + 1)
+            : new Rectangle(tileX - TILE_WIDTH, tileY - TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT + 1);
     }
-    public void SetStairTriggers(HitboxManager hitboxManager)
+
+    public float GetYSortBase()
+    {
+        return 0.8f / 1000f * (GlobalPosition.Y - STEP_HEIGHT);
+    }
+
+    public float GetPlayerYSort()
+    {
+        return GetYSortBase() - PLAYER_LAYER_OFFSET;
+    }
+    
+    #endregion
+
+    #region Trigger Setup
+    
+    private Vector2 CalculateMovementDirection()
+    {
+        float horizontal = STEP_WIDTH * STEP_COUNT;
+        float vertical = -STEP_HEIGHT * STEP_COUNT;
+
+        if (Direction == StairFacing.Left)
+            horizontal = -horizontal;
+
+        var direction = new Vector2(horizontal, vertical);
+        direction.Normalize();
+        return direction;
+    }
+
+    private void CreateTriggers()
+    {
+        CreateBottomTriggers();
+        CreateTopTriggers();
+    }
+
+    private void CreateBottomTriggers()
+    {
+        int x = (int)GlobalPosition.X;
+        int y = (int)GlobalPosition.Y - STEP_LENGTH - STEP_HEIGHT + TRIGGER_OFFSET / 2;
+        int height = STEP_LENGTH - TRIGGER_OFFSET;
+
+        if (Direction == StairFacing.Left)
+            x -= STEP_WIDTH;
+
+        var enterBounds = new Rectangle(x, y, STEP_WIDTH, height);
+        _bottomEnterTrigger = new TriggerHitbox(enterBounds) { DetectsLayers = HitboxLayer.All };
+
+        _bottomExitTrigger = new TriggerHitbox(
+            x,
+            y - EXIT_SAFEGUARD_SIZE / 2,
+            STEP_WIDTH,
+            height + EXIT_SAFEGUARD_SIZE
+        );
+    }
+
+    private void CreateTopTriggers()
+    {
+        int x = (int)GlobalPosition.X + (STEP_COUNT - 1) * STEP_WIDTH;
+        int y = (int)GlobalPosition.Y - STEP_LENGTH - STEP_COUNT * STEP_HEIGHT + TRIGGER_OFFSET / 2;
+        int height = STEP_LENGTH - TRIGGER_OFFSET;
+
+        if (Direction == StairFacing.Left)
+            x = (int)GlobalPosition.X - STEP_COUNT * STEP_WIDTH;
+
+        var enterBounds = new Rectangle(x, y, STEP_WIDTH, height);
+        _topEnterTrigger = new TriggerHitbox(enterBounds) { DetectsLayers = HitboxLayer.All };
+
+        _topExitTrigger = new TriggerHitbox(
+            x,
+            y - EXIT_SAFEGUARD_SIZE / 2,
+            STEP_WIDTH,
+            height + EXIT_SAFEGUARD_SIZE
+        );
+    }
+
+    private void SetupTriggerCallbacks()
     {
         float playerYSort = GetPlayerYSort();
 
-        GroundStepEnterCollider.OnEnter += (trigger, obj, side) => {
-            
-            if (obj is GameObject entity)
-            {
-                if (entity.ElevationLevel != _beginFloor) return;
-
-                entity.IsOnStairs = true;
-                entity.StairDirection = _stairDirection;
-                entity.ElevationLevel = _beginFloor;
-                entity.StairYSort = playerYSort;
-                Console.WriteLine("Player entered stair ground step collider");
-            }
-        };
-        
-        GroundStepExitCollider.OnExit += (trigger, obj, side) => {
-            if (obj is GameObject entity)
-            {
-                if (!entity.IsOnStairs) return;
-
-                // Only exit stairs if leaving through the left side (bottom of stairs)
-                if ((side & TriggerSide.Left) != 0 && _direction == 0 ||
-                    (side & TriggerSide.Right) != 0 && _direction == 1)
-                {
-                    entity.IsOnStairs = false;
-                    entity.StairDirection = Vector2.Zero;
-                    entity.ElevationLevel = _beginFloor;
-                    entity.StairYSort = 0f;
-                    Console.WriteLine("Player exited stairs through the bottom!");
-                }
-            }
-        };
-
-        TopStepEnterCollider.OnEnter += (trigger, obj, side) => {
-            if (obj is GameObject entity)
-            {
-                if (entity.ElevationLevel != _endFloor) return;
-
-                entity.IsOnStairs = true;
-                entity.StairDirection = _stairDirection;
-                entity.ElevationLevel = _endFloor;
-                entity.StairYSort = playerYSort;
-                Console.WriteLine("Player entered stair top step collider");
-            }
-        };
-
-        TopStepExitCollider.OnExit += (trigger, obj, side) => {
-            if (obj is GameObject entity)
-            {
-                if (!entity.IsOnStairs) return;
-                // Only exit stairs if leaving through the right side (top of stairs)
-                if ((side & TriggerSide.Right) != 0 && _direction == 0 ||
-                    (side & TriggerSide.Left) != 0 && _direction == 1)
-                {
-                    entity.IsOnStairs = false;
-                    entity.StairDirection = Vector2.Zero;
-                    entity.ElevationLevel = _endFloor;
-                    entity.StairYSort = 0f;
-                    Console.WriteLine("Player exited stairs through the top!");
-                }
-            }
-        };
-    }
-    protected override void UpdateSelf(GameTime gameTime)
-    {
-        base.UpdateSelf(gameTime);
-    }
-    
-    /// <summary>
-    /// Gets the tile region bounds for this stair (in tile coordinates)
-    /// </summary>
-    public Rectangle GetTileRegion()
-    {
-        int tileX = (int)(GlobalPosition.X / TileSize);
-        int tileY = (int)(GlobalPosition.Y / TileSize);
-        
-        // Direction 0 = right (tiles go right from point)
-        // Direction 1 = left (tiles go left from point)
-        if (_direction == 0)
+        // Bottom enter
+        _bottomEnterTrigger.OnEnter += (trigger, obj, side) =>
         {
-            return new Rectangle(tileX, tileY - TileHeight, TileWidth, TileHeight + 1); // +1 for top railing row
-        }
-        else
-        {
-            return new Rectangle(tileX - TileWidth, tileY - TileHeight, TileWidth, TileHeight + 1);
-        }
-    }
-    
-    /// <summary>
-    /// Checks if a tile grid position is within this stair's region
-    /// </summary>
-    public bool ContainsTile(int tileX, int tileY)
-    {
-        return GetTileRegion().Contains(tileX, tileY);
-    }
-    
-    /// <summary>
-    /// Gets the base Y-sort value for this stair (based on stair point position)
-    /// </summary>
-    public float GetStairYSortBase()
-    {
-        return 0.8f / 1000f * (GlobalPosition.Y - _stepHeight);
-    }
-    
-    /// <summary>
-    /// Gets the Y-sort layer for the player when on this stair
-    /// </summary>
-    public float GetPlayerYSort()
-    {
-        return GetStairYSortBase() - PLAYER_ON_STAIR_OFFSET;
-    }
+            if (obj is not GameObject entity || entity.ElevationLevel != BottomFloor)
+                return;
 
+            entity.IsOnStairs = true;
+            entity.StairDirection = _movementDirection;
+            entity.StairYSort = playerYSort;
+        };
+
+        // Bottom exit
+        _bottomExitTrigger.OnExit += (trigger, obj, side) =>
+        {
+            if (obj is not GameObject entity || !entity.IsOnStairs)
+                return;
+
+            bool exitingBottom = (Direction == StairFacing.Right && (side & TriggerSide.Left) != 0) ||
+                                 (Direction == StairFacing.Left && (side & TriggerSide.Right) != 0);
+
+            if (exitingBottom)
+            {
+                entity.IsOnStairs = false;
+                entity.StairDirection = Vector2.Zero;
+                entity.ElevationLevel = BottomFloor;
+                entity.StairYSort = 0f;
+            }
+        };
+
+        // Top enter
+        _topEnterTrigger.OnEnter += (trigger, obj, side) =>
+        {
+            if (obj is not GameObject entity || entity.ElevationLevel != TopFloor)
+                return;
+
+            entity.IsOnStairs = true;
+            entity.StairDirection = _movementDirection;
+            entity.StairYSort = playerYSort;
+        };
+
+        // Top exit
+        _topExitTrigger.OnExit += (trigger, obj, side) =>
+        {
+            if (obj is not GameObject entity || !entity.IsOnStairs)
+                return;
+
+            bool exitingTop = (Direction == StairFacing.Right && (side & TriggerSide.Right) != 0) ||
+                              (Direction == StairFacing.Left && (side & TriggerSide.Left) != 0);
+
+            if (exitingTop)
+            {
+                entity.IsOnStairs = false;
+                entity.StairDirection = Vector2.Zero;
+                entity.ElevationLevel = TopFloor;
+                entity.StairYSort = 0f;
+            }
+        };
+    }
+    
+    #endregion
 }
