@@ -49,9 +49,8 @@ public class MainMenuScene : Scene
 
     private void OnHostClicked()
     {
-        Console.WriteLine("A");
         if (_isLoading) return;
-        Console.WriteLine("B");
+        
         // Create multiplayer host session
         _isLoading = true;
         GameState.Instance.SwitchSessionAndScene(SessionType.MultiplayerHost, GameplayScene.KEY);
