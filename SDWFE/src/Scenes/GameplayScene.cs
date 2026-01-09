@@ -49,16 +49,16 @@ public class GameplayScene : Scene
     }
     private void SetUpHitboxes()
     {
-        var session = GameState.Instance.SessionManager.CurrentSession;
-        if (session == null) return;
-        
-        var playerObject = GetPawn(session.LocalClientId);
-        if (playerObject is Player player)
+        // Set up hitboxes for ALL players, not just the local one
+        foreach (var playerObject in GetAllPawns())
         {
-            player.HitboxManager = _hitboxManager;
-            player.HitboxLayer = HitboxLayer.Player;
-            player.CollisionSize = new Vector2(16, 8);
-            player.CollisionOffset = new Vector2(0, 24);
+            if (playerObject is Player player && player.HitboxManager == null)
+            {
+                player.HitboxManager = _hitboxManager;
+                player.HitboxLayer = HitboxLayer.Player;
+                player.CollisionSize = new Vector2(16, 8);
+                player.CollisionOffset = new Vector2(0, 24);
+            }
         }
     }
 
@@ -67,23 +67,25 @@ public class GameplayScene : Scene
         base.Update(gameTime);
 
         _bulletTrailSystem.Update(gameTime.DeltaSeconds());
-        // Access the local player
-        var session = GameState.Instance.SessionManager.CurrentSession;
-        if (session != null)
+        
+        // Set up hitboxes for any new players that may have joined
+        SetUpHitboxes();
+        
+        // Update triggers for ALL players, not just the local one
+        foreach (var playerObject in GetAllPawns())
         {
-            var playerObject = GetPawn(session.LocalClientId);
             if (playerObject is Player player)
             {
-                if (playerObject.HitboxManager == null)
-                {
-                    SetUpHitboxes();
-                }
-                
-                Rectangle playerHitbox = new Rectangle((int)player.GlobalPosition.X, (int)player.GlobalPosition.Y + 24, 16, 8);
-
+                Rectangle playerHitbox = new Rectangle(
+                    (int)player.GlobalPosition.X, 
+                    (int)player.GlobalPosition.Y + 24, 
+                    16, 
+                    8
+                );
                 _hitboxManager.UpdateTriggersForObject(player, playerHitbox, HitboxLayer.All);
             }
         }
+        
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);
     }

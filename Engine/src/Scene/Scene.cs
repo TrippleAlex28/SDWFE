@@ -167,6 +167,14 @@ public abstract class Scene
      }
 
      /// <summary>
+     /// Gets all pawns (players) in the scene
+     /// </summary>
+     public List<GameObject> GetAllPawns()
+     {
+          return GetAllPawnsRecursive(SceneRoot);
+     }
+
+     /// <summary>
      /// Get GameObject with a specific network ID
      /// </summary>
      public GameObject? GetObject(int netId)
@@ -206,6 +214,21 @@ public abstract class Scene
           }
 
           return null;
+     }
+
+     private List<GameObject> GetAllPawnsRecursive(GameObject node)
+     {
+          List<GameObject> pawns = [];
+
+          if (node.GetType() == DefaultPlayerClass)
+               pawns.Add(node);
+
+          foreach (var child in node.Children)
+          {
+               pawns.AddRange(GetAllPawnsRecursive(child));
+          }
+
+          return pawns;
      }
 
      private List<GameObject> GetClientObjectsRecursive(GameObject node, int clientId, bool skipNode = false)
