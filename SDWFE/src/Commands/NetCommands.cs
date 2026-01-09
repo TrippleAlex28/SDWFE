@@ -5,5 +5,4 @@ public enum NetCommands : uint
     Move = 0,
     Leap = 1,
     Use = 2,
-    Shoot = 3,
 }

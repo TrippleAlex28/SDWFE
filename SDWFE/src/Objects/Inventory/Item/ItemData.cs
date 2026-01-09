@@ -64,6 +64,14 @@ public class ItemDatabase
                         weaponData.AttackSpeed = attackSpeed.GetSingle();
                     if (element.TryGetProperty("Range", out var range))
                         weaponData.Range = range.GetSingle();
+                    if (element.TryGetProperty("Velocity", out var velocity))
+                        weaponData.Velocity = velocity.GetSingle();
+                    if (element.TryGetProperty("BulletType", out var bulletTypeElement))
+                    {
+                        var bulletTypeString = bulletTypeElement.GetString();
+                        if (Enum.TryParse<BulletType>(bulletTypeString, out var bulletType))
+                            weaponData.BulletType = bulletType;
+                    }
 
                     _itemDataMap[itemData.Name] = weaponData;
                 }
