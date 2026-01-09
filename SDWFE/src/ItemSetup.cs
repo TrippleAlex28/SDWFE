@@ -67,8 +67,8 @@ public static class ItemSetup
                 Name = PISTOL,
                 Damage = 15f,
                 AttackSpeed = 5f,
-                Range = 80f,
-                Velocity = 60f,
+                Range = 250f,
+                Velocity = 200f,
                 IconPath = "Pistol",
                 UseActionId = ACTION_SHOOT,
             }
@@ -79,8 +79,8 @@ public static class ItemSetup
                 Name = ASSAULT_RIFLE,
                 Damage = 15f,
                 AttackSpeed = 5f,
-                Range = 120f,
-                Velocity = 80f,
+                Range = 500f,
+                Velocity = 350f,
                 IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
             }
@@ -91,8 +91,8 @@ public static class ItemSetup
                 Name = SHOTGUN,
                 Damage = 5f,
                 AttackSpeed = 1f,
-                Range = 40f,
-                Velocity = 100f,
+                Range = 80f,
+                Velocity = 500f,
                 BulletType = BulletType.Shotgun,
                 IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
@@ -104,8 +104,8 @@ public static class ItemSetup
                 Name = FIREWORK_LAUNCHER,
                 Damage = 5f,
                 AttackSpeed = 1f,
-                Range = 200f,
-                Velocity = 40f,
+                Range = 1000f,
+                Velocity = 100f,
                 BulletType = BulletType.FireworkRocket,
                 IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
@@ -136,8 +136,8 @@ public static class ItemSetup
                     scene.AddObject(new GenericBullet(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player));
                     break;
                 case BulletType.Shotgun:
-                    const int pelletCount = 16;
-                    const float angleSpread = 15f;
+                    const int pelletCount = 12;
+                    const float angleSpread = 20f;
                     float angleSpreadRad = MathHelper.ToRadians(angleSpread);
                     float angleStep = angleSpreadRad / (pelletCount - 1);
                     float startAngle = -angleSpreadRad / 2f;

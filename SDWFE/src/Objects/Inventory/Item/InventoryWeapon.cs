@@ -28,8 +28,8 @@ public class WeaponData : ItemData
 
 public class InventoryWeapon : InventoryItem
 {
-    [JsonIgnore] private ItemData? _weaponData = null;
-    [JsonIgnore] public ItemData WeaponData => _weaponData ??= ItemDatabase.Instance.GetWeaponData(Name);
+    [JsonIgnore] private WeaponData? _weaponData = null;
+    [JsonIgnore] public WeaponData WeaponData => _weaponData ??= ItemDatabase.Instance.GetWeaponData(Name);
     
     public InventoryWeapon(string name) : base(name, 1)
     {
