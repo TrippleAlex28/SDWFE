@@ -7,6 +7,7 @@ using Engine.Sprite;
 using System.Linq;
 using Engine.Hitbox;
 using SDWFE.Objects.Entities.PlayerEntity;
+using Engine.Collision;
 
 #nullable enable
 public class Tilemap : GameObject
@@ -15,34 +16,41 @@ public class Tilemap : GameObject
     public List<RoomDoor> Doors => _doors;
     public List<Stair> Stairs = new();
 
-    private HashSet<int> _topWallId = new HashSet<int>() {1, 22, 23, 24, 25, 26, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 87, 88, 135, 136, 137, 138, 139, 140, 141, 142};
-    private HashSet<int> _ySortables = new HashSet<int>() {2, 3, 4, 5, 85, 86, 89, 90, 91, 156, 157, 158, 159, 160, 161, 162, 163};
+    private HashSet<int> _topWallId = new HashSet<int>() {1, 22, 23, 24, 25, 26, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 87, 88};
+    private HashSet<int> _ySortables = new HashSet<int>() {2, 3, 4, 5, 85, 86, 89, 90, 91};
     
     // Stair tile IDs - background tiles that should draw BEHIND player when on stairs
     private HashSet<int> _stairBackgroundIds = new HashSet<int>() 
     { 
-        219, 220, 221, 222, 223, 224, 225, 226,
-        198, 199, 200, 201, 202, 203, 204, 205,
-        177, 178, 179, 180, 181, 182, 183, 184,
-        156, 157, 158, 159, 160, 161, 162, 163,
-        135, 136, 137, 138, 139, 140, 141, 142,
+        219, 220, 221, 222, 223, 224, 225, 226, 227,
+        197, 198, 199, 200, 201, 202, 203, 204, 205,
+        176, 177, 178, 179, 180, 181, 182, 183, 184,
+        155, 156, 157, 158, 159, 160, 161, 162, 163,
+        134, 135, 136, 137, 138, 139, 140, 141, 142
     };
     // Stair front railing tile IDs - should ALWAYS draw in front of player when on stairs
     private HashSet<int> _stairForegroundIds = new HashSet<int>()
     {
-        9, 10, 11, 12, 13, 30, 31, 32, 33, 34
+        228, 229, 230, 231, 232,
+        207, 208, 209,
+        186, 187, 188,
+        165, 166, 167
+
     };
     
     private HashSet<int> _stairBackRailings = new HashSet<int>()
     {
-        165, 166, 167, 186, 187, 188, 207, 208, 209, 228, 229, 230
+        9, 10, 11, 12, 13,
+        30, 31, 32, 33, 34,
     };
     private Dictionary<string, Dictionary<Vector2, TileData>> _layers = new();
     private List<RoomDoor> _doors = new();
-    private int tileSize = 16;
+    public int tileSize = 16;
     private string basePath = "../../../src/Objects/Tilemap/levels/";
     
     private List<Texture2D> _tileSheets = null!;
+    private List<TilesetRef> _tilesetRefs = new();
+    
     /// <summary>
     /// Creates a functional Tilemap
     /// </summary>
@@ -54,6 +62,9 @@ public class Tilemap : GameObject
     {   
         LoadTextureSheets();
         TiledMap map = JsonManager.Load<TiledMap>(basePath + pathFile);
+        
+        // Store tileset references sorted by firstgid descending for lookup
+        _tilesetRefs = map.tilesets?.OrderByDescending(t => t.firstgid).ToList() ?? new();
 
         LoadAllTileLayers(map);
         Colliders = new List<Rectangle>();
@@ -80,18 +91,31 @@ public class Tilemap : GameObject
     {
         foreach (var obj in objectsById.Values)
         {
-            if (obj.name != "Stair")
-                continue;
+            if (obj.name == "StairL")
+            {
+                Stair stair = new(
+                    new Vector2(obj.x, obj.y),
+                    1
+                );
 
-            Stair stair = new(
-                new Vector2(obj.x, obj.y)
-            );
+                Stairs.Add(stair);
 
-            Stairs.Add(stair);
+            } else if (obj.name == "StairR")
+            {
+                Stair stair = new(
+                    new Vector2(obj.x, obj.y),
+                    0
+                );
+                Stairs.Add(stair);
+            }
         }
     }
-    public void SetStairHitboxes(HitboxManager hitboxManager)
+    public void SetHitboxes(HitboxManager hitboxManager)
     {
+        foreach (var collider in Colliders)
+        {
+            hitboxManager.AddStatic(collider, HitboxLayer.Environment, HitboxLayer.All);
+        }
         foreach (var stair in Stairs)
         {
             stair.SetHitboxes(hitboxManager);
@@ -129,21 +153,15 @@ public class Tilemap : GameObject
         if (collisionLayer?.data == null)
             return;
 
-        // CollisionMap colliderMap = new(
-        //     TileSheetUsed(73),
-        //     tileSize
-        // );
+        CollisionMap colliderMap = new(
+            this
+        );
 
-        // Colliders = colliderMap.GenerateMapWithColliders(
-        //     collisionLayer.data,
-        //     collisionLayer.width,
-        //     collisionLayer.height
-        // );
-
-        // foreach (Rectangle col in Colliders)
-        // {
-        //     GameManager.Instance.Collision.AddStatic(col);
-        // }
+        Colliders = colliderMap.GenerateMapWithColliders(
+            collisionLayer.data,
+            collisionLayer.width,
+            collisionLayer.height
+        );
     }
     private void BuildDoors(Dictionary<int, TiledObject> objectsById)
     {
@@ -252,7 +270,9 @@ public class Tilemap : GameObject
                         {
                             sprite.BaseDrawLayer = stairYSortBase - Stair.STAIR_LAYER_OFFSET;
                             stair.StairSprites.Add(sprite);
-                        
+                        }
+                        if (sprite.BaseDrawLayer >= 0.8f){
+                            Console.WriteLine("Warning: Stair sprite has invalid Y-sort layer: " + sprite.BaseDrawLayer);
                         }
                     }
                 }
@@ -271,7 +291,8 @@ public class Tilemap : GameObject
         {
             ExtendedGame.AssetManager.LoadTexture("TM_Main", "Tilemap/"),
             ExtendedGame.AssetManager.LoadTexture("TM_Collision", "Tilemap/"),
-            ExtendedGame.AssetManager.LoadTexture("TM_Door_Anim", "Tilemap/")
+            ExtendedGame.AssetManager.LoadTexture("TM_Collision", "Tilemap/"),
+
         };
     }
     
@@ -308,6 +329,7 @@ public class Tilemap : GameObject
             int x = i % layer.width;
             int y = i / layer.width;
             int value = data[i] - 1;
+
             if (value >= 0)
             {
                 Texture2D source = TileSheetUsed(value);
@@ -322,22 +344,56 @@ public class Tilemap : GameObject
     {
         return map.layers?.FirstOrDefault(l => l.name == name);
     }
-    private Texture2D TileSheetUsed(int globalTileId)
+    
+    /// <summary>
+    /// Gets the tileset index for a given global tile ID based on the tileset references.
+    /// </summary>
+    private int GetTilesetIndex(int globalTileId)
+    {
+        // _tilesetRefs is sorted by firstgid descending
+        for (int i = 0; i < _tilesetRefs.Count; i++)
+        {
+            if (globalTileId >= _tilesetRefs[i].firstgid)
+            {
+                // Return the index from the end since we sorted descending
+                return _tilesetRefs.Count - 1 - i;
+            }
+        }
+        return 0; // Default to first tileset
+    }
+    
+    /// <summary>
+    /// Gets the firstgid (base index) for a given global tile ID.
+    /// Used to convert global tile IDs to texture-relative indices.
+    /// </summary>
+    public int GetTilesetFirstGid(int globalTileId)
+    {
+        int tilesetIndex = GetTilesetIndex(globalTileId + 1); // +1 because tile IDs are 0-based in code but 1-based in Tiled
+        
+        if (tilesetIndex < 0 || tilesetIndex >= _tilesetRefs.Count)
+            return 1; // Default to 1 (first tileset)
+            
+        return _tilesetRefs[_tilesetRefs.Count - 1 - tilesetIndex].firstgid;
+    }
+    
+    public Texture2D TileSheetUsed(int globalTileId)
     {
         if (_tileSheets.Count < 3)
         {
             LoadTextureSheets();
         }
-        if (globalTileId <= 231)
-        {
-            return _tileSheets[0];
-        }
-        else
-        {
-            return _tileSheets[1];
-        }
-
+        
+        int tilesetIndex = GetTilesetIndex(globalTileId + 1); // +1 because tile IDs are 0-based in code but 1-based in Tiled
+        
+        // Clamp to available tilesheets
+        if (tilesetIndex >= _tileSheets.Count)
+            tilesetIndex = _tileSheets.Count - 1;
+        if (tilesetIndex < 0)
+            tilesetIndex = 0;
+            
+        return _tileSheets[tilesetIndex];
     }
+    
     private Rectangle getSourceRect(TileData data)
     {
         int amountOfColumns = data.Source.Width / tileSize;
@@ -381,8 +437,14 @@ public struct TileData
 public class TiledMap
 {
     public List<Layer>? layers { get; set; }
+    public List<TilesetRef>? tilesets { get; set; }
     public int width { get; set; }
     public int height { get; set; }
+}
+public class TilesetRef
+{
+    public int firstgid { get; set; }
+    public string? source { get; set; }
 }
 public class Layer
 {

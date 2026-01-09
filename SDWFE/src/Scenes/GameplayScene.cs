@@ -40,9 +40,9 @@ public class GameplayScene : Scene
     public override void Enter()
     {
         base.Enter();
-        map = new Tilemap("TestMap.tmj");
+        map = new Tilemap("level_hub.tmj");
         
-        map.SetStairHitboxes(_hitboxManager);
+        map.SetHitboxes(_hitboxManager);
         SetUpHitboxes();
         this.AddObject(map);
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);

@@ -15,7 +15,7 @@ public class Stair : GameObject
     public TriggerHitbox TopStepExitCollider;
 
     private Vector2 _stairDirection;
-    private int COLLIDEROFFSET = 4;
+    private int COLLIDEROFFSET = 8;
     private int STATICCOLLIDERSIZE = 4;
     private int EXITSAFEGUARDSIZE = 100;
 
@@ -36,10 +36,10 @@ public class Stair : GameObject
     public int TileSize = 16;  // 16 pixels per tile
     
     // Y-Sort layer values (relative to stair point Y)
-    public const float STAIR_LAYER_OFFSET = 0.04f;       
-    public const float BACK_RAILING_OFFSET = 0.03f;   
-    public const float PLAYER_ON_STAIR_OFFSET = 0.02f; 
-    public const float FRONT_RAILING_OFFSET = 0.01f;  
+    public const float STAIR_LAYER_OFFSET = 0.004f;       
+    public const float BACK_RAILING_OFFSET = 0.003f;   
+    public const float PLAYER_ON_STAIR_OFFSET = 0.002f; 
+    public const float FRONT_RAILING_OFFSET = 0.001f;  
     
     // Sprites in this stair's region
     public List<Sprite> StairSprites = new();
@@ -54,8 +54,9 @@ public class Stair : GameObject
     /// <param name="numberOfSteps">The total number of steps in the stair</param>
     /// <param name="direction">The direction the stair is facing (0 for right, 1 for left)</param>
     /// <param name="globalPosition">The global position of the stair in the game world</param>
-    public Stair(Vector2 globalPosition)
+    public Stair(Vector2 globalPosition, int direction)
     {
+        _direction = direction;
         // Direction = 0 - Right
         float horizontalComponent = _stepWidth * _numberOfSteps;
         float verticalComponent = -_stepHeight * _numberOfSteps;
@@ -70,32 +71,23 @@ public class Stair : GameObject
         _stairDirection.Normalize();
         
         this.GlobalPosition = globalPosition;
-        
-        StaticColliders.Add(new Rectangle(
-            (int)globalPosition.X + _stepWidth,
-            (int)globalPosition.Y - _stepLength - STATICCOLLIDERSIZE,
-            _stepWidth * _numberOfSteps - _stepWidth,
-            STATICCOLLIDERSIZE
-        ));
-
-        StaticColliders.Add(new Rectangle(
-            (int)globalPosition.X + _stepWidth,
-            (int)globalPosition.Y - _stepHeight - STATICCOLLIDERSIZE,
-            _stepWidth * _numberOfSteps - _stepWidth,
-            STATICCOLLIDERSIZE
-        ));
 
         InitializeTriggerHitboxes();
         
     }
     private void InitializeTriggerHitboxes()
     {
+
         Rectangle baseGroundColl = new Rectangle(
             (int)GlobalPosition.X,
-            (int)GlobalPosition.Y - _stepLength - _stepHeight + COLLIDEROFFSET,
+            (int)GlobalPosition.Y - _stepLength - _stepHeight + COLLIDEROFFSET / 2,
             _stepWidth,
             _stepLength - COLLIDEROFFSET
         );
+        if (_direction == 1)
+        {
+            baseGroundColl.X = (int)GlobalPosition.X - _stepWidth;
+        }
         GroundStepEnterCollider = new TriggerHitbox(
             baseGroundColl
         );
@@ -111,10 +103,14 @@ public class Stair : GameObject
         // Top step colliders
         Rectangle baseTopColl = new Rectangle(
             (int)GlobalPosition.X + (_numberOfSteps - 1) * _stepWidth,
-            (int)GlobalPosition.Y - _stepLength - _numberOfSteps * _stepHeight,
+            (int)GlobalPosition.Y - _stepLength - _numberOfSteps * _stepHeight + COLLIDEROFFSET / 2,
             _stepWidth,
             _stepLength - COLLIDEROFFSET
         );
+        if (_direction == 1)
+        {
+            baseTopColl.X = (int)GlobalPosition.X - _numberOfSteps * _stepWidth;
+        }
         TopStepEnterCollider = new TriggerHitbox(
             baseTopColl
         );
@@ -168,13 +164,14 @@ public class Stair : GameObject
                 if (!entity.IsOnStairs) return;
 
                 // Only exit stairs if leaving through the left side (bottom of stairs)
-                if ((side & TriggerSide.Left) != 0)
+                if ((side & TriggerSide.Left) != 0 && _direction == 0 ||
+                    (side & TriggerSide.Right) != 0 && _direction == 1)
                 {
                     entity.IsOnStairs = false;
                     entity.StairDirection = Vector2.Zero;
                     entity.ElevationLevel = _beginFloor;
                     entity.StairYSort = 0f;
-                    Console.WriteLine("Player exited stairs through the left!");
+                    Console.WriteLine("Player exited stairs through the bottom!");
                 }
             }
         };
@@ -197,13 +194,14 @@ public class Stair : GameObject
             {
                 if (!entity.IsOnStairs) return;
                 // Only exit stairs if leaving through the right side (top of stairs)
-                if ((side & TriggerSide.Right) != 0)
+                if ((side & TriggerSide.Right) != 0 && _direction == 0 ||
+                    (side & TriggerSide.Left) != 0 && _direction == 1)
                 {
                     entity.IsOnStairs = false;
                     entity.StairDirection = Vector2.Zero;
                     entity.ElevationLevel = _endFloor;
                     entity.StairYSort = 0f;
-                    Console.WriteLine("Player exited stairs through the right!");
+                    Console.WriteLine("Player exited stairs through the top!");
                 }
             }
         };
@@ -229,7 +227,7 @@ public class Stair : GameObject
         }
         else
         {
-            return new Rectangle(tileX - TileWidth + 1, tileY - TileHeight, TileWidth, TileHeight + 1);
+            return new Rectangle(tileX - TileWidth, tileY - TileHeight, TileWidth, TileHeight + 1);
         }
     }
     
