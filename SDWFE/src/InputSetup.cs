@@ -31,6 +31,7 @@ public static class InputSetup
     public const string ACTION_INTERACT = "Interact";
     
     public const string ACTION_PAUSE = "Pause";
+    public const string ACTION_DIALOGUE = "Dialogue";
     
     #endregion
     
@@ -118,6 +119,10 @@ public static class InputSetup
             .AddBinding(new KeyboardBinding(Keys.Escape))
             .AddBinding(new GamePadButtonBinding(Buttons.Start));
         
+        var dialogue = new InputAction(ACTION_DIALOGUE)
+            .AddBinding(new KeyboardBinding(Keys.T))
+            .AddBinding(new GamePadButtonBinding(Buttons.Back));
+        
         gameplayProfile.RegisterAction(moveUp);
         gameplayProfile.RegisterAction(moveDown);
         gameplayProfile.RegisterAction(moveLeft);
@@ -141,6 +146,7 @@ public static class InputSetup
         gameplayProfile.RegisterAction(interact);
         
         gameplayProfile.RegisterAction(pause);
+        gameplayProfile.RegisterAction(dialogue);
         
         InputManager.Instance.RegisterProfile(gameplayProfile);
     }

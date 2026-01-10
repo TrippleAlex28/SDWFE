@@ -4,6 +4,7 @@ using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Inventory;
+using SDWFE.UI.Dialogue;
 using SDWFE.UI.Inventory;
 using SDWFE.UI.PlayerData;
 
@@ -55,6 +56,7 @@ public partial class Player : GameObject
         this.CameraOffset = new Vector2(8, 16); // hardcoded numbers from the spritesheet, because brain fog
 
         ConstructInventory();
+        ConstructDialogue();
     }
 
     protected override void EnterSelf()
@@ -66,9 +68,13 @@ public partial class Player : GameObject
         // Only create UI for the locally owned player
         if (IsLocallyOwned())
         {
-            GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIHotbar(Inventory));
-            GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIStats(this));
-            GameState.Instance.CurrentScene?.UIRoot.AddChild(new UIWeapons(Inventory));
+            StatsUI = new UIStats(this);
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(HotbarUI);
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(StatsUI);
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(WeaponsUI);
+            
+            if (_dialogue != null)
+                GameState.Instance.CurrentScene?.UIRoot.AddChild(_dialogue);
         }
     }
 
@@ -88,5 +94,6 @@ public partial class Player : GameObject
         
         UpdateInventory();
         UpdateMovement(gameTime);
+        UpdateDialogue(gameTime);
     }
 }

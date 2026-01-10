@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using SDWFE.UI.PlayerData;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
@@ -9,6 +10,7 @@ namespace SDWFE.Objects.Entities.PlayerEntity;
 public partial class Player
 {
     public PlayerStats Stats = new PlayerStats();
+    public UIStats StatsUI { get; set; }
 }
 
 public class PlayerStats

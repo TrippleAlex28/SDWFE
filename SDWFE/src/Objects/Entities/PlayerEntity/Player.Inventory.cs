@@ -1,17 +1,22 @@
 ﻿using System;
 using Engine.Input;
 using SDWFE.Objects.Inventory;
+using SDWFE.UI.Inventory;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
 public partial class Player
 {
     public PlayerInventory Inventory { get; private set; }
+    public UIHotbar HotbarUI { get; set; }
+    public UIWeapons WeaponsUI { get; set; }
     
     private void ConstructInventory()
     {
         // Inventory Setup
         Inventory = new PlayerInventory();
+        HotbarUI = new UIHotbar(Inventory);
+        WeaponsUI = new UIWeapons(Inventory);
         this.AddChild(Inventory);
 
         Inventory.AddWeaponByName(ItemSetup.SHOTGUN);
