@@ -30,9 +30,9 @@ public partial class Player
 
     private void OnDialogueClosed()
     {
-        HotbarUI.IsVisible = true;
-        WeaponsUI.IsVisible = true; 
-        StatsUI.IsVisible = true; 
+        if (HotbarUI != null) HotbarUI.IsVisible = true;
+        if (WeaponsUI != null) WeaponsUI.IsVisible = true; 
+        if (StatsUI != null) StatsUI.IsVisible = true; 
     }
 
     /// <summary>
@@ -55,9 +55,9 @@ public partial class Player
 
     private void OnDialogueOpen()
     {
-        HotbarUI.IsVisible = false; 
-        WeaponsUI.IsVisible = false; 
-        StatsUI.IsVisible = false;
+        if (HotbarUI != null) HotbarUI.IsVisible = false; 
+        if (WeaponsUI != null) WeaponsUI.IsVisible = false; 
+        if (StatsUI != null) StatsUI.IsVisible = false;
     }
     /// <summary>
     /// Hides the current dialogue if visible.
