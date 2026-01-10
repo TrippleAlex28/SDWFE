@@ -56,7 +56,7 @@ public partial class Player : GameObject
         this.CameraOffset = new Vector2(8, 16); // hardcoded numbers from the spritesheet, because brain fog
 
         ConstructInventory();
-        ConstructDialogue();
+        // Note: ConstructDialogue is called in EnterSelf for locally owned players only
     }
 
     protected override void EnterSelf()
@@ -68,6 +68,8 @@ public partial class Player : GameObject
         // Only create UI for the locally owned player
         if (IsLocallyOwned())
         {
+            ConstructDialogue();
+            
             StatsUI = new UIStats(this);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(HotbarUI);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(StatsUI);

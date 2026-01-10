@@ -19,13 +19,14 @@ public partial class Player
     /// <summary>
     /// Whether the player is currently viewing a dialogue.
     /// </summary>
-    public bool IsInDialogue => _dialogue?.IsOpen ?? false;
+    public bool IsInDialogue => (_dialogue?.IsOpen ?? false) || (_dialogueChoice?.IsOpen ?? false);
 
     private void ConstructDialogue()
     {
         _dialogue = new UIDialogue();
         _dialogueChoice = new UIDialogueChoice();
         _dialogue.OnDialogueClosed += OnDialogueClosed;
+        _dialogueChoice.OnDialogueClosed += OnDialogueClosed;
     }
 
     private void OnDialogueClosed()
@@ -69,6 +70,10 @@ public partial class Player
 
     private void UpdateDialogue(GameTime gameTime)
     {
+        // Only process dialogue for locally owned player
+        if (!IsLocallyOwned())
+            return;
+            
         // Demo: Press T to show a test dialogue
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_DIALOGUE) && !IsInDialogue)
         {
