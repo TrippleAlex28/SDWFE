@@ -133,7 +133,7 @@ public static class ItemSetup
             switch (weaponData!.BulletType)
             {
                 case BulletType.Generic:
-                    scene.AddObject(new GenericBullet(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player));
+                    scene.AddObject(new GenericBullet(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
                     break;
                 case BulletType.Shotgun:
                     const int pelletCount = 12;

@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Hitbox;
 using Microsoft.Xna.Framework;
 
 namespace SDWFE.Objects.Projectiles.Bullets;
@@ -11,8 +12,9 @@ public class GenericBullet : Bullet
         float velocity, 
         float range, 
         float damage,
-        GameObject? owner = null
-    ) : base(startPos, direction, velocity, range, damage, ExtendedGame.AssetManager.LoadTexture("GenericBullet", "Entities/Projectiles/"), owner, ParticlePresets.BulletTrail)
+        GameObject? owner = null,
+        HitboxManager? hitboxManager = null
+    ) : base(startPos, direction, velocity, range, damage, ExtendedGame.AssetManager.LoadTexture("GenericBullet", "Entities/Projectiles/"), owner, ParticlePresets.BulletTrail, hitboxManager: hitboxManager)
     {
         Sprite.Scale = new Vector2(0.5f);
     }

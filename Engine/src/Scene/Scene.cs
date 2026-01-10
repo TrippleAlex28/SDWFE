@@ -1,4 +1,6 @@
-﻿using Engine.Network.Shared.Object;
+﻿using System.Dynamic;
+using Engine.Hitbox;
+using Engine.Network.Shared.Object;
 using Engine.UI;
 using Engine.UI.Elements;
 using Microsoft.Xna.Framework;
@@ -19,6 +21,7 @@ public abstract class Scene
      public GameObject SceneRoot { get; private set; }
      private int _nextNetworkId = 1;
      
+     public HitboxManager HitboxManager { get; private set; } = new HitboxManager();
      public UIRoot UIRoot { get; private set; }
      
      public Scene(string name)

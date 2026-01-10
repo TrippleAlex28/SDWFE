@@ -19,7 +19,6 @@ public class GameplayScene : Scene
     public const string KEY = "GameplayScene";
 
     private ParticleSystem _bulletTrailSystem = new();
-    private HitboxManager _hitboxManager = new();
     private Tilemap map;
     public GameplayScene() : base(KEY)
     {
@@ -43,7 +42,7 @@ public class GameplayScene : Scene
         base.Enter();
         map = new Tilemap("level_hub.tmj");
         
-        map.RegisterHitboxes(_hitboxManager);
+        map.RegisterHitboxes(HitboxManager);
         SetUpHitboxes();
         this.AddObject(map);
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);
@@ -55,7 +54,7 @@ public class GameplayScene : Scene
         {
             if (playerObject is Player player && player.HitboxManager == null)
             {
-                player.HitboxManager = _hitboxManager;
+                player.HitboxManager = HitboxManager;
                 player.HitboxLayer = HitboxLayer.Player;
                 player.CollisionSize = new Vector2(16, 8);
                 player.CollisionOffset = new Vector2(0, 24);
@@ -83,7 +82,7 @@ public class GameplayScene : Scene
                     16, 
                     8
                 );
-                _hitboxManager.UpdateTriggersForObject(player, playerHitbox, HitboxLayer.All);
+                HitboxManager.UpdateTriggersForObject(player, playerHitbox, HitboxLayer.All);
             }
         }
         

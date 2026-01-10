@@ -1,5 +1,6 @@
 ﻿using System;
 using Engine;
+using Engine.Hitbox;
 using Engine.Particle;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,8 +21,9 @@ public abstract class Bullet : Projectile
         Texture2D texture,
         GameObject? owner = null, 
         ParticleEmitter? projectileEmitter = null, 
-        ParticleEmitter? collisionEmitter = null
-    ) : base(startPos, direction, velocity, texture, owner, projectileEmitter, collisionEmitter)
+        ParticleEmitter? collisionEmitter = null,
+        HitboxManager? hitboxManager = null
+    ) : base(startPos, direction, velocity, texture, owner, projectileEmitter, collisionEmitter, hitboxManager)
     {
         _range = range;
         _damage = damage;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Engine;
+using Engine.Hitbox;
 using Engine.Particle;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
@@ -17,6 +18,7 @@ public abstract class Projectile : GameObject
     private readonly ParticleEmitter? _projectileEmitter;
     private readonly ParticleSystem _collisionEffect = new();
     private readonly ParticleEmitter? _collisionEmitter;
+    private readonly HitboxManager? _hitboxManager;
     protected readonly Sprite Sprite;
 
     protected bool Collided = false;
@@ -28,7 +30,8 @@ public abstract class Projectile : GameObject
         Texture2D texture, 
         GameObject? owner = null, 
         ParticleEmitter? projectileEmitter = null, 
-        ParticleEmitter? collisionEmitter = null
+        ParticleEmitter? collisionEmitter = null,
+        HitboxManager? hitboxManager = null
     )
     {
         this.GlobalPosition = startPos;
@@ -41,12 +44,40 @@ public abstract class Projectile : GameObject
         this._owner = owner;
         this._projectileEmitter = projectileEmitter;
         this._collisionEmitter = collisionEmitter;
+        this._hitboxManager = hitboxManager;
     }
+    
+    private TriggerHitbox? _trigger;
     
     protected override void EnterSelf()
     {
         base.EnterSelf();
+        _trigger = new TriggerHitbox(
+            new Rectangle(
+                (int)this.GlobalPosition.X, 
+                (int)this.GlobalPosition.Y, 
+                Sprite.SourceRectangle.Width, 
+                Sprite.SourceRectangle.Height
+            ))
+        {
+            Owner = this,
+            Layer = HitboxLayer.Projectile,
+            DetectsLayers = HitboxLayer.Environment | HitboxLayer.Enemy | HitboxLayer.Player,
+        };
 
+        _hitboxManager?.AddTrigger(_trigger);
+
+        _trigger.OnEnter += (hitbox, otherObject, side) =>
+        {
+            // Ignore self and owner
+            if (otherObject == this || otherObject == _owner)
+                return;
+                
+            if (otherObject is GameObject otherGameObject)
+                OnCollision(otherGameObject);
+
+            Console.WriteLine("Projectile collided with " + otherObject);
+        };
         if (_projectileEmitter != null)
             _projectileTrail.AddEmitter(_projectileEmitter);
         
@@ -57,6 +88,30 @@ public abstract class Projectile : GameObject
     protected override void UpdateSelf(GameTime gameTime)
     {
         _projectileTrail.Update(gameTime.DeltaSeconds());
+        
+        Sprite.BaseDrawLayer = this.GlobalPosition.Y / 1000f ;
+        Rectangle hitbox = new Rectangle(
+            (int)GlobalPosition.X, 
+            (int)GlobalPosition.Y, 
+            1, 
+            1
+        );
+        
+        // Update our trigger's bounds to match projectile position
+        if (_trigger != null)
+        {
+            _trigger.Bounds = hitbox;
+        }
+        
+        // Check for static (environment) collisions
+        if (_hitboxManager != null && !Collided)
+        {
+            if (_hitboxManager.CheckStaticCollision(hitbox, HitboxLayer.Projectile))
+            {
+                OnCollision(null!); // Hit environment
+                Console.WriteLine("Projectile hit environment");
+            }
+        }
         
         if (Collided)
             _collisionEffect.Update(gameTime.DeltaSeconds());
@@ -74,6 +129,13 @@ public abstract class Projectile : GameObject
     {
         Collided = true;
         Velocity = 0f;
+        
+        // Remove the trigger since we've collided
+        if (_trigger != null && _hitboxManager != null)
+        {
+            _hitboxManager.RemoveTrigger(_trigger);
+            _trigger = null;
+        }
 
         if (_collisionEmitter != null)
         {

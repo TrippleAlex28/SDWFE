@@ -61,6 +61,11 @@ public class Tilemap : GameObject
         30, 31, 32, 33, 34
     };
 
+    private static readonly HashSet<int> ShadowTileIds = new()
+    {
+        128, 129, 149, 150, 170, 171, 210, 211, 212, 213, 214
+    };
+
     #endregion
 
     #region Public Properties
@@ -259,7 +264,8 @@ public class Tilemap : GameObject
                 float drawLayer = tileData.YSortEnabled
                     ? 0.8f / 1000f * (tileData.YSortPoint + destRect.Y)
                     : 0f;
-
+                if (ShadowTileIds.Contains(tileData.Index))
+                    drawLayer = 0.001f; // Slightly above base environment layer
                 var sprite = new Sprite(tileData.Source)
                 {
                     GlobalPosition = new Vector2(destRect.X, destRect.Y),
