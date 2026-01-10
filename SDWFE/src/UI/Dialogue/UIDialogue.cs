@@ -186,31 +186,4 @@ public class UIDialogue : UIControl
             OnDialogueClosed?.Invoke();
         }
     }
-
-    /// <summary>
-    /// Gets the current page number (1-indexed for display).
-    /// </summary>
-    public int CurrentPageDisplay => _textProgression.CurrentPage + 1;
-
-    /// <summary>
-    /// Gets the total number of pages.
-    /// </summary>
-    public int TotalPages => _textProgression.TotalPages;
-
-    /// <summary>
-    /// Skips to show all text on the current page instantly.
-    /// </summary>
-    public void SkipCurrentPageAnimation()
-    {
-        _textProgression.RevealCurrentPage();
-    }
-
-    /// <summary>
-    /// Manually advances to the next page.
-    /// </summary>
-    /// <returns>True if advanced, false if on last page.</returns>
-    public bool NextPage()
-    {
-        return _textProgression.NextPage();
-    }
 }

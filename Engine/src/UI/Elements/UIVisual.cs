@@ -135,6 +135,22 @@ public enum VisualType
             };
         }
 
+        /// <summary>
+        /// Updates the text, font, and color of a text visual.
+        /// </summary>
+        public void SetText(string text, SpriteFont newFont, Color newColor)
+        {
+            if (_visualtype != VisualType.Text)
+                throw new InvalidOperationException("SetText can only be called on Text visuals.");
+            
+            _text = text;
+            font = newFont;
+            color = newColor;
+            DesiredSize = Vector2.Zero; // Reset so SetDesiredSize recalculates
+            SetDesiredSize();
+            _layoutDirty = true;
+        }
+
         public void SetDesiredSize()
         {
             if (DesiredSize != Vector2.Zero)

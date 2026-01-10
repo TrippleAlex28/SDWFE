@@ -24,7 +24,7 @@ public class MainMenuScene : Scene
     public MainMenuScene() : base(KEY)
     {
         BackgroundColor = new Color(0xEA, 0xD2, 0xAD);
-        _ChineseUITexture = ExtendedGame.AssetManager.LoadTexture("SD_Chinese_UI", "UI/");
+        _ChineseUITexture = ExtendedGame.AssetManager.LoadTexture("UI_Chinese", "UI/");
         SetDefaultPlayerClassNull(); // useless default player
     }
 

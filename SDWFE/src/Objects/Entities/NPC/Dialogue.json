@@ -1,0 +1,45 @@
+[
+  {
+    "Id": "fireman_root",
+    "SpeakerName": "Fireman",
+    "Text": "Hello traveler! Do you want to learn about fire safety?",
+    "Choices": [
+      { "ChoiceText": "Yes, tell me more.", "NextId": "fireman_yes" },
+      { "ChoiceText": "No, thanks.", "NextId": "fireman_no" }
+    ]
+  },
+  {
+    "Id": "fireman_yes",
+    "SpeakerName": "Fireman",
+    "Text": "Always keep a fire extinguisher in your home.",
+    "Choices": []
+  },
+  {
+    "Id": "fireman_no",
+    "SpeakerName": "Fireman",
+    "Text": "Okay, stay safe!",
+    "Choices": []
+  },
+
+  {
+    "Id": "blacksmith_root",
+    "SpeakerName": "Blacksmith",
+    "Text": "Greetings! Need a new sword or shield?",
+    "Choices": [
+      { "ChoiceText": "A sword, please.", "NextId": "blacksmith_sword" },
+      { "ChoiceText": "A shield, please.", "NextId": "blacksmith_shield" }
+    ]
+  },
+  {
+    "Id": "blacksmith_sword",
+    "SpeakerName": "Blacksmith",
+    "Text": "Heres a fine blade for you!",
+    "Choices": []
+  },
+  {
+    "Id": "blacksmith_shield",
+    "SpeakerName": "Blacksmith",
+    "Text": "This shield will protect you well.",
+    "Choices": []
+  }
+]

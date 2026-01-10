@@ -8,11 +8,13 @@ namespace SDWFE.Objects.Entities.PlayerEntity;
 public partial class Player
 {
     private UIDialogue? _dialogue;
+    private UIDialogueChoice? _dialogueChoice;
     
     /// <summary>
     /// Gets the player's dialogue UI.
     /// </summary>
     public UIDialogue? Dialogue => _dialogue;
+    public UIDialogueChoice? DialogueChoice => _dialogueChoice;
     
     /// <summary>
     /// Whether the player is currently viewing a dialogue.
@@ -22,6 +24,7 @@ public partial class Player
     private void ConstructDialogue()
     {
         _dialogue = new UIDialogue();
+        _dialogueChoice = new UIDialogueChoice();
         _dialogue.OnDialogueClosed += OnDialogueClosed;
     }
 
@@ -40,11 +43,22 @@ public partial class Player
     public void ShowDialogue(string text)
     {
         _dialogue?.Show(text);
+        OnDialogueOpen();
+    }
+
+    private void ShowChoiceDialogue(string nodeId)
+    {
+        _dialogueChoice?.Show(nodeId);
+        OnDialogueOpen();
+        
+    }
+
+    private void OnDialogueOpen()
+    {
         HotbarUI.IsVisible = false; 
         WeaponsUI.IsVisible = false; 
         StatsUI.IsVisible = false;
     }
-
     /// <summary>
     /// Hides the current dialogue if visible.
     /// </summary>
@@ -58,13 +72,14 @@ public partial class Player
         // Demo: Press T to show a test dialogue
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_DIALOGUE) && !IsInDialogue)
         {
-            ShowDialogue(
-                "Welcome, adventurer! This is a test of the dialogue system.|p" +
-                "As you can see, the text appears letter by letter, creating a typewriter effect.|p" +
-                "You can click anywhere in the dialogue box to speed up the text, or advance to the next page.|p" +
-                "When the text overflows the box, it automatically creates new pages. This is useful for long conversations with NPCs or for telling stories in your game.|p" +
-                "Press Escape or click after the last page to close this dialogue. Good luck on your adventure!"
-            );
+            ShowChoiceDialogue("fireman_root");
+            // ShowDialogue(
+            //     "Welcome, adventurer! This is a test of the dialogue system.|p" +
+            //     "As you can see, the text appears letter by letter, creating a typewriter effect.|p" +
+            //     "You can click anywhere in the dialogue box to speed up the text, or advance to the next page.|p" +
+            //     "When the text overflows the box, it automatically creates new pages. This is useful for long conversations with NPCs or for telling stories in your game.|p" +
+            //     "Press Escape or click after the last page to close this dialogue. Good luck on your adventure!"
+            // );
         }
     }
 }

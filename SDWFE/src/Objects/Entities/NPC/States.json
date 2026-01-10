@@ -1,0 +1,61 @@
+{
+  "fire": {
+    "Completed": false,
+    "Choices": [
+      {
+        "ChoiceText": "No, thanks.",
+        "NextId": "fireman_no"
+      }
+    ],
+    "FillerWords": [
+      "kind of",
+      "yup",
+      "so"
+    ]
+  },
+  "fireman": {
+    "Completed": false,
+    "Choices": [],
+    "FillerWords": [
+      "umh",
+      "ahh",
+      "uh-huhm"
+    ]
+  },
+  "Blacksmith": {
+    "Completed": false,
+    "Choices": [
+      {
+        "ChoiceText": "A shield, please.",
+        "NextId": "blacksmith_shield"
+      },
+      {
+        "ChoiceText": "A sword, please.",
+        "NextId": "blacksmith_sword"
+      }
+    ],
+    "FillerWords": [
+      "yep",
+      "huh",
+      "ehh"
+    ]
+  },
+  "Merchant": {
+    "Completed": false,
+    "Choices": [],
+    "FillerWords": [
+      "ah",
+      "ehh uh",
+      "huh-uh"
+    ]
+  },
+  "Shopkeeper": {
+    "Completed": false,
+    "Choices": [],
+    "FillerWords": [
+      "I mean",
+      "uh-oh",
+      "actually"
+    ]
+  }
+}

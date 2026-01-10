@@ -165,7 +165,7 @@
 /processorParam:TextureFormat=Color
 /build:UI/inventorySheet.png
 
-#begin UI/SD_Chinese_UI.png
+#begin UI/UI_Chinese.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -175,7 +175,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:UI/SD_Chinese_UI.png
+/build:UI/UI_Chinese.png
+
+#begin UI/UI_Dialogue.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/UI_Dialogue.png
 
 #begin UI/UI_Numbers.png
 /importer:TextureImporter

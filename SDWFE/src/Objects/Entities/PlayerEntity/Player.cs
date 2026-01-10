@@ -4,9 +4,9 @@ using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Inventory;
-using SDWFE.UI.Dialogue;
 using SDWFE.UI.Inventory;
 using SDWFE.UI.PlayerData;
+using SDWFE.UI.Dialogue;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
@@ -75,6 +75,9 @@ public partial class Player : GameObject
             
             if (_dialogue != null)
                 GameState.Instance.CurrentScene?.UIRoot.AddChild(_dialogue);
+            
+            if (_dialogueChoice != null)
+                GameState.Instance.CurrentScene?.UIRoot.AddChild(_dialogueChoice);
         }
     }
 
