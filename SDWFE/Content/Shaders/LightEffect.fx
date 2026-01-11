@@ -20,31 +20,32 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
     float2 adjustedPos = screenPos;
     adjustedPos.y *= AspectRatio;
     
-    float maxIntensity = 0.0f;
+    // Accumulate light intensity from all lights (additive blend)
+    float totalIntensity = 0.0f;
     
     for (int i = 0; i < LightCount; i++)
     {
         float2 center = LightData[i].xy;
-        float radius = LightData[i].z;
         
         float2 adjustedCenter = center;
         adjustedCenter.y *= AspectRatio;
 
-        float distance = length(adjustedPos - adjustedCenter);
-        float distanceRatio = distance / radius;
+        float dist = length(adjustedPos - adjustedCenter);
+        float radius = LightData[i].z;
         
-        if (distanceRatio < 1.0)
-        {
-            float intensity = 1.0 - distanceRatio; 
-            
-            maxIntensity = max(maxIntensity, intensity);
-        }
+        // Exponential falloff for very soft edges (gaussian-like)
+        float normalizedDist = dist / radius;
+        float intensity = exp(-normalizedDist * normalizedDist * 3.0);
+        
+        // Add contributions from all lights
+        totalIntensity += intensity;
     }
-
     
-    float darknessAlpha = 1.0 - maxIntensity;
+    // Clamp to 1.0 so overlapping lights don't over-brighten
+    totalIntensity = saturate(totalIntensity);
     
-
+    float darknessAlpha = 1.0 - totalIntensity;
+    
     return float4(color.rgb, darknessAlpha); 
 }
 technique BasicHole

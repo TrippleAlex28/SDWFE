@@ -31,7 +31,7 @@ public class MainMenuScene : Scene
     public override void Enter()
     {
         base.Enter();
-
+        ExtendedGame.LightShaderInstance.Enabled = false;
         // Switch input profile back to UI for menu navigation
         InputManager.Instance.SetActiveProfile(InputSetup.PROFILE_UI);
 

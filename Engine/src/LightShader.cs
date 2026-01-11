@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 public class LightShader
 {
     public Effect LightEffect { get; private set; }
+    public bool Enabled = true;
 
     public LightShader()
     {
@@ -24,11 +25,21 @@ public class LightShader
         {
             Vector2 screenPos = ExtendedGame.WorldToScreen(light.WorldPosition);
 
-            Vector2 normalizedPos = new Vector2(
-                screenPos.X / SettingsManager.Instance.WindowSettings.ScreenWidth,
-                screenPos.Y / SettingsManager.Instance.WindowSettings.ScreenHeight
-            );
+            int screenWidth = SettingsManager.Instance.WindowSettings.FullScreen
+                ? SettingsManager.Instance.WindowSettings.ScreenWidth
+                : SettingsManager.Instance.WindowSettings.WindowWidth;
+            int screenHeight = SettingsManager.Instance.WindowSettings.FullScreen
+                ? SettingsManager.Instance.WindowSettings.ScreenHeight
+                : SettingsManager.Instance.WindowSettings.WindowHeight;
 
+            Vector2 normalizedPos = new Vector2(
+                screenPos.X / screenWidth,
+                screenPos.Y / screenHeight
+            );
+            if (SettingsManager.Instance.WindowSettings.FullScreen)
+            {
+                Console.WriteLine($"Screen Pos: {screenPos}, Normalized Pos: {normalizedPos}");
+            }
             float normalizedRad = light.WorldRadius / ExtendedGame.DrawResolution.X; 
 
             lightData[currentLightCount] = new Vector4(normalizedPos.X, normalizedPos.Y, normalizedRad, 0);

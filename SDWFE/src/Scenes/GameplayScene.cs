@@ -25,13 +25,14 @@ public class GameplayScene : Scene
     {
         // Set dynamic background color based on the session type
         var currentSession = GameState.Instance.SessionManager.CurrentSession;
-        BackgroundColor = currentSession != null 
-            ? currentSession.Type == SessionType.Singleplayer
-                ? Color.Green
-                : currentSession.Type == SessionType.MultiplayerClient
-                    ? Color.Red
-                    : Color.Blue
-            : Color.Black;
+        BackgroundColor = new Color(22, 17, 11);
+        // BackgroundColor = currentSession != null 
+        //     ? currentSession.Type == SessionType.Singleplayer
+        //         ? Color.Green
+        //         : currentSession.Type == SessionType.MultiplayerClient
+        //             ? Color.Red
+        //             : Color.Blue
+        //     : Color.Black;
         
         SetDefaultPlayerClass<Player>(() => new Player());
 
@@ -42,7 +43,8 @@ public class GameplayScene : Scene
     {
         base.Enter();
         map = new Tilemap("level_hub.tmj");
-        
+        ExtendedGame.LightShaderInstance.Enabled = true;
+        SpawnPoint = new Vector2(200, 200);
         map.RegisterHitboxes(HitboxManager);
         Vector2 spawnPointNPC = new Vector2(300, 300);
         NPC npc = new NPC("fireman_root", new Rectangle((int)spawnPointNPC.X - 12, (int)spawnPointNPC.Y - 12, 56, 56), ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/"), HitboxManager);

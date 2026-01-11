@@ -173,18 +173,20 @@ public class ExtendedGame : Game
         float screenWidth = GraphicsDevice.Viewport.Width;
         float screenHeight = GraphicsDevice.Viewport.Height;
 
+        if (LightShaderInstance.Enabled){
+            SpriteBatch.Begin(effect: LightShaderInstance.LightEffect, blendState: BlendState.AlphaBlend); 
+
+            Rectangle fullScreenRectangle = new Rectangle(0, 0, (int)screenWidth, (int)screenHeight);
+            Texture2D whitePixel = EngineResources.BlankSquare;
+            SpriteBatch.Draw(
+                whitePixel, 
+                fullScreenRectangle, 
+                Color.Black 
+            ); 
+
+            SpriteBatch.End();
+        }
         
-        SpriteBatch.Begin(effect: LightShaderInstance.LightEffect, blendState: BlendState.AlphaBlend); 
-
-        Rectangle fullScreenRectangle = new Rectangle(0, 0, (int)screenWidth, (int)screenHeight);
-        Texture2D whitePixel = EngineResources.BlankSquare;
-        SpriteBatch.Draw(
-            whitePixel, 
-            fullScreenRectangle, 
-            Color.Black 
-        ); 
-
-        SpriteBatch.End();
         
         #endregion
         
