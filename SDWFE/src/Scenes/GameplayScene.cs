@@ -50,13 +50,11 @@ public class GameplayScene : Scene
         ExtendedGame.LightShaderInstance.Enabled = true;
         
         SpawnPoint = map.SpawnPoint;
-
-
         map.RegisterHitboxes(HitboxManager);
-
         WaveManager waveManager = new WaveManager(map.Portals, map.Doors, map.Enemies, HitboxManager);
         
         this.AddObject(waveManager);
+
         waveManager.StartWaves();
         Vector2 spawnPointNPC = new Vector2(300, 300);
         NPC npc = new NPC("fireman_root", new Rectangle((int)spawnPointNPC.X - 12, (int)spawnPointNPC.Y - 12, 56, 56), ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/"), HitboxManager);

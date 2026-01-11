@@ -36,10 +36,6 @@ public class LightShader
                 screenPos.X / screenWidth,
                 screenPos.Y / screenHeight
             );
-            if (SettingsManager.Instance.WindowSettings.FullScreen)
-            {
-                Console.WriteLine($"Screen Pos: {screenPos}, Normalized Pos: {normalizedPos}");
-            }
             float normalizedRad = light.WorldRadius / ExtendedGame.DrawResolution.X; 
 
             lightData[currentLightCount] = new Vector4(normalizedPos.X, normalizedPos.Y, normalizedRad, 0);

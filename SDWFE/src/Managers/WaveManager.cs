@@ -251,29 +251,3 @@ public class WaveManager : GameObject
         }
     }
 }
-    // private void SpawnPortal(Vector2 position)
-    // {
-    //     Console.WriteLine($"[WaveManager] Spawning portal at {position}");
-    //     _activePortal = new Portal(position, _hitboxManager);
-    //     AddChild(_activePortal);
-    // }
-
-    // /// <summary>
-    // /// Creates a WaveManager with default test waves.
-    // /// </summary>
-    // public static WaveManager CreateTestWaves(Dictionary<int, RoomDoor> doorsById, HitboxManager hitboxManager, Vector2? portalPosition = null)
-    // {
-    //     var waves = new List<Wave>
-    //     {
-    //         new Wave(1) { EnemyCount = 3, DoorIndices = new List<int> { 0 } },
-    //         new Wave(2) { EnemyCount = 5, DoorIndices = new List<int> { 1 } },
-    //         new Wave(3) 
-    //         { 
-    //             EnemyCount = 7, 
-    //             IsFinalWave = true, 
-    //             PortalPosition = portalPosition ?? new Vector2(200, 200) 
-    //         }
-    //     };
-
-    //     return new WaveManager(waves, doorsById, hitboxManager);
-    // }
