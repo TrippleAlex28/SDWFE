@@ -7,6 +7,7 @@ using Engine.Hitbox;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SDWFE.Objects.Tiles;
 
 #nullable enable
 
@@ -239,6 +240,13 @@ public class Tilemap : GameObject
                     new Vector2(obj.x, obj.y - 32),
                     tileSize: 32,
                     hitboxManager: _hitboxManager
+                ));
+            }
+            else if (obj.name == "PortalPosition")
+            {
+                AddChild(new Portal(
+                    new Vector2(obj.x, obj.y - 32),
+                    _hitboxManager
                 ));
             }
         }

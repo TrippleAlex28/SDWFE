@@ -5,8 +5,10 @@ namespace Engine.Sprite;
 
 public class AnimatedSprite : Sprite
 {
-    private readonly int _spriteWidth;
-    private readonly int _spriteHeight;
+    public int Column { get; set; } = 0;
+
+    public readonly int _spriteWidth;
+    public readonly int _spriteHeight;
     private readonly bool _isLooping;
     private bool _isPlaying = false;
     private double _elapsedTimeSinceFrame = 0;
@@ -34,13 +36,13 @@ public class AnimatedSprite : Sprite
     {
         _isPlaying = true;
         _currentFrame = 0;
-        SourceRectangle = GetSpriteFromSheet(0, _currentFrame);
+        SourceRectangle = GetSpriteFromSheet(Column, _currentFrame);
     }
     public void Reset()
     {
         _isPlaying = false;
         _currentFrame = 0;
-        SourceRectangle = GetSpriteFromSheet(0, _currentFrame);
+        SourceRectangle = GetSpriteFromSheet(Column, _currentFrame);
     }
     public void Stop()
     {
