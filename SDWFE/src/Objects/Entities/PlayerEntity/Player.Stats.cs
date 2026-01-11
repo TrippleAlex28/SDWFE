@@ -11,6 +11,9 @@ public partial class Player
 {
     public PlayerStats Stats = new PlayerStats();
     public UIStats StatsUI { get; set; }
+
+    public Interactable? ClosestInteractable = null;
+    public int ClosestInteractableDist = int.MaxValue;
 }
 
 public class PlayerStats

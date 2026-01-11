@@ -43,6 +43,10 @@ public class GameplayScene : Scene
         map = new Tilemap("level_hub.tmj");
         
         map.RegisterHitboxes(HitboxManager);
+        Vector2 spawnPointNPC = new Vector2(300, 300);
+        NPC npc = new NPC("fireman_root", new Rectangle((int)spawnPointNPC.X - 12, (int)spawnPointNPC.Y - 12, 56, 56), ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/"), HitboxManager);
+        npc.GlobalPosition = spawnPointNPC;
+        this.AddObject(npc);
         SetUpHitboxes();
         this.AddObject(map);
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);

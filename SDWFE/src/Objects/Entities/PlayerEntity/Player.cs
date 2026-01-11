@@ -96,7 +96,7 @@ public partial class Player : GameObject
         {
             Sprite.BaseDrawLayer = (float)(0.8f / 1000f) * (this.GlobalPosition.Y + 24);
         }
-        
+        UpdateNPC(gameTime);
         UpdateInventory();
         UpdateMovement(gameTime);
         UpdateDialogue(gameTime);

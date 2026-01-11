@@ -8,7 +8,7 @@ namespace SDWFE.Objects.Entities.PlayerEntity;
 public partial class Player
 {
     private UIDialogue? _dialogue;
-    private UIDialogueChoice? _dialogueChoice;
+    public UIDialogueChoice? _dialogueChoice;
     
     /// <summary>
     /// Gets the player's dialogue UI.
@@ -86,5 +86,23 @@ public partial class Player
             //     "Press Escape or click after the last page to close this dialogue. Good luck on your adventure!"
             // );
         }
+    }
+
+    private void UpdateNPC(GameTime gameTime)
+    {
+        // Only process NPC dialogue for locally owned player
+        if (!IsLocallyOwned())
+            return;
+        
+        if (ClosestInteractable is NPC npc)
+        {
+            npc.speechBubble.IsVisible = true;
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
+            {
+                ShowChoiceDialogue(npc._basenode);
+            }
+        }
+        // Demo: Press E to interact with closest NPC
+        
     }
 }
