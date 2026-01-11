@@ -14,6 +14,8 @@ public enum ItemType
     Weapon = 1,
 }
 
+[JsonDerivedType(typeof(ItemData), typeDiscriminator: "item")]
+[JsonDerivedType(typeof(WeaponData), typeDiscriminator: "weapon")]
 public class ItemData
 {
     public string Name { get; set; } = "Item";

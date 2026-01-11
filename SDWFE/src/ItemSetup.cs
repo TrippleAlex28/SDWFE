@@ -154,12 +154,13 @@ public static class ItemSetup
                             weaponData.Velocity, 
                             weaponData.Range, 
                             weaponData.Damage, 
-                            player
+                            player,
+                            scene.HitboxManager
                         ));
                     }
                     break;
                 case BulletType.FireworkRocket:
-                    scene.AddObject(new FireworkRocket(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player));
+                    scene.AddObject(new FireworkRocket(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
                     break;
                 default:
                     break;

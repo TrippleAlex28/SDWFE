@@ -59,8 +59,8 @@ public class ItemDatabase
 
                 ItemData data = itemType == ItemType.Weapon
                     ? el.Deserialize<WeaponData>(options)!
-                    : el.Deserialize<ItemData>(options)!;
-
+                    : el.Deserialize<ItemData>(options)!; 
+                
                 _itemDataMap[data.Name] = data;
             }
             
@@ -90,6 +90,7 @@ public class ItemDatabase
             {
                 WriteIndented = true
             };
+            options.Converters.Add(new JsonStringEnumConverter());
             
             string json = JsonSerializer.Serialize(itemDataList, options);
             File.WriteAllText(_databasePath, json);
