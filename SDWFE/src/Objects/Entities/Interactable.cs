@@ -59,7 +59,6 @@ public class Interactable : GameObject
                 player.ClosestInteractable = this;
                 player.ClosestInteractableDist = distance;
             }
-            Console.WriteLine(player.ClosestInteractableDist);
         }
     }
 }
