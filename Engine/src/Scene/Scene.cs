@@ -119,6 +119,10 @@ public abstract class Scene
           }
           
           var player = DefaultPlayerClassFactory();
+
+          // Place the newly created player at the scene's defined spawn point
+          player.GlobalPosition = SpawnPoint;
+
           AddObject(
                player,
                owningClientId: owningClientId

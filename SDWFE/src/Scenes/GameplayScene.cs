@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Engine;
 using Engine.Hitbox;
 using Engine.Input;
@@ -25,13 +26,14 @@ public class GameplayScene : Scene
     {
         // Set dynamic background color based on the session type
         var currentSession = GameState.Instance.SessionManager.CurrentSession;
-        BackgroundColor = currentSession != null 
-            ? currentSession.Type == SessionType.Singleplayer
-                ? Color.Green
-                : currentSession.Type == SessionType.MultiplayerClient
-                    ? Color.Red
-                    : Color.Blue
-            : Color.Black;
+        BackgroundColor = new Color(22, 17, 11);
+        // BackgroundColor = currentSession != null 
+        //     ? currentSession.Type == SessionType.Singleplayer
+        //         ? Color.Green
+        //         : currentSession.Type == SessionType.MultiplayerClient
+        //             ? Color.Red
+        //             : Color.Blue
+        //     : Color.Black;
         
         SetDefaultPlayerClass<Player>(() => new Player());
 
@@ -41,13 +43,18 @@ public class GameplayScene : Scene
     public override void Enter()
     {
         base.Enter();
-        map = new Tilemap("level_hub.tmj");
-        
+        map = new Tilemap("Level1.tmj", HitboxManager);
+        ExtendedGame.LightShaderInstance.Enabled = true;
+        SpawnPoint = new Vector2(200, 200);
+
+
         map.RegisterHitboxes(HitboxManager);
         
         Vector2 spawnPointNPC = new Vector2(300, 300);
         NPC npc = new NPC("fireman_root", new Rectangle((int)spawnPointNPC.X - 12, (int)spawnPointNPC.Y - 12, 56, 56), ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/"), HitboxManager);
         npc.GlobalPosition = spawnPointNPC;
+        
+        
         this.AddObject(npc);
         
         if (GameState.Instance.SessionManager.IsHost || GameState.Instance.SessionManager.IsSingleplayer)
@@ -86,14 +93,21 @@ public class GameplayScene : Scene
 
         _bulletTrailSystem.Update(gameTime.DeltaSeconds());
         
+        List<PointLight> allWorldLights = new List<PointLight>();
         // Set up hitboxes for any new players that may have joined
         SetUpHitboxes();
-        
         // Update triggers for ALL players, not just the local one
         foreach (var playerObject in GetAllPawns())
         {
             if (playerObject is Player player)
             {
+                // Update lighting shader with all world lights
+                allWorldLights.Add(new PointLight()
+                {
+                    WorldPosition = player.GlobalPosition + new Vector2(8, 16),
+                    WorldRadius = 150f,
+                    LightColor = Color.White * 0.5f
+                });
                 Rectangle playerHitbox = new Rectangle(
                     (int)player.GlobalPosition.X, 
                     (int)player.GlobalPosition.Y + 24, 
@@ -103,7 +117,10 @@ public class GameplayScene : Scene
                 HitboxManager.UpdateTriggersForObject(player, playerHitbox, HitboxLayer.All);
             }
         }
-        
+        ExtendedGame.LightShaderInstance.SetLights(allWorldLights);
+        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
+            map.DoorsById[0].Open();
+         // Handle pause input
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);
     }
