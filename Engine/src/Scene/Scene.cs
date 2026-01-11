@@ -20,6 +20,7 @@ public abstract class Scene
 
      public GameObject SceneRoot { get; private set; }
      private int _nextNetworkId = 1;
+     public List<GameObject> SceneObjects { get; private set; } = [];
      
      public HitboxManager HitboxManager { get; private set; } = new HitboxManager();
      public UIRoot UIRoot { get; private set; }
@@ -49,6 +50,10 @@ public abstract class Scene
           
           SceneRoot.Update(gameTime);
           UIRoot.Update(gameTime);
+          
+          // Update SceneRoot object list
+          SceneObjects.Clear();
+          MapSceneRecursive(SceneRoot, SceneObjects);
      }
 
      public virtual void DrawScene(SpriteBatch spriteBatch)
@@ -286,6 +291,16 @@ public abstract class Scene
           
           foreach (GameObject child in node.Children)
                child.ClearDirty();
+     }
+
+     private void MapSceneRecursive(GameObject node, List<GameObject> result)
+     {
+          result.Add(node);
+          
+          foreach (var c in node.Children)
+          {
+               MapSceneRecursive(c, result);
+          }
      }
      
      #endregion

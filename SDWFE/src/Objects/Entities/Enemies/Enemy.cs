@@ -58,6 +58,18 @@ public abstract class Enemy : GameObject
             () => _targetNetId,
             (v) => _targetNetId = v
         );
+
+        RegisterProperty(
+            nameof(MaxHealth),
+            () => MaxHealth,
+            (v) => MaxHealth = v
+        );
+        
+        RegisterProperty(
+            nameof(CurrentHealth),
+            () => CurrentHealth,
+            (v) => CurrentHealth = v
+        );
         
         MaxHealth = maxHealth;
         CurrentHealth = MaxHealth;
@@ -88,6 +100,9 @@ public abstract class Enemy : GameObject
         {
             Target = GameState.Instance.CurrentScene?.GetObject(_targetNetId.Value);
         }
+        
+        // Update target based on Scene
+        Target = GetBestTarget();
         
         // Update attack timer
         if (AttackTimer > 0f)
@@ -136,6 +151,21 @@ public abstract class Enemy : GameObject
         return dSquared <= range * range;
     }
 
+    protected GameObject? GetBestTarget()
+    {
+        GameObject? target = null;
+        float bestDistance = float.MaxValue;
+        foreach (var obj in GameState.Instance.CurrentScene!.SceneObjects)
+        {
+            if (bestDistance > GetDistanceToTarget(obj))
+            {
+                target = obj;
+            }
+        }
+
+        return target;
+    }
+    
     protected float GetDistanceToTarget(GameObject? target)
     {
         return target == null ? float.MaxValue : Vector2.Distance(GlobalPosition, target.GlobalPosition);
