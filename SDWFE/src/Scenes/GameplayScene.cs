@@ -45,6 +45,8 @@ public class GameplayScene : Scene
     public override void Enter()
     {
         base.Enter();
+
+        #region Load Tilemap and Setup
         string tilemaptoLoad = $"{SceneData.levelName}.tmj";
         map = new Tilemap(tilemaptoLoad, HitboxManager);
         ExtendedGame.LightShaderInstance.Enabled = true;
@@ -55,14 +57,28 @@ public class GameplayScene : Scene
         
         this.AddObject(waveManager);
 
-        waveManager.StartWaves();
-        Vector2 spawnPointNPC = new Vector2(300, 300);
-        NPC npc = new NPC("fireman_root", new Rectangle((int)spawnPointNPC.X - 12, (int)spawnPointNPC.Y - 12, 56, 56), ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/"), HitboxManager);
-        npc.GlobalPosition = spawnPointNPC;
+        if (SceneData.levelIndex == -1)
+        {
+            foreach (var portalData in map.Portals)
+            {
+                var portal = new Portal(portalData, HitboxManager);
+                
+                this.AddObject(portal);
+            }
+        } else 
+        {
+            waveManager.StartWaves();
+        }
         
-        
-        this.AddObject(npc);
-        
+        // Spawn NPCs
+        foreach (var npcData in map.NPCs)
+        {
+            NPC newNPC = new NPC(npcData.RootNode, new Rectangle((int)npcData.Position.X - 12, (int)npcData.Position.Y - 12, 56, 56), npcData.Texture, HitboxManager);
+            newNPC.GlobalPosition = npcData.Position;
+
+            this.AddObject(newNPC);
+        }
+            
         if (GameState.Instance.SessionManager.IsHost || GameState.Instance.SessionManager.IsSingleplayer)
         {
             var grunt = new Grunt()
@@ -75,6 +91,7 @@ public class GameplayScene : Scene
         SetUpHitboxes();
         
         this.AddObject(map);
+        #endregion
         
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);
     }
@@ -124,8 +141,6 @@ public class GameplayScene : Scene
             }
         }
         ExtendedGame.LightShaderInstance.SetLights(allWorldLights);
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
-            map.DoorsById[0].Open();
          // Handle pause input
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);

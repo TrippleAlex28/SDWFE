@@ -2,44 +2,131 @@
   {
     "Id": "fireman_root",
     "SpeakerName": "Fireman",
-    "Text": "Hello traveler! Do you want to learn about fire safety?",
+    "Text": "You look like you've walked far, traveler. This is the ninth year of the Song-967 by the old calendar-and our homeland has not known a peaceful night since the curse fell.",
     "Choices": [
-      { "ChoiceText": "Yes, tell me more.", "NextId": "fireman_yes" },
-      { "ChoiceText": "No, thanks.", "NextId": "fireman_no" }
+      { "ChoiceText": "The curse", "NextId": "fireman_curse" },
+      { "ChoiceText": "The wizard", "NextId": "fireman_wizard" }
     ]
   },
   {
-    "Id": "fireman_yes",
+    "Id": "fireman_curse",
     "SpeakerName": "Fireman",
-    "Text": "Always keep a fire extinguisher in your home.",
-    "Choices": []
+    "Text": "It began on a windless evening. Lantern flames turned blue. Wells tasted like ink. The river ran too still, like it was holding its breath. By dawn, every threshold was marked with the same symbol-drawn in ash.",
+    "Choices": [
+      { "ChoiceText": "The symbol", "NextId": "fireman_symbol" },
+      { "ChoiceText": "Leave", "NextId": "fireman_end" }
+    ]
   },
   {
-    "Id": "fireman_no",
+    "Id": "fireman_symbol",
     "SpeakerName": "Fireman",
-    "Text": "Okay, stay safe!",
+    "Text": "The elders call it a binding mark-meant to tether a place to misfortune. They say it makes people forget the safe roads... and remember only the wrong ones.",
+    "Choices": [
+      { "ChoiceText": "Break it", "NextId": "fireman_break" },
+      { "ChoiceText": "Leave", "NextId": "fireman_end" }
+    ]
+  },
+  {
+    "Id": "fireman_wizard",
+    "SpeakerName": "Fireman",
+    "Text": "Some whisper 'wizard'. Others say 'scribe'-a scholar who learned the wrong kind of characters. All I know is this: strangers arrived days before the curse, and one of them never showed his face.",
+    "Choices": [
+      { "ChoiceText": "Why me", "NextId": "fireman_chosen" },
+      { "ChoiceText": "Any leads", "NextId": "fireman_leads" }
+    ]
+  },
+  {
+    "Id": "fireman_chosen",
+    "SpeakerName": "Fireman",
+    "Text": "Because you're not from here-at least, not the way we are now. The curse bends people who belong to this soil. Outsiders can still see the seams. If you can find the one who spoke the words, you can make him swallow them.",
+    "Choices": [
+      { "ChoiceText": "Any leads", "NextId": "fireman_leads" },
+      { "ChoiceText": "Leave e", "NextId": "fireman_end" }
+    ]
+  },
+  {
+    "Id": "fireman_break",
+    "SpeakerName": "Fireman",
+    "Text": "If the stories are true, a curse like this needs three things: a place to anchor, a name to target, and a voice to carry it. Remove any one of them. Start with the voice.",
+    "Choices": [
+      { "ChoiceText": "Any leads", "NextId": "fireman_leads" },
+      { "ChoiceText": "Leave", "NextId": "fireman_end" }
+    ]
+  },
+  {
+    "Id": "fireman_leads",
+    "SpeakerName": "Fireman",
+    "Text": "The first ash-mark appeared near the old hillside shrine. And the last person to return from there was a courier-tongue blackened, as if he'd tried to speak and the words turned to soot. If you need something to ward you, ask the Blacksmith.",
+    "Choices": [
+      { "ChoiceText": "Blacksmith", "NextId": "blacksmith_root" },
+      { "ChoiceText": "Leave", "NextId": "fireman_end" }
+    ]
+  },
+  {
+    "Id": "fireman_end",
+    "SpeakerName": "Fireman",
+    "Text": "Then go with clear eyes. The curse loves hesitation.",
     "Choices": []
   },
 
   {
     "Id": "blacksmith_root",
     "SpeakerName": "Blacksmith",
-    "Text": "Greetings! Need a new sword or shield?",
+    "Text": "If you're here to buy steel, you're late. If you're here about the curse... you're right on time.",
     "Choices": [
-      { "ChoiceText": "A sword, please.", "NextId": "blacksmith_sword" },
-      { "ChoiceText": "A shield, please.", "NextId": "blacksmith_shield" }
+      { "ChoiceText": "Ward me", "NextId": "blacksmith_ward" },
+      { "ChoiceText": "The wizard", "NextId": "blacksmith_wizard" }
     ]
   },
   {
-    "Id": "blacksmith_sword",
+    "Id": "blacksmith_ward",
     "SpeakerName": "Blacksmith",
-    "Text": "Heres a fine blade for you!",
-    "Choices": []
+    "Text": "Take this iron charm. Not magic-just honest metal. The cursed marks dislike things that have been hammered with purpose. Keep it close when the air turns cold.",
+    "Choices": [
+      { "ChoiceText": "The shrine", "NextId": "blacksmith_shrine" },
+      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+    ]
   },
   {
-    "Id": "blacksmith_shield",
+    "Id": "blacksmith_wizard",
     "SpeakerName": "Blacksmith",
-    "Text": "This shield will protect you well.",
+    "Text": "I never saw his face. But I heard his voice-soft as paper sliding over stone. He asked for 'ink that doesn't dry' and 'thread that can bind a town'. That's not trade talk. That's ritual talk.",
+    "Choices": [
+      { "ChoiceText": "Where from", "NextId": "blacksmith_leads" },
+      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+    ]
+  },
+  {
+    "Id": "blacksmith_shrine",
+    "SpeakerName": "Blacksmith",
+    "Text": "Ash on stone. Scratches like calligraphy. And silence-too perfect. If you hear chanting, do not answer it. A curse can learn your name that way.",
+    "Choices": [
+      { "ChoiceText": "Advice", "NextId": "blacksmith_advice" },
+      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+    ]
+  },
+  {
+    "Id": "blacksmith_leads",
+    "SpeakerName": "Blacksmith",
+    "Text": "The old apothecary keeps rare inks. And the shrine keeps old threads-prayer cords, offerings, things people leave behind. If the caster wanted to bind us, those are the places he'd steal from.",
+    "Choices": [
+      { "ChoiceText": "Go shrine", "NextId": "blacksmith_end" },
+      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+    ]
+  },
+  {
+    "Id": "blacksmith_advice",
+    "SpeakerName": "Blacksmith",
+    "Text": "Don't chase every shadow. The curse makes decoys. Follow what repeats: the same mark, the same cold wind, the same wrong silence. Repetition is how spells stay alive.",
+    "Choices": [
+      { "ChoiceText": "Thanks", "NextId": "blacksmith_end" },
+      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+    ]
+  },
+  {
+    "Id": "blacksmith_end",
+    "SpeakerName": "Blacksmith",
+    "Text": "Bring our dawn back, traveler.",
     "Choices": []
   }
 ]

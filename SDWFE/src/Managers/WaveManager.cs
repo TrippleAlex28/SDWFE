@@ -143,7 +143,7 @@ public class WaveManager : GameObject
         }
         foreach (var portalData in wave.PortalData)
         {
-            var portal = new Portal(portalData.Position, _hitboxManager);
+            var portal = new Portal(portalData, _hitboxManager);
             portal.IsVisible = false;
             _portals.Add(portal);
             AddChild(portal);
