@@ -39,7 +39,7 @@ public class Grunt : ChasingEnemy
     protected override void Attack()
     {
         base.Attack();
-
+        Console.WriteLine("Attack");
         if (Target == null) return;
         
         // Check if target is within range

@@ -53,6 +53,7 @@ public abstract class Projectile : GameObject
     protected override void EnterSelf()
     {
         base.EnterSelf();
+        
         _trigger = new TriggerHitbox(
             new Rectangle(
                 (int)this.GlobalPosition.X, 
@@ -74,15 +75,13 @@ public abstract class Projectile : GameObject
             if (otherObject == this || otherObject == _owner)
                 return;
             
-            if (otherObject is Enemy enemy)
-            {
-                enemy.TakeDamage(100);
-            }
             if (otherObject is GameObject otherGameObject)
                 OnCollision(otherGameObject);
-
+            
             Console.WriteLine("Projectile collided with " + otherObject);
         };
+        
+        
         if (_projectileEmitter != null)
             _projectileTrail.AddEmitter(_projectileEmitter);
         
@@ -159,6 +158,5 @@ public abstract class Projectile : GameObject
         {
             RemoveFromParent();
         }
-        
     }
 }

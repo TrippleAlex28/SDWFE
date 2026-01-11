@@ -4,6 +4,7 @@ using Engine.Hitbox;
 using Engine.Particle;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SDWFE.Objects.Entities.Enemies;
 
 namespace SDWFE.Objects.Projectiles.Bullets;
 
@@ -45,9 +46,9 @@ public abstract class Bullet : Projectile
     {
         if (Collided) return;
         
-        if (other != null)
+        if (other is Enemy enemy)
         {
-            // TODO: Apply Damage
+            enemy.TakeDamage((int)_damage);
         }
         
         base.OnCollision(other);
