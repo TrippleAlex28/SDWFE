@@ -9,8 +9,8 @@ namespace SDWFE.Objects.Entities.Enemies;
 public abstract class ChasingEnemy : Enemy
 {
     public float MoveSpeed { get; }
-    
-    public float PathRecalculateInterval { get; }
+
+    public float PathRecalculateInterval { get; } = 0.5f;
     public float WaypointReachedDistance { get; set; } = 8f;
     public int MaxPathfindingDistance { get; set; }= 512;
     public const int PATHFINDING_GRID_SIZE = 16;

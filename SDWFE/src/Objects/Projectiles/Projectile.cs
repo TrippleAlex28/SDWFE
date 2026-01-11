@@ -77,8 +77,6 @@ public abstract class Projectile : GameObject
             
             if (otherObject is GameObject otherGameObject)
                 OnCollision(otherGameObject);
-            
-            Console.WriteLine("Projectile collided with " + otherObject);
         };
         
         
@@ -113,7 +111,6 @@ public abstract class Projectile : GameObject
             if (_hitboxManager.CheckStaticCollision(hitbox, HitboxLayer.Projectile))
             {
                 OnCollision(null!); // Hit environment
-                Console.WriteLine("Projectile hit environment");
             }
         }
         
