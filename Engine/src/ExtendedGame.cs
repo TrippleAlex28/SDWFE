@@ -24,6 +24,8 @@ public class ExtendedGame : Game
     public RenderTarget2D RenderTarget { get; private set; }
     public static readonly Point DrawResolution = new(480, 270);
     private static Point _cachedBackBufferSize;
+
+    public static LightShader LightShaderInstance { get; private set; }
     
     public static string ContentRootDirectory
     {
@@ -64,8 +66,8 @@ public class ExtendedGame : Game
     protected override void LoadContent()
     {
         base.LoadContent();
-
         AssetManager = new AssetManager(this.Content);
+        LightShaderInstance = new LightShader();
         SpriteBatch = new SpriteBatch(this.GraphicsDevice);
         RenderTarget = new RenderTarget2D(
             GraphicsDevice,
@@ -157,7 +159,32 @@ public class ExtendedGame : Game
         
         #region Draw Shader
         
-        // Draw Shader
+        GraphicsDevice.SetRenderTarget(null);
+
+        // var list = new List<PointLight>() { 
+        //     new PointLight
+        //     {
+        //         WorldPosition = new Vector2(240, 135),
+        //         WorldRadius = 200,
+        //         LightColor = Color.White
+        //     }
+        // };
+        // LightShaderInstance.SetLights(list);
+        float screenWidth = GraphicsDevice.Viewport.Width;
+        float screenHeight = GraphicsDevice.Viewport.Height;
+
+        
+        SpriteBatch.Begin(effect: LightShaderInstance.LightEffect, blendState: BlendState.AlphaBlend); 
+
+        Rectangle fullScreenRectangle = new Rectangle(0, 0, (int)screenWidth, (int)screenHeight);
+        Texture2D whitePixel = EngineResources.BlankSquare;
+        SpriteBatch.Draw(
+            whitePixel, 
+            fullScreenRectangle, 
+            Color.Black 
+        ); 
+
+        SpriteBatch.End();
         
         #endregion
         

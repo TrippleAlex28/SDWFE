@@ -26,7 +26,10 @@ public sealed class AssetManager
     {
         return this._contentManager.Load<SpriteFont>(basePath + fontName);
     }
-
+    public Effect LoadEffect(string effectName, string basePath = "")
+    {
+        return this._contentManager.Load<Effect>(basePath + effectName);
+    }
     public SoundEffect LoadSoundEffect(string soundEffectName, string basePath = "")
     {
         return this._contentManager.Load<SoundEffect>(basePath + soundEffectName);

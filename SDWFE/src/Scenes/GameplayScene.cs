@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Engine;
 using Engine.Hitbox;
 using Engine.Input;
@@ -72,14 +73,21 @@ public class GameplayScene : Scene
 
         _bulletTrailSystem.Update(gameTime.DeltaSeconds());
         
+        List<PointLight> allWorldLights = new List<PointLight>();
         // Set up hitboxes for any new players that may have joined
         SetUpHitboxes();
-        
         // Update triggers for ALL players, not just the local one
         foreach (var playerObject in GetAllPawns())
         {
             if (playerObject is Player player)
             {
+                // Update lighting shader with all world lights
+                allWorldLights.Add(new PointLight()
+                {
+                    WorldPosition = player.GlobalPosition + new Vector2(8, 16),
+                    WorldRadius = 150f,
+                    LightColor = Color.White * 0.5f
+                });
                 Rectangle playerHitbox = new Rectangle(
                     (int)player.GlobalPosition.X, 
                     (int)player.GlobalPosition.Y + 24, 
@@ -89,7 +97,9 @@ public class GameplayScene : Scene
                 HitboxManager.UpdateTriggersForObject(player, playerHitbox, HitboxLayer.All);
             }
         }
+        ExtendedGame.LightShaderInstance.SetLights(allWorldLights);
         
+         // Handle pause input
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);
     }

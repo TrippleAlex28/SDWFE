@@ -153,6 +153,12 @@
 /processorParam:TextureFormat=Color
 /build:Items/Pistol.png
 
+#begin Shaders/LightEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/LightEffect.fx
+
 #begin Tilemap/TM_Collision.png
 /importer:TextureImporter
 /processor:TextureProcessor
