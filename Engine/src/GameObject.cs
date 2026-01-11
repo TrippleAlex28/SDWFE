@@ -117,11 +117,17 @@ public class GameObject : NetObject
     /// When IsOnStairs is true, use this value instead of position-based Y-sorting.
     /// </summary>
     public float StairYSort { get; set; } = 0f;
-    
+
+
+
+    #endregion
+
+    #region Chest
+
     #endregion
 
     #region Collision
-    
+
     /// <summary>
     /// Reference to the HitboxManager for collision detection.
     /// Set this if you want the object to use physics-based collision.

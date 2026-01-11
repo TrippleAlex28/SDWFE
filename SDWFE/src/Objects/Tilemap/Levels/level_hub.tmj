@@ -117,31 +117,51 @@
                  "width":0,
                  "x":160,
                  "y":192
-                }, 
+                },
                 {
-                 "height":0,
-                 "id":4,
-                 "name":"StairL",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"direction",
-                         "type":"int",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":128,
-                 "y":192
+                  "height": 0,
+                  "id": 4,
+                  "name": "StairL",
+                  "point": true,
+                  "properties": [
+                    {
+                      "name": "direction",
+                      "type": "int",
+                      "value": 1
+                    }
+                  ],
+                  "rotation": 0,
+                  "type": "",
+                  "visible": true,
+                  "width": 0,
+                  "x": 128,
+                  "y": 192
+                },
+                {
+                  "height": 0,
+                  "id": 5,
+                  "name": "Chest",
+                  "point": true,
+                  "properties": [
+                    {
+                      "name": "direction",
+                      "type": "int",
+                      "value": 1
+                    }
+                  ],
+                  "rotation": 0,
+                  "type": "",
+                  "visible": true,
+                  "width": 0,
+                  "x": 100,
+                  "y": 250
                 }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
+               "opacity":1,
+               "type":"objectgroup",
+               "visible":true,
+               "x":0,
+               "y":0
+              }],
  "nextlayerid":5,
  "nextobjectid":5,
  "orientation":"orthogonal",

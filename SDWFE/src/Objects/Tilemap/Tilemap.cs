@@ -221,6 +221,11 @@ public class Tilemap : GameObject
             {
                 Stairs.Add(new Stair(new Vector2(obj.x, obj.y), StairFacing.Right));
             }
+            else if (obj.name == "Chest")
+            {
+                this.AddChild(new Chest(new Vector2(obj.x, obj.y)));
+            }
+                
         }
     }
 
