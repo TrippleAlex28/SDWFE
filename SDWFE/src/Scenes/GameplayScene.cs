@@ -9,6 +9,7 @@ using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities;
+using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Tilemap;
 
@@ -43,12 +44,25 @@ public class GameplayScene : Scene
         map = new Tilemap("level_hub.tmj");
         
         map.RegisterHitboxes(HitboxManager);
+        
         Vector2 spawnPointNPC = new Vector2(300, 300);
         NPC npc = new NPC("fireman_root", new Rectangle((int)spawnPointNPC.X - 12, (int)spawnPointNPC.Y - 12, 56, 56), ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/"), HitboxManager);
         npc.GlobalPosition = spawnPointNPC;
         this.AddObject(npc);
+        
+        if (GameState.Instance.SessionManager.IsHost || GameState.Instance.SessionManager.IsSingleplayer)
+        {
+            var grunt = new Grunt()
+            {
+                GlobalPosition = new Vector2(350, 350),
+            };
+            AddObject(grunt);
+        }
+        
         SetUpHitboxes();
+        
         this.AddObject(map);
+        
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);
     }
     private void SetUpHitboxes()

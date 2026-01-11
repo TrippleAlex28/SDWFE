@@ -30,9 +30,9 @@
       <ProjectReference Include="..\Engine\Engine.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Content\Entities\Player\" />
-      <Folder Include="Content\Fonts\" />
-      <Folder Include="Content\Items\" />
-      <Folder Include="Content\UI\" />
+      <Folder Include="Content\Entities\Enemies\" />
     </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DefineConstants>DEBUG</DefineConstants>
+    </PropertyGroup>
 </Project>

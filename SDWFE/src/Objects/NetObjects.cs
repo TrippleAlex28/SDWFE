@@ -9,4 +9,5 @@ public enum NetObjects : uint
     GenericBullet = 2,
     ShotgunBullet = 3,
     FireworkRocket = 4,
+    Grunt = 5,
 } 

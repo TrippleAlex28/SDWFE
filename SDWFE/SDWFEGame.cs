@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SDWFE.Commands;
 using SDWFE.Objects;
+using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
 using SDWFE.Scenes;
@@ -26,6 +27,9 @@ public class SDWFEGame : ExtendedGame
         // --- NET OBJECTS SETUP ---
         NetObjectRegistry.Register<Player>((uint)NetObjects.Player);
         // NetObjectRegistry.Register<GenericBullet>((uint)NetObjects.GenericBullet);
+        // NetObjectRegistry.Register<ShotgunBullet>((uint)NetObjects.GenericBullet);
+        // NetObjectRegistry.Register<FireworkRocket>((uint)NetObjects.GenericBullet);
+        NetObjectRegistry.Register<Grunt>((uint)NetObjects.Grunt);
         
         // --- NET COMMANDS SETUP ---
         NetCommandRegistry.Register<WalkCommand>((uint)NetCommands.Move);
