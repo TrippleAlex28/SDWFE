@@ -224,7 +224,9 @@ public class HitboxManager
     /// </summary>
     public void UpdateTriggersForObject(object obj, Rectangle objBounds, HitboxLayer objLayer)
     {
-        foreach (var trigger in _triggerHitboxes)
+        // Use ToList() to iterate over a copy, preventing "collection modified" errors
+        // if triggers are removed during update (e.g., in event handlers)
+        foreach (var trigger in _triggerHitboxes.ToList())
         {
             trigger.UpdateObject(obj, objBounds, objLayer);
         }

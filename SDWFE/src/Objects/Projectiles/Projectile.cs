@@ -6,6 +6,7 @@ using Engine.Particle;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SDWFE.Objects.Entities.Enemies;
 
 namespace SDWFE.Objects.Projectiles;
 
@@ -72,7 +73,11 @@ public abstract class Projectile : GameObject
             // Ignore self and owner
             if (otherObject == this || otherObject == _owner)
                 return;
-                
+            
+            if (otherObject is Enemy enemy)
+            {
+                enemy.TakeDamage(100);
+            }
             if (otherObject is GameObject otherGameObject)
                 OnCollision(otherGameObject);
 
@@ -89,7 +94,7 @@ public abstract class Projectile : GameObject
     {
         _projectileTrail.Update(gameTime.DeltaSeconds());
         
-        Sprite.BaseDrawLayer = this.GlobalPosition.Y / 1000f ;
+        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 0));
         Rectangle hitbox = new Rectangle(
             (int)GlobalPosition.X, 
             (int)GlobalPosition.Y, 

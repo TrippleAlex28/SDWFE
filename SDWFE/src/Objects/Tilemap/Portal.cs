@@ -42,7 +42,7 @@ namespace SDWFE.Objects.Tiles
             _hitboxManager.AddTrigger(Hitbox);
 
             Hitbox.OnEnter += OnEnterPortal;
-            this.Sprite.BaseDrawLayer = (float)(0.8f / 1000f) * (globalPosition.Y + 32);
+            this.Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 32));
 
             
             this.AddChild(Sprite);
@@ -58,7 +58,7 @@ namespace SDWFE.Objects.Tiles
             {
                 OriginType = OriginType.TopLeft,
             };
-            this.Sprite.BaseDrawLayer = (float)(0.8f / 1000f) * (GlobalPosition.Y + 32);
+            this.Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 32));
             Sprite.AnimationCompleted += OnAnimationComplete;
             this.AddChild(Sprite);
         }

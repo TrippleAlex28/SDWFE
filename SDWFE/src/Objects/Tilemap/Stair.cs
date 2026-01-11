@@ -100,7 +100,7 @@ public class Stair : GameObject
 
     public float GetYSortBase()
     {
-        return 0.8f / 1000f * (GlobalPosition.Y - STEP_HEIGHT);
+        return ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, -STEP_HEIGHT)) + STAIR_LAYER_OFFSET;
     }
 
     public float GetPlayerYSort()

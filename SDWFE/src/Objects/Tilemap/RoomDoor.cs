@@ -8,6 +8,7 @@ using Engine.Input;
 using Engine.Sprite;
 using Engine.Hitbox;
 
+#nullable enable
 public class RoomDoor : GameObject
 {
     public Rectangle _hitBox;
@@ -18,19 +19,18 @@ public class RoomDoor : GameObject
     private StaticHitbox? _staticHitbox;
     private readonly HitboxManager _hitboxManager;
 
-    public RoomDoor(Texture2D spriteSheet, Vector2 globalPosition, int tileSize, HitboxManager hitboxManager)
+    public RoomDoor(Vector2 globalPosition, HitboxManager hitboxManager)
     {
-        this._tileSize = tileSize;
-        this._spriteSheet = spriteSheet;
+        this._spriteSheet = ExtendedGame.AssetManager.LoadTexture("TM_Door_Anim", "Tilemap/");
         this.GlobalPosition = globalPosition;
         this._hitboxManager = hitboxManager;
 
-        _staticHitbox = new StaticHitbox(new Rectangle((int)globalPosition.X, (int)globalPosition.Y + 24, tileSize, 8));
+        _staticHitbox = new StaticHitbox(new Rectangle((int)globalPosition.X, (int)globalPosition.Y + 24, _tileSize, 8));
         _staticHitbox.BlocksLayers = HitboxLayer.All;
         _hitboxManager.AddStatic(_staticHitbox);
 
         _animatedSprite = new AnimatedSprite(_spriteSheet, _tileSize, _tileSize, false, false);
-        _animatedSprite.BaseDrawLayer = (float)(0.8f / 1000f) * (globalPosition.Y + 32) - 0.0001f;
+        _animatedSprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 32)) - 0.0001f;
 
         _animatedSprite.AnimationCompleted += () =>
         {

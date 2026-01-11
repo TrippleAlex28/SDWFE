@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Engine;
 using Engine.Hitbox;
 using Microsoft.Xna.Framework;
+using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Tilemap;
 using SDWFE.Objects.Tiles;
 
@@ -16,12 +17,13 @@ namespace SDWFE.Managers;
 public class WaveManager : GameObject
 {
     private readonly List<Wave> _waves;
-    private readonly Dictionary<int, RoomDoor> _doorsById;
-    private readonly HitboxManager _hitboxManager;
+    private List<RoomDoor> _doors = new();
+    private List<Portal> _portals = new();
+    private List<Enemy> _enemies = new();
     
+    private HitboxManager _hitboxManager;
     private int _currentWaveIndex = -1;
     private int _enemiesRemaining = 0;
-    private Portal? _activePortal;
     private bool _waveInProgress = false;
 
     /// <summary>
@@ -64,12 +66,57 @@ public class WaveManager : GameObject
     /// </summary>
     public event Action? OnAllWavesCompleted;
 
-    public WaveManager(List<Wave> waves, Dictionary<int, RoomDoor> doorsById, HitboxManager hitboxManager)
+    public WaveManager(List<PortalData> portals, List<DoorData> doors, List<EnemyData> enemies, HitboxManager hitboxManager)
     {
-        _waves = waves;
-        _doorsById = doorsById;
         _hitboxManager = hitboxManager;
+        _waves = InitializeWaves(portals, doors, enemies);
     }
+    private List<Wave> InitializeWaves(List<PortalData> portals, List<DoorData> doors, List<EnemyData> enemies){
+        List<Wave> waves = new List<Wave>();
+        int totalWaves = 0;
+        portals.ForEach(portalData =>
+        {
+            if (portalData.WaveNumber > totalWaves)
+                totalWaves = portalData.WaveNumber;
+        });
+
+        for (int i = 0; i < totalWaves; i++)
+        {
+            Wave newWave = new Wave(i + 1);
+            // Add enemies for this wave
+            enemies.ForEach(enemyData =>
+            {
+                if (enemyData.WaveNumber == i + 1)
+                {
+                    newWave.EnemyCount++;
+                    newWave.EnemyData.Add(enemyData);
+                }
+            });
+
+            // Add doors for this wave
+            doors.ForEach(doorData =>
+            {
+                if (doorData.WaveNumber == i + 1)
+                {
+                    newWave.DoorsToOpen.Add(doorData);
+                }
+            });
+
+            // Add portals for this wave
+            portals.ForEach(portalData =>
+            {
+                if (portalData.WaveNumber == i + 1)
+                {
+                    newWave.PortalData.Add(portalData);
+                }
+            });
+            waves.Add(newWave);
+        }
+        
+        
+        return waves;
+    }
+    
 
     /// <summary>
     /// Starts the first wave.
@@ -85,7 +132,43 @@ public class WaveManager : GameObject
         _currentWaveIndex = -1;
         StartNextWave();
     }
-
+    public void BuildWave()
+    {
+        Wave wave = _waves[_currentWaveIndex];
+        foreach (var doorData in wave.DoorsToOpen)
+        {
+            var door = new RoomDoor(doorData.Position, _hitboxManager);
+            _doors.Add(door);
+            AddChild(door);
+        }
+        foreach (var portalData in wave.PortalData)
+        {
+            var portal = new Portal(portalData.Position, _hitboxManager);
+            portal.IsVisible = false;
+            _portals.Add(portal);
+            AddChild(portal);
+        }
+        foreach (var enemyData in wave.EnemyData)
+        {
+            Enemy enemy;
+            switch (enemyData.EnemyType)
+            {
+                case 0:
+                    enemy = new Grunt();
+                    break;
+                default:
+                    enemy = new Grunt(); // Default to Grunt if unknown type
+                    break;
+            }
+            enemy.OnDeathEvent += (Enemy e) => {
+                OnEnemyKilled(e);
+            };
+            enemy.GlobalPosition = enemyData.Position;
+            enemy.HitboxManager = _hitboxManager;
+            _enemies.Add(enemy);
+            AddChild(enemy);
+        }
+    }
     /// <summary>
     /// Advances to the next wave if current wave is complete.
     /// </summary>
@@ -97,10 +180,10 @@ public class WaveManager : GameObject
             OnAllWavesCompleted?.Invoke();
             return;
         }
-
         _currentWaveIndex++;
         var wave = _waves[_currentWaveIndex];
-        _enemiesRemaining = wave.EnemyCount;
+
+        _enemiesRemaining = wave.EnemyData.Count;
         _waveInProgress = true;
 
         Console.WriteLine($"[WaveManager] Starting Wave {wave.WaveNumber} with {wave.EnemyCount} enemies.");
@@ -108,6 +191,7 @@ public class WaveManager : GameObject
 
         // TODO: Spawn actual enemies at wave.EnemySpawnPositions
         // For now, enemies are simulated via OnEnemyKilled()
+        BuildWave();
 
         // If wave has 0 enemies, complete immediately
         if (_enemiesRemaining <= 0)
@@ -119,11 +203,13 @@ public class WaveManager : GameObject
     /// <summary>
     /// Called when an enemy is killed. Decrements enemy count and checks for wave completion.
     /// </summary>
-    public void OnEnemyKilled()
+    public void OnEnemyKilled(Enemy e)
     {
         if (!_waveInProgress || _enemiesRemaining <= 0)
             return;
 
+        e.IsVisible = false;
+        
         _enemiesRemaining--;
         Console.WriteLine($"[WaveManager] Enemy killed. {_enemiesRemaining} remaining.");
 
@@ -133,13 +219,7 @@ public class WaveManager : GameObject
         }
     }
 
-    /// <summary>
-    /// Simulates killing an enemy (for testing without real enemies).
-    /// </summary>
-    public void SimulateEnemyKill()
-    {
-        OnEnemyKilled();
-    }
+
 
     private void CompleteCurrentWave()
     {
@@ -153,52 +233,47 @@ public class WaveManager : GameObject
         OnWaveCompleted?.Invoke(wave.WaveNumber);
 
         // Open doors associated with this wave
-        foreach (var doorIndex in wave.DoorIndices)
+        foreach (RoomDoor door in _doors)
         {
-            if (_doorsById.TryGetValue(doorIndex, out var door))
-            {
-                door.Open();
-                Console.WriteLine($"[WaveManager] Opened door {doorIndex}.");
-            }
+            door.Open();
+            Console.WriteLine($"[WaveManager] Opened door at {door.GlobalPosition}.");
+        }
+        // Open portals associated with this wave
+        foreach (Portal portal in _portals)
+        {
+            portal.IsVisible = true;
+            Console.WriteLine($"[WaveManager] Activated portal at {portal.GlobalPosition}.");
         }
 
-        // If final wave, spawn portal
-        if (wave.IsFinalWave && wave.PortalPosition.HasValue)
+        if (_currentWaveIndex < _waves.Count - 1)
         {
-            SpawnPortal(wave.PortalPosition.Value);
-            OnAllWavesCompleted?.Invoke();
+            StartNextWave();
         }
-        else if (_currentWaveIndex < _waves.Count - 1)
-        {
-            // Auto-start next wave (or you could require manual trigger)
-            // For now we wait for player to walk through door
-        }
-    }
-
-    private void SpawnPortal(Vector2 position)
-    {
-        Console.WriteLine($"[WaveManager] Spawning portal at {position}");
-        _activePortal = new Portal(position, _hitboxManager);
-        AddChild(_activePortal);
-    }
-
-    /// <summary>
-    /// Creates a WaveManager with default test waves.
-    /// </summary>
-    public static WaveManager CreateTestWaves(Dictionary<int, RoomDoor> doorsById, HitboxManager hitboxManager, Vector2? portalPosition = null)
-    {
-        var waves = new List<Wave>
-        {
-            new Wave(1) { EnemyCount = 3, DoorIndices = new List<int> { 0 } },
-            new Wave(2) { EnemyCount = 5, DoorIndices = new List<int> { 1 } },
-            new Wave(3) 
-            { 
-                EnemyCount = 7, 
-                IsFinalWave = true, 
-                PortalPosition = portalPosition ?? new Vector2(200, 200) 
-            }
-        };
-
-        return new WaveManager(waves, doorsById, hitboxManager);
     }
 }
+    // private void SpawnPortal(Vector2 position)
+    // {
+    //     Console.WriteLine($"[WaveManager] Spawning portal at {position}");
+    //     _activePortal = new Portal(position, _hitboxManager);
+    //     AddChild(_activePortal);
+    // }
+
+    // /// <summary>
+    // /// Creates a WaveManager with default test waves.
+    // /// </summary>
+    // public static WaveManager CreateTestWaves(Dictionary<int, RoomDoor> doorsById, HitboxManager hitboxManager, Vector2? portalPosition = null)
+    // {
+    //     var waves = new List<Wave>
+    //     {
+    //         new Wave(1) { EnemyCount = 3, DoorIndices = new List<int> { 0 } },
+    //         new Wave(2) { EnemyCount = 5, DoorIndices = new List<int> { 1 } },
+    //         new Wave(3) 
+    //         { 
+    //             EnemyCount = 7, 
+    //             IsFinalWave = true, 
+    //             PortalPosition = portalPosition ?? new Vector2(200, 200) 
+    //         }
+    //     };
+
+    //     return new WaveManager(waves, doorsById, hitboxManager);
+    // }

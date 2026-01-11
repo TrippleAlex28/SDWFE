@@ -10,7 +10,7 @@ public class Grunt : ChasingEnemy
 {
     public override uint TypeId => (uint)NetObjects.Grunt;
 
-    public Sprite Sprite { get; private set; } // TODO: Replace with Animated Sprite
+    public AnimatedSprite Sprite { get; private set; } // TODO: Replace with Animated Sprite
     
     public Grunt() : base(100, 100f, 32f, 10f, 1.0f)
     {
@@ -21,7 +21,10 @@ public class Grunt : ChasingEnemy
     {
         base.EnterSelf();
         
-        Sprite = new Sprite(ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/"));
+        Texture2D texture = ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/");
+        Sprite = new AnimatedSprite(texture, 32, 32, true, true);
+
+        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 16));
         // Sprite = new Sprite(ExtendedGame.AssetManager.LoadTexture("Grunt", "Entities/Enemies/"));
         AddChild(Sprite);
     }

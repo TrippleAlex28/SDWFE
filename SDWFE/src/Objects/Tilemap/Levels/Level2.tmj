@@ -294,7 +294,7 @@
                         {
                          "name":"wave",
                          "type":"int",
-                         "value":1
+                         "value":2
                         }],
                  "rotation":0,
                  "type":"",
@@ -306,7 +306,7 @@
                 {
                  "height":0,
                  "id":4,
-                 "name":"SpawnPoint",
+                 "name":"SpawnLocation",
                  "point":true,
                  "rotation":0,
                  "type":"",
@@ -318,19 +318,8 @@
                 {
                  "height":0,
                  "id":5,
-                 "name":"Portal",
+                 "name":"PortalPosition",
                  "point":true,
-                 "properties":[
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":-1
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":2
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -340,164 +329,15 @@
                 }, 
                 {
                  "height":0,
-                 "id":7,
-                 "name":"Enemy",
+                 "id":6,
+                 "name":"PortalPosition",
                  "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":96,
-                 "y":416
-                }, 
-                {
-                 "height":0,
-                 "id":8,
-                 "name":"Enemy",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":144,
-                 "y":480
-                }, 
-                {
-                 "height":0,
-                 "id":9,
-                 "name":"Enemy",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":192,
-                 "y":416
-                }, 
-                {
-                 "height":0,
-                 "id":10,
-                 "name":"Enemy",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":2
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":80,
-                 "y":208
-                }, 
-                {
-                 "height":0,
-                 "id":11,
-                 "name":"Enemy",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":2
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
                  "x":208,
-                 "y":208
-                }, 
-                {
-                 "height":0,
-                 "id":12,
-                 "name":"Enemy",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":2
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":80,
-                 "y":112
-                }, 
-                {
-                 "height":0,
-                 "id":13,
-                 "name":"Enemy",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":2
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":208,
-                 "y":112
+                 "y":368
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -597,7 +437,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":14,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

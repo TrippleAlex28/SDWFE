@@ -228,7 +228,9 @@ public class ExtendedGame : Game
     }
 
     #region Utils
-
+    public static float GetYSort(Vector2 position, Vector2 offset){
+        return (float)(position.Y + offset.Y) / 10000f;
+    }
     public static Vector2 ScreenToWorld(Vector2 screenPos)
     {
         Vector2 rtPos = ScreenToRenderTarget(screenPos);

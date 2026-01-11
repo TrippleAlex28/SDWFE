@@ -25,22 +25,18 @@ public class Wave
     /// <summary>
     /// Positions where enemies spawn for this wave.
     /// </summary>
-    public List<Vector2> EnemySpawnPositions { get; set; } = new();
+    public List<EnemyData> EnemyData { get; set; } = new();
 
     /// <summary>
     /// List of door indices that open when this wave is complete.
     /// </summary>
-    public List<int> DoorIndices { get; set; } = new();
+    public List<DoorData> DoorsToOpen { get; set; } = new();
 
     /// <summary>
     /// Portal position if this wave has a portal (null if none).
     /// </summary>
-    public Vector2? PortalPosition { get; set; }
+    public List<PortalData> PortalData { get; set; } = new();
 
-    /// <summary>
-    /// Whether this is the final wave (portal appears when complete).
-    /// </summary>
-    public bool IsFinalWave { get; set; }
 
     public Wave(int waveNumber)
     {
@@ -55,7 +51,6 @@ public class Wave
         return new Wave(waveNumber)
         {
             EnemyCount = enemyCount,
-            IsFinalWave = isFinalWave
         };
     }
 }

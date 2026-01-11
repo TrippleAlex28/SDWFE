@@ -32,6 +32,8 @@ public abstract class Enemy : GameObject
     }
     private GameObject? _target;
     private int? _targetNetId;
+
+    public event Action<Enemy>? OnDeathEvent;
     
     
     public float DetectionRange { get; set; } = 200f;
@@ -68,7 +70,7 @@ public abstract class Enemy : GameObject
 
         HitboxLayer = HitboxLayer.AllExceptEnemy;
         CollisionSize = new Vector2(16, 32);
-        CollisionOffset = new Vector2(-8, -16);
+        CollisionOffset = new Vector2(8, 16);
     }
 
     protected override void UpdateSelf(GameTime gameTime)
@@ -116,6 +118,7 @@ public abstract class Enemy : GameObject
     {
         State = EnemyState.Dead;
         Velocity = 0f;
+        OnDeathEvent?.Invoke(this);
     }
     
     public void Heal(int amount)

@@ -68,7 +68,19 @@ public class Tilemap : GameObject
     };
 
     #endregion
+    #region Data From Tiled
+    // All portals in the tilemap
+    public List<PortalData> Portals { get; private set; } = new();
 
+    // All doors in the tilemap
+    public List<DoorData> Doors { get; private set; } = new();
+
+    // All enemy spawn points in the tilemap
+    public List<EnemyData> Enemies { get; private set; } = new();
+
+    public Vector2 SpawnPoint { get; set; } = Vector2.Zero;
+
+    #endregion
     #region Public Properties
     
     public List<Rectangle> Colliders { get; private set; } = new();
@@ -230,24 +242,33 @@ public class Tilemap : GameObject
             }
             else if (obj.name == "RoomDoor")
             {
-                int index = GetPropertyByName(obj, "index")?.value ?? -1;
-                
-                if (index == -1)
-                    throw new Exception("RoomDoor object is missing 'index' property.");
-                
-                DoorsById.Add(index, new RoomDoor(
-                    _roomDoorSheet,
-                    new Vector2(obj.x, obj.y - 32),
-                    tileSize: 32,
-                    hitboxManager: _hitboxManager
-                ));
+                DoorData doorData = new DoorData()
+                {
+                    Position = new Vector2(obj.x, obj.y - 32),
+                    WaveNumber = GetPropertyByName(obj, "wave")?.value ?? 0
+                };
+                Doors.Add(doorData);
             }
-            else if (obj.name == "PortalPosition")
+            else if (obj.name == "Portal")
             {
-                AddChild(new Portal(
-                    new Vector2(obj.x, obj.y - 32),
-                    _hitboxManager
-                ));
+                PortalData portalData = new PortalData()
+                {
+                    Position = new Vector2(obj.x, obj.y - 32),
+                    WaveNumber = GetPropertyByName(obj, "wave")?.value ?? 0,
+                    LevelIndex = GetPropertyByName(obj, "level")?.value ?? -1
+                };
+                Portals.Add(portalData);
+            }
+            else if (obj.name == "SpawnPoint")
+                SpawnPoint = new Vector2(obj.x, obj.y - 16);              
+            else if (obj.name == "Enemy"){
+        
+                EnemyData enemyData = new EnemyData()
+                {                    Position = new Vector2(obj.x, obj.y - 32),
+                EnemyType = GetPropertyByName(obj, "type")?.value ?? 0,
+                WaveNumber = GetPropertyByName(obj, "wave")?.value ?? 0
+                };
+                Enemies.Add(enemyData);              
             }
         }
     }
@@ -298,7 +319,7 @@ public class Tilemap : GameObject
             {
                 var destRect = GetDestinationRect(gridPos);
                 float drawLayer = tileData.YSortEnabled
-                    ? 0.8f / 1000f * (tileData.YSortPoint + destRect.Y)
+                    ? ExtendedGame.GetYSort(new Vector2(destRect.X, destRect.Y), new Vector2(0, tileData.YSortPoint))
                     : 0f;
                 if (ShadowTileIds.Contains(tileData.Index))
                     drawLayer = 0.001f; // Slightly above base environment layer
