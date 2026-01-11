@@ -96,6 +96,7 @@ public partial class Player : GameObject
         {
             Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 24));
         }
+        
         UpdateNPC(gameTime);
         UpdateInventory();
         UpdateMovement(gameTime);
