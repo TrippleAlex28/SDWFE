@@ -71,7 +71,8 @@ public class Tilemap : GameObject
     #region Public Properties
     
     public List<Rectangle> Colliders { get; private set; } = new();
-    public List<RoomDoor> Doors => _doors;
+    public Dictionary<int, RoomDoor> DoorsById { get; } = new();
+
     public List<Stair> Stairs { get; } = new();
     public int TileSize => TILE_SIZE;
     
@@ -83,15 +84,21 @@ public class Tilemap : GameObject
     private readonly List<RoomDoor> _doors = new();
     private List<Texture2D> _tileSheets = null!;
     private List<TilesetRef> _tilesetRefs = new();
+    private readonly HitboxManager _hitboxManager;
+
+    //Extra Textures for special tiles can be added here
+    private Texture2D _roomDoorSheet;
     
     #endregion
 
     #region Constructor
     
-    public Tilemap(string levelFile)
+    public Tilemap(string levelFile, HitboxManager hitboxManager)
     {
         LoadTileSheets();
-        
+        _hitboxManager = hitboxManager;
+
+        _roomDoorSheet = ExtendedGame.AssetManager.LoadTexture("TM_Door_Anim", "Tilemap/");
         var map = JsonManager.Load<TiledMap>(LEVELS_PATH + levelFile);
         _tilesetRefs = map.tilesets?.OrderByDescending(t => t.firstgid).ToList() ?? new();
 
@@ -99,8 +106,7 @@ public class Tilemap : GameObject
         
         LoadTileLayers(map);
         BuildColliders(map);
-        BuildStairs(objectsById);
-        BuildDoors(objectsById);
+        BuildAllObjects(objectsById);
         BuildSprites();
         
         AddDoorsAsChildren();
@@ -209,7 +215,7 @@ public class Tilemap : GameObject
         Colliders = colliderBuilder.BuildColliders(collisionLayer.data, collisionLayer.width, collisionLayer.height);
     }
 
-    private void BuildStairs(Dictionary<int, TiledObject> objectsById)
+    private void BuildAllObjects(Dictionary<int, TiledObject> objectsById)
     {
         foreach (var obj in objectsById.Values)
         {
@@ -221,34 +227,56 @@ public class Tilemap : GameObject
             {
                 Stairs.Add(new Stair(new Vector2(obj.x, obj.y), StairFacing.Right));
             }
-        }
-    }
-
-    private void BuildDoors(Dictionary<int, TiledObject> objectsById)
-    {
-        foreach (var obj in objectsById.Values)
-        {
-            if (obj.name != "Door" || obj.properties == null)
-                continue;
-
-            foreach (var prop in obj.properties)
+            else if (obj.name == "RoomDoor")
             {
-                if (prop.name != "Hitbox" || prop.Hitbox == null)
-                    continue;
-
-                var door = new RoomDoor(
-                    GetTileSheet(81),
+                int index = GetPropertyByName(obj, "index")?.value ?? -1;
+                
+                if (index == -1)
+                    throw new Exception("RoomDoor object is missing 'index' property.");
+                
+                DoorsById.Add(index, new RoomDoor(
+                    _roomDoorSheet,
                     new Vector2(obj.x, obj.y - 32),
                     tileSize: 32,
-                    animationTotalFrames: 6,
-                    sourceRect: null,
-                    hitbox: prop.Hitbox.Value
-                );
-
-                _doors.Add(door);
+                    hitboxManager: _hitboxManager
+                ));
             }
         }
     }
+
+    private TiledProperty? GetPropertyByName(TiledObject obj, string propertyName)
+    {
+        if (obj.properties == null)
+            return null;
+
+        return obj.properties.FirstOrDefault(p => p.name == propertyName);
+    }
+
+    // private void BuildDoors(Dictionary<int, TiledObject> objectsById)
+    // {
+    //     foreach (var obj in objectsById.Values)
+    //     {
+    //         if (obj.name != "Door" || obj.properties == null)
+    //             continue;
+
+    //         foreach (var prop in obj.properties)
+    //         {
+    //             if (prop.name != "Hitbox" || prop.Hitbox == null)
+    //                 continue;
+
+    //             var door = new RoomDoor(
+    //                 GetTileSheet(81),
+    //                 new Vector2(obj.x, obj.y - 32),
+    //                 tileSize: 32,
+    //                 animationTotalFrames: 6,
+    //                 sourceRect: null,
+    //                 hitbox: prop.Hitbox.Value
+    //             );
+
+    //             _doors.Add(door);
+    //         }
+    //     }
+    // }
 
     private void BuildSprites()
     {
@@ -329,8 +357,10 @@ public class Tilemap : GameObject
 
     private void AddDoorsAsChildren()
     {
-        foreach (var door in _doors)
+        foreach (var door in DoorsById.Values)
+        {
             AddChild(door);
+        }
     }
     
     #endregion

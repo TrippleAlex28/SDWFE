@@ -42,13 +42,17 @@ public class GameplayScene : Scene
     public override void Enter()
     {
         base.Enter();
-        map = new Tilemap("level_hub.tmj");
+        map = new Tilemap("Level1.tmj", HitboxManager);
         ExtendedGame.LightShaderInstance.Enabled = true;
         SpawnPoint = new Vector2(200, 200);
+
+
         map.RegisterHitboxes(HitboxManager);
         Vector2 spawnPointNPC = new Vector2(300, 300);
         NPC npc = new NPC("fireman_root", new Rectangle((int)spawnPointNPC.X - 12, (int)spawnPointNPC.Y - 12, 56, 56), ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/"), HitboxManager);
         npc.GlobalPosition = spawnPointNPC;
+        
+        
         this.AddObject(npc);
         SetUpHitboxes();
         this.AddObject(map);
@@ -100,7 +104,8 @@ public class GameplayScene : Scene
             }
         }
         ExtendedGame.LightShaderInstance.SetLights(allWorldLights);
-        
+        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
+            map.DoorsById[0].Open();
          // Handle pause input
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);
