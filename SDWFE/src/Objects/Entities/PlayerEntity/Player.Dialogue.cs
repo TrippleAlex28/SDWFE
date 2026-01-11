@@ -101,8 +101,6 @@ public partial class Player
             {
                 ShowChoiceDialogue(npc._basenode);
             }
-        }
-        // Demo: Press E to interact with closest NPC
-        
+        }        
     }
 }
