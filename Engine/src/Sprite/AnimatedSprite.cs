@@ -13,6 +13,8 @@ public class AnimatedSprite : Sprite
     private int _currentFrame = 0;
     private int _totalFrames => Texture.Width / _spriteWidth;
 
+    public event Action? AnimationCompleted;
+
     public AnimatedSprite(Texture2D spriteSheet, int spriteWidth, int spriteHeight, bool isLooping = false, bool isPlaying = true) : base(spriteSheet)
     {
         this._spriteWidth = spriteWidth;
@@ -61,6 +63,7 @@ public class AnimatedSprite : Sprite
                 }
                 else
                 {
+                    AnimationCompleted?.Invoke();
                     _currentFrame = _totalFrames - 1; // Stay on last frame
                     Stop();
                 }

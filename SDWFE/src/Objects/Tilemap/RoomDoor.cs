@@ -31,14 +31,26 @@ public class RoomDoor : GameObject
 
         _animatedSprite = new AnimatedSprite(_spriteSheet, _tileSize, _tileSize, false, false);
         _animatedSprite.BaseDrawLayer = (float)(0.8f / 1000f) * (globalPosition.Y + 32) - 0.0001f;
+
+        _animatedSprite.AnimationCompleted += () =>
+        {
+            disableHitbox();
+        };
         this.AddChild(_animatedSprite);
     }
     public void Open()
     {
         _animatedSprite?.Play();
     }
+
     public void Reset()
     {
         _animatedSprite?.Reset();
+        _staticHitbox.IsEnabled = true;
+    }
+
+    private void disableHitbox()
+    {
+        _staticHitbox.IsEnabled = false;
     }
 }
