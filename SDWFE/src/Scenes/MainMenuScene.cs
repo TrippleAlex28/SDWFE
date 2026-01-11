@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using Engine;
 using Engine.Input;
 using Engine.Network.Shared.Session;
@@ -10,6 +11,8 @@ using Engine.UI;
 using Engine.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector4 = Microsoft.Xna.Framework.Vector4;
 
 namespace SDWFE.Scenes;
 
@@ -17,6 +20,8 @@ public class MainMenuScene : Scene
 {
     public const string KEY = "MainMenuScene";
 
+    private string _desiredIp;
+    
     private bool _isLoading = false;
 
     private readonly Texture2D _ChineseUITexture;
@@ -60,6 +65,11 @@ public class MainMenuScene : Scene
         _isLoading = false;
     }
 
+    private void OnJoinInputTextChanged(string text)
+    {
+        _desiredIp = text;
+    }
+    
     private async void OnJoinClicked()
     {
         if (_isLoading) return;
@@ -68,7 +78,7 @@ public class MainMenuScene : Scene
         _isLoading = true;
         GameState.Instance.SwitchSession(SessionType.MultiplayerClient);
         if (!await ((MultiplayerClientSession)GameState.Instance.SessionManager.CurrentSession!).ConnectAsync(
-                "192.168.68.125"))
+                _desiredIp))
         {
             // Re-enter this scene as SinglePlayer
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, KEY);
@@ -138,11 +148,29 @@ public class MainMenuScene : Scene
         hostButton.Released += (control) => OnHostClicked();
         playButtonsContainer.AddChild(hostButton);
 
-        // Join Button (right)
+        // Join button and IP input field vertical container (right)
+        var joinContainer = new UIVBoxContainer();
+        joinContainer.DesiredSize = Vector2.Zero;
+        joinContainer.AlignmentPoint = Alignment.MiddleCenter;
+        playButtonsContainer.AddChild(joinContainer);
+
+        // Join IP Input field (bottom)
+        _desiredIp = "192.168.2.23";
+        var ipInputBox = new UIInputBox(Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 12))
+        {
+            PlaceholderText = _desiredIp,
+            MaxLength = 20,
+            AlignmentPoint = Alignment.TopMiddle // xxx.xxx.xxx.xxx:port
+        };
+        ipInputBox.TextChanged += OnJoinInputTextChanged;
+        joinContainer.AddChild(ipInputBox);
+        
+        // Join Button (bottom)
         var joinButton = CreateButton("JOIN", new Rectangle(128, 0, 128, 128));
-        joinButton.AlignmentPoint = Alignment.MiddleCenter;
+        joinButton.AlignmentPoint = Alignment.BottomMiddle;
+        joinButton.DesiredSize = UIExtensionMethods.ScreenPercent(100, 100);;
         joinButton.Released += (control) => OnJoinClicked();
-        playButtonsContainer.AddChild(joinButton);
+        joinContainer.AddChild(joinButton);
 
         // Bottom container for settings and quit
         var bottomContainer = new UIHBoxContainer();
@@ -160,6 +188,7 @@ public class MainMenuScene : Scene
         // filling
         var filler = new UIElement();
         bottomContainer.AddChild(filler);
+        
         // Quit Button (right)
         var quitButton = CreateButton("QUIT", new Rectangle(256, 104, 64, 16), new Vector4(7, 7, 7, 7), fontSize: 12);
         quitButton.AlignmentPoint = Alignment.MiddleRight;
