@@ -276,7 +276,7 @@ public class Tilemap : GameObject
                 NPCData npcData = new NPCData()
                 {                    
                     Position = new Vector2(obj.x, obj.y - 32),
-                    NPCType = GetPropertyByName(obj, "type")?.value ?? 0
+                    NPCType = GetPropertyByName(obj, "index")?.value ?? 0
                 };
                 NPCs.Add(npcData);
             }

@@ -1,66 +1,72 @@
 [
   {
-    "Id": "fireman_root",
-    "SpeakerName": "Fireman",
-    "Text": "You look like you've walked far, traveler. This is the ninth year of the Song-967 by the old calendar-and our homeland has not known a peaceful night since the curse fell.",
+    "Id": "anwei_root",
+    "SpeakerName": "Anwei",
+    "Text": "You look tired, warrior. It is not safe here. A curse hit our town and the night changed.",
     "Choices": [
-      { "ChoiceText": "The curse", "NextId": "fireman_curse" },
-      { "ChoiceText": "The wizard", "NextId": "fireman_wizard" }
+      { "ChoiceText": "The curse", "NextId": "anwei_curse" },
+      { "ChoiceText": "The wizard", "NextId": "anwei_wizard" }
     ]
   },
   {
-    "Id": "fireman_curse",
-    "SpeakerName": "Fireman",
-    "Text": "It began on a windless evening. Lantern flames turned blue. Wells tasted like ink. The river ran too still, like it was holding its breath. By dawn, every threshold was marked with the same symbol-drawn in ash.",
+    "Id": "anwei_curse",
+    "SpeakerName": "Anwei",
+    "Text": "One night the lamps went blue. The well water tasted wrong. Then a black mark showed up on doors. After that people got lost in their own streets.",
     "Choices": [
-      { "ChoiceText": "The symbol", "NextId": "fireman_symbol" },
-      { "ChoiceText": "Leave", "NextId": "fireman_end" }
+      { "ChoiceText": "The symbol", "NextId": "anwei_symbol" },
+      { "ChoiceText": "Leave", "NextId": "anwei_end" }
     ]
   },
   {
-    "Id": "fireman_symbol",
-    "SpeakerName": "Fireman",
-    "Text": "The elders call it a binding mark-meant to tether a place to misfortune. They say it makes people forget the safe roads... and remember only the wrong ones.",
+    "Id": "anwei_symbol",
+    "SpeakerName": "Anwei",
+    "Text": "That mark is the curse. It ties the town down. It makes you forget the right way and walk into danger.",
     "Choices": [
-      { "ChoiceText": "Break it", "NextId": "fireman_break" },
-      { "ChoiceText": "Leave", "NextId": "fireman_end" }
+      { "ChoiceText": "Break it", "NextId": "anwei_break" },
+      { "ChoiceText": "Leave", "NextId": "anwei_end" }
     ]
   },
   {
-    "Id": "fireman_wizard",
-    "SpeakerName": "Fireman",
-    "Text": "Some whisper 'wizard'. Others say 'scribe'-a scholar who learned the wrong kind of characters. All I know is this: strangers arrived days before the curse, and one of them never showed his face.",
+    "Id": "anwei_wizard",
+    "SpeakerName": "Anwei",
+    "Text": "Days before it began a stranger came in a hood. He talked like a scholar. He carried a brush case. After he left the mark appeared.",
     "Choices": [
-      { "ChoiceText": "Why me", "NextId": "fireman_chosen" },
-      { "ChoiceText": "Any leads", "NextId": "fireman_leads" }
+      { "ChoiceText": "Why me", "NextId": "anwei_chosen" },
+      { "ChoiceText": "Any leads", "NextId": "anwei_leads" }
     ]
   },
   {
-    "Id": "fireman_chosen",
-    "SpeakerName": "Fireman",
-    "Text": "Because you're not from here-at least, not the way we are now. The curse bends people who belong to this soil. Outsiders can still see the seams. If you can find the one who spoke the words, you can make him swallow them.",
+    "Id": "anwei_chosen",
+    "SpeakerName": "Anwei",
+    "Text": "You are not from this town. The curse grips the people who belong here. Outsiders can still think straight. That is why you can help.",
     "Choices": [
-      { "ChoiceText": "Any leads", "NextId": "fireman_leads" },
-      { "ChoiceText": "Leave e", "NextId": "fireman_end" }
+      { "ChoiceText": "Any leads", "NextId": "anwei_leads" },
+      { "ChoiceText": "Leave", "NextId": "anwei_end" }
     ]
   },
   {
-    "Id": "fireman_break",
-    "SpeakerName": "Fireman",
-    "Text": "If the stories are true, a curse like this needs three things: a place to anchor, a name to target, and a voice to carry it. Remove any one of them. Start with the voice.",
+    "Id": "anwei_break",
+    "SpeakerName": "Anwei",
+    "Text": "To break it you must find where the mark was first made. If you ruin the first mark the rest should weaken.",
     "Choices": [
-      { "ChoiceText": "Any leads", "NextId": "fireman_leads" },
-      { "ChoiceText": "Leave", "NextId": "fireman_end" }
+      { "ChoiceText": "Any leads", "NextId": "anwei_leads" },
+      { "ChoiceText": "Leave", "NextId": "anwei_end" }
     ]
   },
   {
-    "Id": "fireman_leads",
-    "SpeakerName": "Fireman",
-    "Text": "The first ash-mark appeared near the old hillside shrine. And the last person to return from there was a courier-tongue blackened, as if he'd tried to speak and the words turned to soot. If you need something to ward you, ask the Blacksmith.",
+    "Id": "anwei_leads",
+    "SpeakerName": "Anwei",
+    "Text": "The first mark showed up by the old hillside shrine. People who go there come back quiet and scared. If you want a charm ask the Blacksmith.",
     "Choices": [
       { "ChoiceText": "Blacksmith", "NextId": "blacksmith_root" },
-      { "ChoiceText": "Leave", "NextId": "fireman_end" }
+      { "ChoiceText": "Leave", "NextId": "anwei_end" }
     ]
+  },
+  {
+    "Id": "anwei_end",
+    "SpeakerName": "Anwei",
+    "Text": "Be careful. Keep moving and do not linger in the dark.",
+    "Choices": []
   },
   {
     "Id": "fireman_end",
@@ -70,62 +76,62 @@
   },
 
   {
-    "Id": "blacksmith_root",
-    "SpeakerName": "Blacksmith",
-    "Text": "If you're here to buy steel, you're late. If you're here about the curse... you're right on time.",
+    "Id": "archer_root",
+    "SpeakerName": "Mulan",
+    "Text": "I watch the road. The night went wrong and the town changed. You should not be here.",
     "Choices": [
-      { "ChoiceText": "Ward me", "NextId": "blacksmith_ward" },
-      { "ChoiceText": "The wizard", "NextId": "blacksmith_wizard" }
+      { "ChoiceText": "What happened", "NextId": "archer_ward" },
+      { "ChoiceText": "The wizard", "NextId": "archer_wizard" }
     ]
   },
   {
-    "Id": "blacksmith_ward",
-    "SpeakerName": "Blacksmith",
-    "Text": "Take this iron charm. Not magic-just honest metal. The cursed marks dislike things that have been hammered with purpose. Keep it close when the air turns cold.",
+    "Id": "archer_ward",
+    "SpeakerName": "Mulan",
+    "Text": "It started after sunset. Lamps went blue. Dogs went quiet. Then that black mark appeared on doors. In the morning people walked in circles like they forgot home.",
     "Choices": [
-      { "ChoiceText": "The shrine", "NextId": "blacksmith_shrine" },
-      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+      { "ChoiceText": "The mark", "NextId": "archer_shrine" },
+      { "ChoiceText": "Any leads", "NextId": "archer_leads" }
     ]
   },
   {
-    "Id": "blacksmith_wizard",
-    "SpeakerName": "Blacksmith",
-    "Text": "I never saw his face. But I heard his voice-soft as paper sliding over stone. He asked for 'ink that doesn't dry' and 'thread that can bind a town'. That's not trade talk. That's ritual talk.",
+    "Id": "archer_wizard",
+    "SpeakerName": "Mulan",
+    "Text": "I saw a hooded stranger near the shrine path. He carried a brush case. He stopped at the first gate and drew something fast. After that the air felt cold.",
     "Choices": [
-      { "ChoiceText": "Where from", "NextId": "blacksmith_leads" },
-      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+      { "ChoiceText": "Any leads", "NextId": "archer_leads" },
+      { "ChoiceText": "The mark", "NextId": "archer_shrine" }
     ]
   },
   {
-    "Id": "blacksmith_shrine",
-    "SpeakerName": "Blacksmith",
-    "Text": "Ash on stone. Scratches like calligraphy. And silence-too perfect. If you hear chanting, do not answer it. A curse can learn your name that way.",
+    "Id": "archer_shrine",
+    "SpeakerName": "Mulan",
+    "Text": "The mark looks like ash and scratches. It shows up most near the hillside shrine. When the wind dies the mark feels warmer than the stone.",
     "Choices": [
-      { "ChoiceText": "Advice", "NextId": "blacksmith_advice" },
-      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+      { "ChoiceText": "Any leads", "NextId": "archer_leads" },
+      { "ChoiceText": "Advice", "NextId": "archer_advice" }
     ]
   },
   {
-    "Id": "blacksmith_leads",
-    "SpeakerName": "Blacksmith",
-    "Text": "The old apothecary keeps rare inks. And the shrine keeps old threads-prayer cords, offerings, things people leave behind. If the caster wanted to bind us, those are the places he'd steal from.",
+    "Id": "archer_leads",
+    "SpeakerName": "Mulan",
+    "Text": "I followed tracks from the first marked door. They went uphill toward the shrine, then vanished. Like the ground forgot them.",
     "Choices": [
-      { "ChoiceText": "Go shrine", "NextId": "blacksmith_end" },
-      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+      { "ChoiceText": "Go shrine", "NextId": "archer_end" },
+      { "ChoiceText": "Advice", "NextId": "archer_advice" }
     ]
   },
   {
-    "Id": "blacksmith_advice",
-    "SpeakerName": "Blacksmith",
-    "Text": "Don't chase every shadow. The curse makes decoys. Follow what repeats: the same mark, the same cold wind, the same wrong silence. Repetition is how spells stay alive.",
+    "Id": "archer_advice",
+    "SpeakerName": "Mulan",
+    "Text": "Keep to light. Count your turns. If you feel lost, stop and listen. The curse wants you to rush.",
     "Choices": [
-      { "ChoiceText": "Thanks", "NextId": "blacksmith_end" },
-      { "ChoiceText": "Back", "NextId": "blacksmith_root" }
+      { "ChoiceText": "Thanks", "NextId": "archer_end" },
+      { "ChoiceText": "Back", "NextId": "archer_root" }
     ]
   },
   {
-    "Id": "blacksmith_end",
-    "SpeakerName": "Blacksmith",
+    "Id": "archer_end",
+    "SpeakerName": "Mulan",
     "Text": "Bring our dawn back, traveler.",
     "Choices": []
   }

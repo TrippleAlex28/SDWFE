@@ -83,9 +83,8 @@ public static class NPCTypes
     private static readonly Dictionary<int, string> NPCTypeMap = new()
     {
         // Add your NPC types here:
-        { 0, "fireman_root" },
-        { 1, "guard_root" },
-        { 2, "merchant_root" },
+        { 0, "anwei_root" },
+        { 1, "archer_root" },
     };
 
     private static readonly Dictionary<int, Texture2D> NPCTextureMap = new()
