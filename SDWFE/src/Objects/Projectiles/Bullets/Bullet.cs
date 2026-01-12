@@ -13,6 +13,14 @@ public abstract class Bullet : Projectile
     private float _range;
     private float _damage;
     
+    /// <summary>
+    /// Empty constructor, should ONLY be used for network object instantiation
+    /// </summary>
+    public Bullet()
+    {
+        
+    }
+    
     public Bullet(
         Vector2 startPos, 
         Vector2 direction, 

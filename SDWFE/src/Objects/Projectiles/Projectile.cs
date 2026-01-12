@@ -23,6 +23,14 @@ public abstract class Projectile : GameObject
     protected readonly Sprite Sprite;
 
     protected bool Collided = false;
+
+    /// <summary>
+    /// Empty constructor, should ONLY be used for network object instantiation
+    /// </summary>
+    public Projectile()
+    {
+        
+    }
     
     public Projectile(
         Vector2 startPos, 

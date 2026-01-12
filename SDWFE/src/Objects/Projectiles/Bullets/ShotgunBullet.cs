@@ -6,6 +6,16 @@ namespace SDWFE.Objects.Projectiles.Bullets;
 
 public class ShotgunBullet : Bullet
 {
+    public override uint TypeId => (uint)NetObjects.ShotgunBullet;
+    
+    /// <summary>
+    /// Empty constructor, should ONLY be used for network object instantiation
+    /// </summary>
+    public ShotgunBullet()
+    {
+        
+    }
+    
     public ShotgunBullet(
         Vector2 startPos, 
         Vector2 direction, 
