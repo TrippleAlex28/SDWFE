@@ -87,7 +87,6 @@ public abstract class Projectile : GameObject
                 OnCollision(otherGameObject);
         };
         
-        
         if (_projectileEmitter != null)
             _projectileTrail.AddEmitter(_projectileEmitter);
         
@@ -97,6 +96,12 @@ public abstract class Projectile : GameObject
     
     protected override void UpdateSelf(GameTime gameTime)
     {
+        if (_projectileEmitter != null)
+            _projectileEmitter.Position = this.GlobalPosition;
+        
+        if (_collisionEmitter != null)
+            _collisionEmitter.Position = this.GlobalPosition;
+        
         _projectileTrail.Update(gameTime.DeltaSeconds());
         
         Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 0));
@@ -156,12 +161,12 @@ public abstract class Projectile : GameObject
                     Console.WriteLine("Projectile Collision Effect shouldn't have an infinite duration!!!");
                 }
                 await Task.Delay(isInfinite ? 0 : (int)_collisionEmitter.Config.Duration * 1000);
-                RemoveFromParent();
+                // this.RemoveFromParent();
             });
         }
         else
         {
-            RemoveFromParent();
+            // this.RemoveFromParent();
         }
     }
 }

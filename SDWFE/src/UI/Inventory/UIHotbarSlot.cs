@@ -88,7 +88,7 @@ public class UIHotbarSlot : UIContainer
 
         _icon = UIVisual.FromTexture(icon);
         _icon.AlignmentPoint = Alignment.MiddleCenter;
-        _icon.DesiredSize = DesiredSize;
+        _icon.DesiredSize = DesiredSize / 2;
         AddChild(_icon);
     }
 }

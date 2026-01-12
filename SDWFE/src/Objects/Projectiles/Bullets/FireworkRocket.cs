@@ -24,7 +24,18 @@ public class FireworkRocket : Bullet
         float damage,
         GameObject? owner = null,
         HitboxManager? hitboxManager = null
-    ) : base(startPos, direction, velocity, range, damage, ExtendedGame.AssetManager.LoadTexture("GenericBullet", "Entities/Projectiles/"), owner, ParticlePresets.BulletTrail, hitboxManager: hitboxManager)
+    ) : base(
+        startPos, 
+        direction, 
+        velocity, 
+        range, 
+        damage, 
+        ExtendedGame.AssetManager.LoadTexture("GenericBullet", "Entities/Projectiles/"), 
+        owner, 
+        ParticlePresets.RocketTrail, 
+        ParticlePresets.RocketImpact,
+        hitboxManager: hitboxManager
+    )
     {
         
     }
