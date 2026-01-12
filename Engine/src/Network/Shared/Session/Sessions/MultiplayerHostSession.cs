@@ -150,7 +150,9 @@ public class MultiplayerHostSession : GameSession
                 .Select(ConvertToReplicatedData)
                 .ToList(),
         };
-
+        
+        Console.WriteLine(packet.ToBytes().Length);
+        
         _netServer.BroadcastUdp(packet.ToBytes());
 
         scene.ClearDirty();

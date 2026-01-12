@@ -55,7 +55,7 @@ public abstract class Enemy : GameObject
 
         RegisterProperty(
             nameof(_targetNetId),
-            () => _targetNetId,
+            () => _targetNetId ?? -1,
             (v) => _targetNetId = v
         );
 
@@ -182,7 +182,7 @@ public abstract class Enemy : GameObject
 
     protected virtual void Attack()
     {
-        Console.WriteLine("Enemy Attack");
+        
     }
     
     protected override void ExitSelf()

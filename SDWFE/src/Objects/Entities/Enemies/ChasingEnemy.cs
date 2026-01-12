@@ -191,7 +191,7 @@ public abstract class ChasingEnemy : Enemy
 
         return true;
     }
-    
+
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
         base.DrawSelf(spriteBatch);

@@ -38,11 +38,12 @@ public class Grunt : ChasingEnemy
 
     protected override void Attack()
     {
-        base.Attack();
-        Console.WriteLine("Attack");
+        Console.WriteLine("Grunt Attack");
         if (Target == null) return;
         
         // Check if target is within range
+        // TODO: Play anim & Do damage to the target 
+        
     }
 
     protected override void OnDeath()

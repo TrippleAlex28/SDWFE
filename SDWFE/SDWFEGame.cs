@@ -13,6 +13,7 @@ using SDWFE.Objects;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
+using SDWFE.Objects.Projectiles.Bullets;
 using SDWFE.Scenes;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
@@ -30,6 +31,7 @@ public class SDWFEGame : ExtendedGame
         // NetObjectRegistry.Register<ShotgunBullet>((uint)NetObjects.GenericBullet);
         // NetObjectRegistry.Register<FireworkRocket>((uint)NetObjects.GenericBullet);
         NetObjectRegistry.Register<Grunt>((uint)NetObjects.Grunt);
+        NetObjectRegistry.Register<Turret>((uint)NetObjects.Turret);
         
         // --- NET COMMANDS SETUP ---
         NetCommandRegistry.Register<WalkCommand>((uint)NetCommands.Move);
