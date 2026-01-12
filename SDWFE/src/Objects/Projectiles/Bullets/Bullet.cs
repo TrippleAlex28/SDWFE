@@ -34,6 +34,8 @@ public abstract class Bullet : Projectile
         HitboxManager? hitboxManager = null
     ) : base(startPos, direction, velocity, texture, owner, projectileEmitter, collisionEmitter, hitboxManager)
     {
+        this.ReplicatesOverNetwork = false;
+        
         _range = range;
         _damage = damage;
 
