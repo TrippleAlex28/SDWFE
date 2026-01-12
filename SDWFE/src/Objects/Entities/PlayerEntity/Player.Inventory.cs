@@ -20,6 +20,7 @@ public partial class Player
         this.AddChild(Inventory);
 
         Inventory.AddWeaponByName(ItemSetup.SHOTGUN);
+        Inventory.AddWeaponByName(ItemSetup.PISTOL);
         Inventory.AddItemByName(ItemSetup.BANDAGE,
             ItemSetup.ItemDataMap.TryGetValue(ItemSetup.BANDAGE, out var data) ? data.MaxStackSize : 1);
     }

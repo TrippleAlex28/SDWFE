@@ -83,6 +83,11 @@ public partial class Player : GameObject
         }
     }
 
+    protected void OnDeath()
+    {
+        
+    }
+    
     protected override void UpdateSelf(GameTime gameTime)
     {
         base.UpdateSelf(gameTime);

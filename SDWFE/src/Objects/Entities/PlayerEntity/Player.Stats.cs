@@ -5,8 +5,6 @@ using SDWFE.UI.PlayerData;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
-
-
 public partial class Player
 {
     public PlayerStats Stats = new PlayerStats();
@@ -18,13 +16,16 @@ public partial class Player
 
 public class PlayerStats
 {
+    public Action? OnDeath;
+    
     // Set max values
     private float _maxHealth = 500f;
+
     public float MaxHealth
     {
         get => _maxHealth;
-        set => SetField(ref _maxHealth, value);
-    }
+        set => SetField( ref _maxHealth, value);
+}
     private float _maxStamina = 100f;
     public float MaxStamina
     {
@@ -37,8 +38,13 @@ public class PlayerStats
     public float CurrentHealth
     {
         get => _currentHealth;
-        set => SetField(ref _currentHealth, MathHelper.Clamp(value, 0f, MaxHealth));
+        set
+        {
+            SetField(ref _currentHealth, MathHelper.Clamp(value, 0f, MaxHealth));
+            if (CurrentHealth <= 0f) OnDeath?.Invoke();
+        }
     }
+
     private float _currentStamina = 100f;
     public float CurrentStamina
     {
