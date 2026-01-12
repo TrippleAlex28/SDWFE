@@ -37,6 +37,18 @@
 /processorParam:TextureFormat=Color
 /build:Entities/NPC/32x32 Han_Soldier_Idle.png
 
+#begin Entities/NPC/32x32 Khitan_Mage_Idle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/NPC/32x32 Khitan_Mage_Idle.png
+
 #begin Entities/NPC/32x32 Khitan_Raider_Idle.png
 /importer:TextureImporter
 /processor:TextureProcessor

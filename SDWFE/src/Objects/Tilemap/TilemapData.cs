@@ -85,6 +85,7 @@ public static class NPCTypes
         // Add your NPC types here:
         { 0, "anwei_root" },
         { 1, "archer_root" },
+        { 2, "wizard_root"}
     };
 
     private static readonly Dictionary<int, Texture2D> NPCTextureMap = new()
@@ -92,6 +93,7 @@ public static class NPCTypes
         // Add your NPC textures here:
         { 0, ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/") },
         { 1, ExtendedGame.AssetManager.LoadTexture("32x32 Khitan_Raider_Idle", "Entities/NPC/") },
+        { 2, ExtendedGame.AssetManager.LoadTexture("32x32 Khitan_Mage_Idle", "Entities/NPC/") }
     };
     
     public static Texture2D GetTexture(int npcType)
