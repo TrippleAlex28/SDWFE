@@ -157,7 +157,7 @@ public class WaveManager : GameObject
                     enemy = new Grunt();
                     break;
                 default:
-                    enemy = new Grunt(); // Default to Grunt if unknown type
+                    enemy = new TestBoss(_hitboxManager); // Default to Grunt if unknown type
                     break;
             }
             enemy.OnDeathEvent += (Enemy e) => {

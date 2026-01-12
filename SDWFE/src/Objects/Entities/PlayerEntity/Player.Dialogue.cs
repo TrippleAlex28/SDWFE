@@ -47,7 +47,7 @@ public partial class Player
         OnDialogueOpen();
     }
 
-    private void ShowChoiceDialogue(string nodeId)
+    public void ShowChoiceDialogue(string nodeId)
     {
         _dialogueChoice?.Show(nodeId);
         OnDialogueOpen();

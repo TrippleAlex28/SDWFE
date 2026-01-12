@@ -134,5 +134,12 @@
     "SpeakerName": "Mulan",
     "Text": "Bring our dawn back, traveler.",
     "Choices": []
+  },
+
+  {
+    "Id": "test_boss_intro",
+    "SpeakerName": "Test Boss",
+    "Text": "So, you have finally arrived, brave warrior. I have been expecting you. Your journey has been long and arduous, but it ends here. Prepare yourself for the ultimate challenge!",
+    "Choices": []
   }
 ]

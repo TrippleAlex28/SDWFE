@@ -37,7 +37,7 @@ namespace SDWFE.Objects.Tiles
             int height = Sprite._spriteHeight;
             int width = Sprite._spriteWidth;
 
-            this.Hitbox = new TriggerHitbox(new Rectangle((int)data.Position.X, (int)data.Position.Y, width, height));
+            this.Hitbox = new TriggerHitbox(new Rectangle((int)data.Position.X, (int)data.Position.Y, width, height + 10));
             Hitbox.DetectsLayers = HitboxLayer.Player;
             _hitboxManager.AddTrigger(Hitbox);
 
