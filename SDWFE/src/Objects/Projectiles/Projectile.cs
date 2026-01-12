@@ -112,7 +112,7 @@ public abstract class Projectile : GameObject
         }
         
         if (_projectileEmitter != null)
-            _projectileEmitter.Position = this.GlobalPosition;
+            _projectileEmitter.Position = this.GlobalPosition - this.Displacement * gameTime.DeltaSeconds();
             
         if (_collisionEmitter != null)
             _collisionEmitter.Position = this.GlobalPosition;

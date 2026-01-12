@@ -47,8 +47,6 @@ public class GameplayScene : Scene
     public override void Enter()
     {
         base.Enter();
-        
-        
 
         #region Load Tilemap and Setup
         string tilemaptoLoad = $"{SceneData.levelName}.tmj";
