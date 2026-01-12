@@ -149,7 +149,6 @@ public class UIDialogueChoice : UIControl
             UIExtensionMethods.GetScreenPercentageWidth(100),
             32
         );
-        _choicesHbox.Spacing = 0;
         _textAndOptionsVbox.AddChild(_choicesHbox);
     }
 
@@ -168,14 +167,28 @@ public class UIDialogueChoice : UIControl
 
         // Clear old choice buttons
         ClearChoiceButtons();
-
+        _textAndOptionsVbox.RemoveChild(_choicesHbox);
+        _choicesHbox = new UIHBoxContainer();
+        _choicesHbox.DesiredSize = new Vector2(
+            UIExtensionMethods.GetScreenPercentageWidth(100),
+            32
+        );
         // Create new choice buttons
         for (int i = 0; i < newNode.Choices.Count; i++)
         {
             var choice = newNode.Choices[i];
             UIControl buttonChoice = CreateChoiceButton(choice.ChoiceText, choice.NextNode!);
-            _choicesHbox.AddChild(buttonChoice);
+            buttonChoice.DesiredSize = new Vector2(
+                UIExtensionMethods.GetScreenPercentageWidth(40),
+                32
+            );
+            //_choicesHbox.AddChild(buttonChoice);
         }
+        foreach (var button in _choiceButtons)
+        {
+            _choicesHbox.AddChild(button);
+        }
+        _textAndOptionsVbox.AddChild(_choicesHbox);
     }
 
     /// <summary>
