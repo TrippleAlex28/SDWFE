@@ -63,7 +63,7 @@ public class UIDialogue : UIControl
         // Semi-transparent dark background overlay
         _backgroundOverlay = UIVisual.FromColor(new Color(0, 0, 0, 180));
         _backgroundOverlay.DesiredSize = UIExtensionMethods.ScreenPercent(100, 100);
-        _backgroundOverlay.AlignmentPoint = Alignment.TopLeft;
+        _backgroundOverlay.AlignmentPoint = Alignment.MiddleCenter;
         _uiRoot.AddChild(_backgroundOverlay);
         
         // Dialogue box container - positioned at bottom of screen
@@ -72,8 +72,7 @@ public class UIDialogue : UIControl
             UIExtensionMethods.GetScreenPercentageWidth(80),
             UIExtensionMethods.GetScreenPercentageHeight(80)
         );
-        _dialogueBox.AlignmentPoint = Alignment.BottomMiddle;
-        _dialogueBox.Margin = new Vector4(0, 0, 0, 20); // Bottom margin
+        _dialogueBox.AlignmentPoint = Alignment.MiddleCenter;
         _uiRoot.AddChild(_dialogueBox);
         
         // Dialogue box background (using engine's blank square with color)

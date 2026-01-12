@@ -11,8 +11,7 @@ namespace SDWFE.Objects.Tiles
 {
     public class Portal : GameObject
     {
-        private readonly int _levelIndex;
-        private Text label;
+        private readonly PortalData _portalData;
         private readonly SpriteFont labelFont;
 
         public AnimatedSprite Sprite { get; private set; }
@@ -22,10 +21,11 @@ namespace SDWFE.Objects.Tiles
         private Texture2D _spriteIdleSheet;
         private Texture2D _spriteEnterSheet;
 
-        public Portal(Vector2 globalPosition, HitboxManager hitboxManager)
+        public Portal(PortalData data, HitboxManager hitboxManager)
         {
             this._hitboxManager = hitboxManager;
-            this.GlobalPosition = globalPosition;
+            this.GlobalPosition = data.Position;
+            this._portalData = data;
             labelFont = ExtendedGame.AssetManager.LoadFont("Upheavel", "Fonts/");
             _spriteIdleSheet = ExtendedGame.AssetManager.LoadTexture("TM_Portal_RodHakGames", "Tilemap/");
             _spriteEnterSheet = ExtendedGame.AssetManager.LoadTexture("TM_Portal_Entrance", "Tilemap/");
@@ -37,7 +37,7 @@ namespace SDWFE.Objects.Tiles
             int height = Sprite._spriteHeight;
             int width = Sprite._spriteWidth;
 
-            this.Hitbox = new TriggerHitbox(new Rectangle((int)globalPosition.X, (int)globalPosition.Y, width, height));
+            this.Hitbox = new TriggerHitbox(new Rectangle((int)data.Position.X, (int)data.Position.Y, width, height + 10));
             Hitbox.DetectsLayers = HitboxLayer.Player;
             _hitboxManager.AddTrigger(Hitbox);
 
@@ -65,6 +65,7 @@ namespace SDWFE.Objects.Tiles
 
         private void OnAnimationComplete()
         {
+            SceneData.levelIndex = _portalData.LevelIndex;
             // Switch to the appropriate Scene
             GameState.Instance.SwitchScene(GameplayScene.KEY);
         }

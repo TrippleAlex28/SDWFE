@@ -80,6 +80,8 @@ public class Tilemap : GameObject
 
     public Vector2 SpawnPoint { get; set; } = Vector2.Zero;
 
+    public List<NPCData> NPCs { get; private set; } = new();
+
     #endregion
     #region Public Properties
     
@@ -269,6 +271,14 @@ public class Tilemap : GameObject
                 WaveNumber = GetPropertyByName(obj, "wave")?.value ?? 0
                 };
                 Enemies.Add(enemyData);              
+            }
+            else if (obj.name == "NPC"){
+                NPCData npcData = new NPCData()
+                {                    
+                    Position = new Vector2(obj.x, obj.y - 32),
+                    NPCType = GetPropertyByName(obj, "index")?.value ?? 0
+                };
+                NPCs.Add(npcData);
             }
         }
     }

@@ -26,6 +26,7 @@ public class NPC : Interactable
         _basenode = base_node;
 
         idleSprite = new AnimatedSprite(idleSpritesheet, 32, 32, true);
+        idleSprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 32));
         AddChild(idleSprite);
 
 
@@ -34,6 +35,7 @@ public class NPC : Interactable
             SourceRectangle = new Rectangle(new Point(0, 0), new Point(16, 16)),
             LocalPosition = new Vector2(2, -5)
         };
+        speechBubble.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 32)) + 0.0001f;
         speechBubble.IsVisible = false;
         this.AddChild(speechBubble);
     }

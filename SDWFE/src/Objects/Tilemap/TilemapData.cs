@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Engine;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 public struct PortalData
 {
@@ -26,7 +28,17 @@ public struct DoorData
     public Vector2 Position;
     public int WaveNumber;
 }
-
+public struct NPCData
+{
+    public Vector2 Position;
+    public int NPCType;
+    
+    /// <summary>
+    /// Get the root node name for this NPC type (e.g., "fireman_root", "guard_root")
+    /// </summary>
+    public string RootNode => NPCTypes.GetRootNode(NPCType);
+    public Texture2D Texture => NPCTypes.GetTexture(NPCType);
+}
 
 
 
@@ -59,5 +71,51 @@ public static class LevelNames
     public static bool TryGetLevelName(int levelIndex, out string levelName)
     {
         return LevelMap.TryGetValue(levelIndex, out levelName!);
+    }
+}
+
+/// <summary>
+/// Maps NPC type IDs to their root node names and textures.
+/// Add your NPC type mappings here.
+/// </summary>
+public static class NPCTypes
+{
+    private static readonly Dictionary<int, string> NPCTypeMap = new()
+    {
+        // Add your NPC types here:
+        { 0, "anwei_root" },
+        { 1, "archer_root" },
+    };
+
+    private static readonly Dictionary<int, Texture2D> NPCTextureMap = new()
+    {
+        // Add your NPC textures here:
+        { 0, ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/") },
+        { 1, ExtendedGame.AssetManager.LoadTexture("32x32 Khitan_Raider_Idle", "Entities/NPC/") },
+    };
+    
+    public static Texture2D GetTexture(int npcType)
+    {
+        if (NPCTextureMap.TryGetValue(npcType, out var texture))
+            return texture;
+        
+        return ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/");
+    }
+
+    public static string GetRootNode(int npcType)
+    {
+        if (NPCTypeMap.TryGetValue(npcType, out var rootNode))
+            return rootNode;
+        
+        // Fallback: return "npc_{typeId}"
+        return $"fireman_root";
+    }
+
+    /// <summary>
+    /// Try to get root node name. Returns false if not found.
+    /// </summary>
+    public static bool TryGetRootNode(int npcType, out string rootNode)
+    {
+        return NPCTypeMap.TryGetValue(npcType, out rootNode!);
     }
 }

@@ -21,6 +21,8 @@ namespace SDWFE.Scenes;
 public class GameplayScene : Scene
 {
     public const string KEY = "GameplayScene";
+    
+    private const string INTRO_DIALOGUE = "To the Chosen Warrior, |p In the ninth year of my reign, beneath Heaven's watchful gaze, I write to you with a burdened heart. The year is 967, and a dark curse has fallen upon our kingdom. Fields grow silent, rivers run uneasy, and the people whisper of ill fate. This calamity was wrought by a wandering wizard, learned in forbidden arts, whose magic now binds our land in suffering.|p By the Mandate of Heaven, I command you-brave warrior-to journey beyond our borders and seek this wizard. Face his trials, endure his deceptions, and compel him to lift the curse that shackles our realm.|p The fate of the kingdom rests upon your blade and your resolve.|p Return with victory, and your name shall be etched in history. Fail, and our dynasty may fade into shadow.|p May the spirits guide your path,and may Heaven grant you strength.|p-The King";
 
     private ParticleSystem _bulletTrailSystem = new();
     private Tilemap map;
@@ -45,6 +47,10 @@ public class GameplayScene : Scene
     public override void Enter()
     {
         base.Enter();
+        
+        
+
+        #region Load Tilemap and Setup
         string tilemaptoLoad = $"{SceneData.levelName}.tmj";
         map = new Tilemap(tilemaptoLoad, HitboxManager);
         ExtendedGame.LightShaderInstance.Enabled = true;
@@ -55,14 +61,28 @@ public class GameplayScene : Scene
         
         this.AddObject(waveManager);
 
-        waveManager.StartWaves();
-        Vector2 spawnPointNPC = new Vector2(300, 300);
-        NPC npc = new NPC("fireman_root", new Rectangle((int)spawnPointNPC.X - 12, (int)spawnPointNPC.Y - 12, 56, 56), ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/"), HitboxManager);
-        npc.GlobalPosition = spawnPointNPC;
+        if (SceneData.levelIndex == -1)
+        {
+            foreach (var portalData in map.Portals)
+            {
+                var portal = new Portal(portalData, HitboxManager);
+                
+                this.AddObject(portal);
+            }
+        } else 
+        {
+            waveManager.StartWaves();
+        }
         
-        
-        this.AddObject(npc);
-        
+        // Spawn NPCs
+        foreach (var npcData in map.NPCs)
+        {
+            NPC newNPC = new NPC(npcData.RootNode, new Rectangle((int)npcData.Position.X - 12, (int)npcData.Position.Y - 12, 56, 56), npcData.Texture, HitboxManager);
+            newNPC.GlobalPosition = npcData.Position;
+
+            this.AddObject(newNPC);
+        }
+            
         if (GameState.Instance.SessionManager.IsHost || GameState.Instance.SessionManager.IsSingleplayer)
         {
             var grunt = new Grunt()
@@ -75,6 +95,7 @@ public class GameplayScene : Scene
         SetUpHitboxes();
         
         this.AddObject(map);
+        #endregion
         
         _bulletTrailSystem.AddEmitter(ParticlePresets.BulletTrail);
     }
@@ -107,6 +128,11 @@ public class GameplayScene : Scene
         {
             if (playerObject is Player player)
             {
+                if (!SceneData.hasSeenIntro)
+                {
+                    SceneData.hasSeenIntro = true;
+                    player.ShowDialogue(INTRO_DIALOGUE);
+                }
                 // Update lighting shader with all world lights
                 allWorldLights.Add(new PointLight()
                 {
@@ -124,8 +150,6 @@ public class GameplayScene : Scene
             }
         }
         ExtendedGame.LightShaderInstance.SetLights(allWorldLights);
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
-            map.DoorsById[0].Open();
          // Handle pause input
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);
