@@ -24,6 +24,9 @@ public abstract class Projectile : GameObject
 
     protected bool Collided = false;
 
+    private bool _removeRequested = false;
+    private float _removeTimer = 0f;
+    
     /// <summary>
     /// Empty constructor, should ONLY be used for network object instantiation
     /// </summary>
@@ -96,9 +99,21 @@ public abstract class Projectile : GameObject
     
     protected override void UpdateSelf(GameTime gameTime)
     {
+        if (_removeRequested)
+        {
+            Sprite.IsVisible = false;
+            _projectileTrail.Clear();
+            _removeTimer -= gameTime.DeltaSeconds();
+            if (_removeTimer <= 0f)
+            {
+                RemoveFromParent();
+                return;
+            }
+        }
+        
         if (_projectileEmitter != null)
             _projectileEmitter.Position = this.GlobalPosition;
-        
+            
         if (_collisionEmitter != null)
             _collisionEmitter.Position = this.GlobalPosition;
         
@@ -153,20 +168,21 @@ public abstract class Projectile : GameObject
 
         if (_collisionEmitter != null)
         {
-            Task.Run(async () =>
+            bool isInfinite = _collisionEmitter.Config.Duration.IsApproximatelyEqual(-1f);
+            if (isInfinite)
             {
-                bool isInfinite = _collisionEmitter.Config.Duration.IsApproximatelyEqual(-1f);
-                if (isInfinite)
-                {
-                    Console.WriteLine("Projectile Collision Effect shouldn't have an infinite duration!!!");
-                }
-                await Task.Delay(isInfinite ? 0 : (int)_collisionEmitter.Config.Duration * 1000);
-                // this.RemoveFromParent();
-            });
+                Console.WriteLine("Projectile Collision Effect shouldn't have an infinite duration!!!");
+            }
+            
+            float maxVisible = Math.Max(_collisionEmitter.Config.Duration, _collisionEmitter.Config.LifetimeMax);
+
+            _removeRequested = true;
+            _removeTimer = isInfinite ? 0f : maxVisible;
         }
         else
         {
-            // this.RemoveFromParent();
+            _removeRequested = true;
+            _removeTimer = 0f;
         }
     }
 }
