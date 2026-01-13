@@ -34,6 +34,7 @@ public class SDWFEGame : ExtendedGame
         NetObjectRegistry.Register<Grunt>((uint)NetObjects.Grunt);
         NetObjectRegistry.Register<Turret>((uint)NetObjects.Turret);
         NetObjectRegistry.Register<WaveManager>((uint)NetObjects.WaveManager);
+        NetObjectRegistry.Register<RoomDoor>((uint)NetObjects.RoomDoor);
         
         // --- NET COMMANDS SETUP ---
         NetCommandRegistry.Register<WalkCommand>((uint)NetCommands.Move);

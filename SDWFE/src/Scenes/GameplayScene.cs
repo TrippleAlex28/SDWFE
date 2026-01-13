@@ -55,21 +55,26 @@ public class GameplayScene : Scene
         
         SpawnPoint = map.SpawnPoint;
         map.RegisterHitboxes(HitboxManager);
-        WaveManager waveManager = new WaveManager(map.Portals, map.Doors, map.Enemies, HitboxManager);
         
-        this.AddObject(waveManager);
+        // Only host/singleplayer creates the WaveManager - clients receive it via network sync
+        if (GameState.Instance.SessionManager.IsHost || GameState.Instance.SessionManager.IsSingleplayer)
+        {
+            WaveManager waveManager = new WaveManager(map.Portals, map.Doors, map.Enemies, HitboxManager);
+            
+            this.AddObject(waveManager);
 
-        if (SceneData.levelIndex == -1)
-        {
-            foreach (var portalData in map.Portals)
+            if (SceneData.levelIndex == -1)
             {
-                var portal = new Portal(portalData, HitboxManager);
-                
-                this.AddObject(portal);
+                foreach (var portalData in map.Portals)
+                {
+                    var portal = new Portal(portalData, HitboxManager);
+                    
+                    this.AddObject(portal);
+                }
+            } else 
+            {
+                waveManager.StartWaves();
             }
-        } else 
-        {
-            waveManager.StartWaves();
         }
         
         // Spawn NPCs

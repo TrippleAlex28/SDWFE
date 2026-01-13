@@ -44,6 +44,17 @@ public class AnimatedSprite : Sprite
         _currentFrame = 0;
         SourceRectangle = GetSpriteFromSheet(Column, _currentFrame);
     }
+    
+    /// <summary>
+    /// Set the animation to the last frame (for already-completed states)
+    /// </summary>
+    public void SetToLastFrame()
+    {
+        _isPlaying = false;
+        _currentFrame = _totalFrames - 1;
+        SourceRectangle = GetSpriteFromSheet(Column, _currentFrame);
+    }
+    
     public void Stop()
     {
         _isPlaying = false;
