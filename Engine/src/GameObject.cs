@@ -9,6 +9,34 @@ namespace Engine;
 public class GameObject : NetObject
 {
     public override uint TypeId => 0;
+    
+    #region Network Interpolation
+    
+    /// <summary>
+    /// Whether this object should use network interpolation for smooth movement.
+    /// Enabled automatically for replicated objects that are not locally owned.
+    /// </summary>
+    public bool UseNetworkInterpolation { get; set; } = false;
+    
+    /// <summary>
+    /// The target position received from the network. Used for interpolation.
+    /// </summary>
+    private Vector2 _networkTargetPosition = Vector2.Zero;
+    
+    /// <summary>
+    /// How fast to interpolate towards the network target position.
+    /// Higher values = faster interpolation (less smooth but more accurate).
+    /// Typical range: 10-25
+    /// </summary>
+    public float NetworkInterpolationSpeed { get; set; } = 15f;
+    
+    /// <summary>
+    /// If the distance to target exceeds this, snap immediately instead of interpolating.
+    /// Prevents rubber-banding when teleporting or spawning.
+    /// </summary>
+    public float NetworkSnapDistance { get; set; } = 100f;
+    
+    #endregion
 
     public GameObject()
     {
@@ -21,7 +49,7 @@ public class GameObject : NetObject
         RegisterProperty(
             nameof(GlobalPosition),
             () => GlobalPosition,
-            (v) => GlobalPosition = v
+            (v) => SetNetworkPosition(v)
         );
         
         RegisterProperty(
@@ -35,6 +63,30 @@ public class GameObject : NetObject
             () => Velocity,
             (v) => Velocity = v
         );
+    }
+    
+    /// <summary>
+    /// Sets position received from network. Uses interpolation for non-owned objects.
+    /// </summary>
+    private void SetNetworkPosition(Vector2 position)
+    {
+        // For locally owned objects or non-replicated, set position directly
+        if (!ReplicatesOverNetwork || IsLocallyOwned())
+        {
+            LocalPosition = Parent == null ? position : LocalPosition + (position - GlobalPosition);
+            return;
+        }
+        
+        // For remote objects, enable interpolation and set target
+        UseNetworkInterpolation = true;
+        _networkTargetPosition = position;
+        
+        // If too far away, snap immediately (prevents rubber-banding on spawn/teleport)
+        float distanceSquared = Vector2.DistanceSquared(GlobalPosition, position);
+        if (distanceSquared > NetworkSnapDistance * NetworkSnapDistance)
+        {
+            LocalPosition = Parent == null ? position : LocalPosition + (position - GlobalPosition);
+        }
     }
     
     #region Events
@@ -320,10 +372,35 @@ public class GameObject : NetObject
     public virtual void Update(GameTime gameTime)
     {
         this.UpdateSelf(gameTime);
+        this.UpdateNetworkInterpolation(gameTime.DeltaSeconds());
         this.UpdatePosition(gameTime.DeltaSeconds());
 
         for (int i = 0; i < this.Children.Count; ++i)
             this.Children[i].Update(gameTime);
+    }
+    
+    /// <summary>
+    /// Smoothly interpolates towards the network target position for remote objects.
+    /// </summary>
+    private void UpdateNetworkInterpolation(float deltaSeconds)
+    {
+        if (!UseNetworkInterpolation)
+            return;
+            
+        Vector2 currentPos = GlobalPosition;
+        Vector2 targetPos = _networkTargetPosition;
+        
+        // Calculate interpolation factor based on speed and delta time
+        float lerpFactor = 1f - MathF.Exp(-NetworkInterpolationSpeed * deltaSeconds);
+        
+        // Interpolate towards target
+        Vector2 newPos = Vector2.Lerp(currentPos, targetPos, lerpFactor);
+        
+        // Set position directly (not through network setter)
+        if (Parent == null)
+            LocalPosition = newPos;
+        else
+            LocalPosition += newPos - GlobalPosition;
     }
 
     /// <summary>
