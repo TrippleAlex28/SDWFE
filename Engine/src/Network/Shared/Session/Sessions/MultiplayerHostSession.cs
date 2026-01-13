@@ -120,6 +120,7 @@ public class MultiplayerHostSession : GameSession
         {
             SceneEpoch = sceneEpoch,
             SceneKey = sceneKey,
+            LevelIndex = GameState.Instance.SceneData.LevelIndex,
         };
         _ = _netServer.BroadcastTcp(packet.ToBytes());
         

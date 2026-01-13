@@ -1,4 +1,5 @@
-﻿using Engine.Network.Shared.Command;
+﻿using Engine.Network.Shared;
+using Engine.Network.Shared.Command;
 using Engine.Network.Shared.Session;
 using Engine.Network.Shared.Session.Sessions;
 using Engine.Scene;
@@ -27,6 +28,12 @@ public class GameState
 
     public uint SceneEpoch { get; private set; } = 0;
     public Scene.Scene? CurrentScene { get; private set; }
+    
+    /// <summary>
+    /// Scene data that needs to be synced over the network.
+    /// Set this from your game project.
+    /// </summary>
+    public INetworkSceneData? SceneData { get; set; }
 
     /// <summary>
     /// Event called when MultiplayerClient gets disconnected from the server

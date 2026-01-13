@@ -184,6 +184,12 @@ public class MultiplayerClientSession : GameSession
             _packetQueue.Enqueue(p);
         }
         
+        // Apply LevelIndex from host before switching scene
+        if (GameState.Instance.SceneData != null)
+        {
+            GameState.Instance.SceneData.LevelIndex = packet.LevelIndex;
+        }
+        
         GameState.Instance.SwitchSceneClient(packet.SceneEpoch, packet.SceneKey);
         
         // Apply stored future snapshot

@@ -9,6 +9,7 @@ using Engine.Scene;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SDWFE.Commands;
+using SDWFE.Managers;
 using SDWFE.Objects;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
@@ -32,6 +33,7 @@ public class SDWFEGame : ExtendedGame
         NetObjectRegistry.Register<FireworkRocket>((uint)NetObjects.FireworkRocket);
         NetObjectRegistry.Register<Grunt>((uint)NetObjects.Grunt);
         NetObjectRegistry.Register<Turret>((uint)NetObjects.Turret);
+        NetObjectRegistry.Register<WaveManager>((uint)NetObjects.WaveManager);
         
         // --- NET COMMANDS SETUP ---
         NetCommandRegistry.Register<WalkCommand>((uint)NetCommands.Move);
@@ -46,6 +48,9 @@ public class SDWFEGame : ExtendedGame
     protected override void Initialize()
     {
         base.Initialize();
+        
+        // Register SceneData for network syncing
+        GameState.Instance.SceneData = SceneData.Instance;
         
         // Initialize Input System
         InputSetup.Initialize(InputSetup.PROFILE_UI);
