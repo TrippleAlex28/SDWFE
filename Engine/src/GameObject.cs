@@ -61,14 +61,38 @@ public class GameObject : NetObject
         RegisterProperty(
             nameof(Direction),
             () => Direction,
-            (v) => Direction = v
+            (v) => SetNetworkDirection(v)
         );
         
         RegisterProperty(
             nameof(Velocity),
             () => Velocity,
-            (v) => Velocity = v
+            (v) => SetNetworkVelocity(v)
         );
+    }
+    
+    /// <summary>
+    /// Sets direction received from network. Ignores for locally owned objects (they use client-side prediction).
+    /// </summary>
+    private void SetNetworkDirection(Vector2 direction)
+    {
+        // For locally owned objects, ignore network direction - trust client-side prediction
+        if (ReplicatesOverNetwork && IsLocallyOwned())
+            return;
+            
+        Direction = direction;
+    }
+    
+    /// <summary>
+    /// Sets velocity received from network. Ignores for locally owned objects (they use client-side prediction).
+    /// </summary>
+    private void SetNetworkVelocity(float velocity)
+    {
+        // For locally owned objects, ignore network velocity - trust client-side prediction
+        if (ReplicatesOverNetwork && IsLocallyOwned())
+            return;
+            
+        Velocity = velocity;
     }
     
     /// <summary>
