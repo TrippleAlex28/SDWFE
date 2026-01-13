@@ -36,6 +36,12 @@ public class GameObject : NetObject
     /// </summary>
     public float NetworkSnapDistance { get; set; } = 100f;
     
+    /// <summary>
+    /// For locally owned objects, only correct position if desync exceeds this distance.
+    /// This prevents jank from the reconciliation "snap back and replay" pattern.
+    /// </summary>
+    public float LocalDesyncCorrectionThreshold { get; set; } = 50f;
+    
     #endregion
 
     public GameObject()
@@ -67,13 +73,31 @@ public class GameObject : NetObject
     
     /// <summary>
     /// Sets position received from network. Uses interpolation for non-owned objects.
+    /// For locally owned objects, only corrects if there's a significant desync.
     /// </summary>
     private void SetNetworkPosition(Vector2 position)
     {
-        // For locally owned objects or non-replicated, set position directly
-        if (!ReplicatesOverNetwork || IsLocallyOwned())
+        // Non-replicated objects: set position directly
+        if (!ReplicatesOverNetwork)
         {
             LocalPosition = Parent == null ? position : LocalPosition + (position - GlobalPosition);
+            return;
+        }
+        
+        // Locally owned objects: only correct if there's a significant desync
+        // This prevents jank from "snap back and replay" reconciliation
+        if (IsLocallyOwned())
+        {
+            float distanceSquared = Vector2.DistanceSquared(GlobalPosition, position);
+            
+            // Only correct if desync is significant (e.g., server rejected a move due to collision)
+            if (distanceSquared > LocalDesyncCorrectionThreshold * LocalDesyncCorrectionThreshold)
+            {
+                // Smoothly correct towards server position instead of snapping
+                UseNetworkInterpolation = true;
+                _networkTargetPosition = position;
+            }
+            // Otherwise, trust client-side prediction - don't update position
             return;
         }
         
@@ -82,8 +106,8 @@ public class GameObject : NetObject
         _networkTargetPosition = position;
         
         // If too far away, snap immediately (prevents rubber-banding on spawn/teleport)
-        float distanceSquared = Vector2.DistanceSquared(GlobalPosition, position);
-        if (distanceSquared > NetworkSnapDistance * NetworkSnapDistance)
+        float snapDistanceSquared = Vector2.DistanceSquared(GlobalPosition, position);
+        if (snapDistanceSquared > NetworkSnapDistance * NetworkSnapDistance)
         {
             LocalPosition = Parent == null ? position : LocalPosition + (position - GlobalPosition);
         }
