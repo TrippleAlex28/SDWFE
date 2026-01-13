@@ -97,7 +97,7 @@ public class GameObject : NetObject
     
     /// <summary>
     /// Sets position received from network. Uses interpolation for non-owned objects.
-    /// For locally owned objects, only corrects if there's a significant desync.
+    /// For locally owned objects, only corrects if there's a significant desync (snap correction).
     /// </summary>
     private void SetNetworkPosition(Vector2 position)
     {
@@ -117,9 +117,8 @@ public class GameObject : NetObject
             // Only correct if desync is significant (e.g., server rejected a move due to collision)
             if (distanceSquared > LocalDesyncCorrectionThreshold * LocalDesyncCorrectionThreshold)
             {
-                // Smoothly correct towards server position instead of snapping
-                UseNetworkInterpolation = true;
-                _networkTargetPosition = position;
+                // Snap to server position for major desync (don't use interpolation - it fights with prediction)
+                LocalPosition = Parent == null ? position : LocalPosition + (position - GlobalPosition);
             }
             // Otherwise, trust client-side prediction - don't update position
             return;
@@ -429,11 +428,20 @@ public class GameObject : NetObject
     
     /// <summary>
     /// Smoothly interpolates towards the network target position for remote objects.
+    /// Does NOT apply to locally owned objects - they use client-side prediction.
     /// </summary>
     private void UpdateNetworkInterpolation(float deltaSeconds)
     {
         if (!UseNetworkInterpolation)
             return;
+        
+        // Don't interpolate locally owned objects - they use client-side prediction
+        // Desync correction for local objects is handled in SetNetworkPosition
+        if (ReplicatesOverNetwork && IsLocallyOwned())
+        {
+            UseNetworkInterpolation = false;
+            return;
+        }
             
         Vector2 currentPos = GlobalPosition;
         Vector2 targetPos = _networkTargetPosition;
