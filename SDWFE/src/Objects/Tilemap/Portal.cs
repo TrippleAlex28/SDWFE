@@ -65,7 +65,7 @@ namespace SDWFE.Objects.Tiles
 
         private void OnAnimationComplete()
         {
-            SceneData.levelIndex = _portalData.LevelIndex;
+            SceneData.LevelIndex = _portalData.LevelIndex;
             // Switch to the appropriate Scene
             GameState.Instance.SwitchScene(GameplayScene.KEY);
         }
