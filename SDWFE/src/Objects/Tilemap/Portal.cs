@@ -67,7 +67,7 @@ namespace SDWFE.Objects.Tiles
         {
             SceneData.LevelIndex = _portalData.LevelIndex;
             // Switch to the appropriate Scene
-            GameState.Instance.SwitchScene(GameplayScene.KEY);
+            GameState.Instance.SwitchScene(GameplayScene.KEY, SceneData.LevelIndex);
         }
     }
 }

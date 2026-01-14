@@ -24,7 +24,7 @@ public class Grunt : ChasingEnemy
         Texture2D texture = ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/");
         Sprite = new AnimatedSprite(texture, 32, 32, true, true);
 
-        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 16));
+        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 32));
         // Sprite = new Sprite(ExtendedGame.AssetManager.LoadTexture("Grunt", "Entities/Enemies/"));
         AddChild(Sprite);
     }

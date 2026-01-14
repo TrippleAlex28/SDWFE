@@ -9,11 +9,13 @@ using Engine.Scene;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SDWFE.Commands;
+using SDWFE.Managers;
 using SDWFE.Objects;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
 using SDWFE.Objects.Projectiles.Bullets;
+using SDWFE.Objects.Tilemap;
 using SDWFE.Scenes;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
@@ -32,6 +34,8 @@ public class SDWFEGame : ExtendedGame
         NetObjectRegistry.Register<FireworkRocket>((uint)NetObjects.FireworkRocket);
         NetObjectRegistry.Register<Grunt>((uint)NetObjects.Grunt);
         NetObjectRegistry.Register<Turret>((uint)NetObjects.Turret);
+        NetObjectRegistry.Register<WaveManager>((uint)NetObjects.WaveManager);
+        NetObjectRegistry.Register<RoomDoor>((uint)NetObjects.RoomDoor);
         
         // --- NET COMMANDS SETUP ---
         NetCommandRegistry.Register<WalkCommand>((uint)NetCommands.Move);

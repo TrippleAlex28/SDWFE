@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Engine;
 using Engine.Hitbox;
 using Microsoft.Xna.Framework;
+using SDWFE.Objects;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Tilemap;
 using SDWFE.Objects.Tiles;
@@ -16,6 +17,8 @@ namespace SDWFE.Managers;
 /// </summary>
 public class WaveManager : GameObject
 {
+    public override uint TypeId => (uint)NetObjects.WaveManager;
+    
     private readonly List<Wave> _waves;
     private List<RoomDoor> _doors = new();
     private List<Portal> _portals = new();
@@ -66,8 +69,33 @@ public class WaveManager : GameObject
     /// </summary>
     public event Action? OnAllWavesCompleted;
 
+    public WaveManager() : this(new(), new(), new(), null!)
+    {
+        // Parameterless constructor for network deserialization
+    }
+
     public WaveManager(List<PortalData> portals, List<DoorData> doors, List<EnemyData> enemies, HitboxManager hitboxManager)
     {
+        this.ReplicatesOverNetwork = true;
+        
+        RegisterProperty(
+            nameof(_currentWaveIndex),
+            () => _currentWaveIndex,
+            (v) => _currentWaveIndex = v
+        );
+        
+        RegisterProperty(
+            nameof(_enemiesRemaining),
+            () => _enemiesRemaining,
+            (v) => _enemiesRemaining = v
+        );
+        
+        RegisterProperty(
+            nameof(_waveInProgress),
+            () => _waveInProgress,
+            (v) => _waveInProgress = v
+        );
+        
         _hitboxManager = hitboxManager;
         _waves = InitializeWaves(portals, doors, enemies);
     }

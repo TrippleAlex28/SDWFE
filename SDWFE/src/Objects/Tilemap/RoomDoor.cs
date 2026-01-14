@@ -19,6 +19,11 @@ public class RoomDoor : GameObject
     private StaticHitbox? _staticHitbox;
     private readonly HitboxManager _hitboxManager;
 
+    public RoomDoor() : this(Vector2.Zero, null!)
+    {
+        // Parameterless constructor for network deserialization
+    }
+
     public RoomDoor(Vector2 globalPosition, HitboxManager hitboxManager)
     {
         this._spriteSheet = ExtendedGame.AssetManager.LoadTexture("TM_Door_Anim", "Tilemap/");
