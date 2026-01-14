@@ -49,7 +49,7 @@ public class GameplayScene : Scene
         base.Enter();
 
         #region Load Tilemap and Setup
-        string tilemaptoLoad = $"{SceneData.levelName}.tmj";
+        string tilemaptoLoad = $"{SceneData.LevelName}.tmj";
         map = new Tilemap(tilemaptoLoad, HitboxManager);
         ExtendedGame.LightShaderInstance.Enabled = true;
         
@@ -59,7 +59,7 @@ public class GameplayScene : Scene
         
         this.AddObject(waveManager);
 
-        if (SceneData.levelIndex == -1)
+        if (SceneData.LevelIndex == -1)
         {
             foreach (var portalData in map.Portals)
             {
