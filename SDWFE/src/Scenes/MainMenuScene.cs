@@ -155,7 +155,7 @@ public class MainMenuScene : Scene
         playButtonsContainer.AddChild(joinContainer);
 
         // Join IP Input field (bottom)
-        _desiredIp = "192.168.2.23";
+        _desiredIp = "192.168.68.125";
         var ipInputBox = new UIInputBox(Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 12))
         {
             PlaceholderText = _desiredIp,

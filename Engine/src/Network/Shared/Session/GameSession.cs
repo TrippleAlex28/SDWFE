@@ -25,7 +25,7 @@ public abstract class GameSession
     public abstract void HandleInput(List<NetCommand> commands);
     public abstract void Update(GameTime gameTime);
 
-    public virtual void OnSwitchScene(uint sceneEpoch, string sceneKey)
+    public virtual void OnSwitchScene(uint sceneEpoch, string sceneKey, int levelIndex = -1)
     {
         
     }

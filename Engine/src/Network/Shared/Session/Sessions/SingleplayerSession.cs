@@ -41,7 +41,7 @@ public class SingleplayerSession : GameSession
         }
     }
 
-    public override void OnSwitchScene(uint sceneEpoch, string sceneKey)
+    public override void OnSwitchScene(uint sceneEpoch, string sceneKey, int levelIndex = -1)
     {
         GameState.Instance.CurrentScene!.AddPlayer(LocalClientId);
     }

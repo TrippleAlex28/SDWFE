@@ -184,7 +184,7 @@ public class MultiplayerClientSession : GameSession
             _packetQueue.Enqueue(p);
         }
         
-        GameState.Instance.SwitchSceneClient(packet.SceneEpoch, packet.SceneKey);
+        GameState.Instance.SwitchSceneClient(packet.SceneEpoch, packet.SceneKey, packet.LevelIndex);
         
         // Apply stored future snapshot
         if (_latestFutureSnapshot != null)

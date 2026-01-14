@@ -109,7 +109,7 @@ public class MultiplayerHostSession : GameSession
         }
     }
 
-    public override void OnSwitchScene(uint sceneEpoch, string sceneKey)
+    public override void OnSwitchScene(uint sceneEpoch, string sceneKey, int levelIndex = -1)
     {
         if (!IsInitialized) return;
         
@@ -120,6 +120,7 @@ public class MultiplayerHostSession : GameSession
         {
             SceneEpoch = sceneEpoch,
             SceneKey = sceneKey,
+            LevelIndex = levelIndex,
         };
         _ = _netServer.BroadcastTcp(packet.ToBytes());
         

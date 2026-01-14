@@ -33,6 +33,12 @@ public class GameState
     /// </summary>
     public event Action<string>? OnDisconnected;
     
+    /// <summary>
+    /// Event called when client receives a scene change from the server.
+    /// Parameters: (sceneKey, levelIndex)
+    /// </summary>
+    public event Action<string, int>? OnSceneChangeReceived;
+    
     private GameState()
     {
         SessionManager = new SessionManager();
@@ -62,7 +68,7 @@ public class GameState
     /// <summary>
     /// Switch scenes as a Host, clients should only switch scenes when receiving packets using the function below
     /// </summary>
-    public void SwitchScene(string sceneKey)
+    public void SwitchScene(string sceneKey, int levelIndex = -1)
     {
         if (SessionManager.CurrentSession?.Type == SessionType.MultiplayerClient)
             return;
@@ -76,7 +82,7 @@ public class GameState
 
         SceneEpoch += 1;
         
-        SessionManager.CurrentSession?.OnSwitchScene(SceneEpoch, sceneKey);
+        SessionManager.CurrentSession?.OnSwitchScene(SceneEpoch, sceneKey, levelIndex);
         // TODO: Stop loading screen
     }
 
@@ -86,8 +92,11 @@ public class GameState
         SwitchScene(sceneKey);
     }
     
-    public void SwitchSceneClient(uint sceneEpoch, string sceneKey)
+    public void SwitchSceneClient(uint sceneEpoch, string sceneKey, int levelIndex)
     {
+        // Notify game code before switching (so it can update global state)
+        OnSceneChangeReceived?.Invoke(sceneKey, levelIndex);
+        
         // TODO: Start loading screen
         var scene = SceneRegistry.Create(sceneKey);
         

@@ -57,6 +57,11 @@ public class SDWFEGame : ExtendedGame
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);
         };
         
+        GameState.Instance.OnSceneChangeReceived += (sceneKey, levelIndex) =>
+        {
+            SceneData.levelIndex = levelIndex;
+        };
+        
         // Initialize Scene & Session
         GameState.Instance.SwitchScene(MainMenuScene.KEY);
         GameState.Instance.SwitchSession(SessionType.Singleplayer);
