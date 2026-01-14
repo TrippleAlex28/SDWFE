@@ -12,7 +12,11 @@ public class ConnectionAcceptPacket : Packet
 
     // Session Data
     public uint CurrentSceneEpoch { get; set; }
+
+    // Added level index to sync scene data
     public string CurrentSceneKey { get; set; }
+
+    public int LevelIndex { get; set; }
     
     public override void Serialize(BinaryWriter bw)
     {
@@ -22,6 +26,7 @@ public class ConnectionAcceptPacket : Packet
         
         bw.Write(CurrentSceneEpoch);
         bw.Write(CurrentSceneKey);
+        bw.Write(LevelIndex);
     }
 
     public override void Deserialize(BinaryReader br)
@@ -32,5 +37,6 @@ public class ConnectionAcceptPacket : Packet
 
         CurrentSceneEpoch = br.ReadUInt32();
         CurrentSceneKey = br.ReadString();
+        LevelIndex = br.ReadInt32();
     }
 }

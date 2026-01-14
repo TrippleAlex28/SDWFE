@@ -227,7 +227,7 @@ public class NetClient
 
         // Set the Scene & SceneEpoch to be correct
         if (!GameState.Instance.SessionManager.IsHost)
-            GameState.Instance.SwitchSceneClient(packet.CurrentSceneEpoch, packet.CurrentSceneKey);
+            GameState.Instance.SwitchSceneClient(packet.CurrentSceneEpoch, packet.CurrentSceneKey, packet.LevelIndex);
     }
 
     private void StopRunning()

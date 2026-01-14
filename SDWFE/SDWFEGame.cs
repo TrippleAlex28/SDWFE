@@ -59,7 +59,7 @@ public class SDWFEGame : ExtendedGame
         
         GameState.Instance.OnSceneChangeReceived += (sceneKey, levelIndex) =>
         {
-            SceneData.levelIndex = levelIndex;
+            SceneData.LevelIndex = levelIndex;
         };
         
         // Initialize Scene & Session
