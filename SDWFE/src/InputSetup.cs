@@ -26,6 +26,8 @@ public static class InputSetup
     public const string ACTION_HOTBAR_LEFT = "HotbarLeft";
     public const string ACTION_HOTBAR_RIGHT = "HotbarRight";
 
+    public const string ACTION_INVENTORY = "Inventory";
+    
     public const string ACTION_SHOOT = "Shoot";
     public const string ACTION_USE = "Use";
     public const string ACTION_INTERACT = "Interact";
@@ -43,6 +45,8 @@ public static class InputSetup
     public const string ACTION_UI_NAVIGATE_DOWN = "UINavigateDown";
     public const string ACTION_UI_NAVIGATE_LEFT = "UINavigateLeft";
     public const string ACTION_UI_NAVIGATE_RIGHT = "UINavigateRight";
+
+    public const string ACTION_UI_INVENTORY = "UIInventory";
     
     #endregion
     
@@ -105,6 +109,10 @@ public static class InputSetup
             .AddBinding(new MouseButtonBinding(MouseButtonBinding.MouseButton.WheelUp))
             .AddBinding(new GamePadButtonBinding(Buttons.RightShoulder));
 
+        var inventory = new InputAction(ACTION_INVENTORY)
+            .AddBinding(new KeyboardBinding(Keys.Tab))
+            .AddBinding(new GamePadButtonBinding(Buttons.DPadUp));
+        
         var shoot = new InputAction(ACTION_SHOOT)
             .AddBinding(new MouseButtonBinding(MouseButtonBinding.MouseButton.Left))
             .AddBinding(new GamePadButtonBinding(Buttons.RightTrigger));
@@ -140,6 +148,8 @@ public static class InputSetup
         gameplayProfile.RegisterAction(hotbar5);
         gameplayProfile.RegisterAction(hotbarLeft);
         gameplayProfile.RegisterAction(hotbarRight);
+        
+        gameplayProfile.RegisterAction(inventory);
         
         gameplayProfile.RegisterAction(shoot);
         gameplayProfile.RegisterAction(use);
@@ -183,6 +193,10 @@ public static class InputSetup
             .AddBinding(new KeyboardBinding(Keys.D))
             .AddBinding(new KeyboardBinding(Keys.Right))
             .AddBinding(new GamePadButtonBinding(Buttons.LeftThumbstickRight));
+
+        var inventory = new InputAction(ACTION_UI_INVENTORY)
+            .AddBinding(new KeyboardBinding(Keys.T))
+            .AddBinding(new GamePadButtonBinding(Buttons.DPadUp));
         
         uiProfile.RegisterAction(select);
         uiProfile.RegisterAction(cancel);
@@ -190,6 +204,8 @@ public static class InputSetup
         uiProfile.RegisterAction(navigateDown);
         uiProfile.RegisterAction(navigateLeft);
         uiProfile.RegisterAction(navigateRight);
+
+        uiProfile.RegisterAction(inventory);
         
         InputManager.Instance.RegisterProfile(uiProfile);
     }
