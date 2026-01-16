@@ -7,37 +7,37 @@ namespace SDWFE;
 public static class ParticlePresets
 {
     public static ParticleEmitter CreateBulletTrail() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
-            .WithMaxParticles(1024)
-            .WithEmissionRate(128f)
+            .WithMaxParticles(512)
+            .WithEmissionRate(32f)
             .Continuous()
             .WithSpawnRadius(1.5f)
-            .WithLifetime(0.06f, 0.14f)
+            .WithLifetime(0.05f, 0.1f)
             .WithVelocity(new Vector2(-5f, -5f), new Vector2(5f, 5f))
             .WithRotationVelocity(-5f, 5f)
             .WithColorRange(Color.Yellow, Color.OrangeRed)
             .WithScaleCurve(c => c
-                .AddKey(0f, 0.18f)
-                .AddKey(0.4f, 0.26f)
+                .AddKey(0f, 0.1f)
+                .AddKey(0.4f, 0.2f)
                 .AddKey(1f, 0.05f))
             .WithFadeInOut(0.05f, 0.55f)
             .Additive()
             .Build();
 
     public static ParticleEmitter CreateBulletImpact() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
-            .WithMaxParticles(40)
-            .WithEmissionRate(200f)
+            .WithMaxParticles(8)
+            .WithEmissionRate(256f)
             .WithDuration(0.25f)                // One-shot burst
-            .WithSpawnRadius(2f)
-            .WithLifetime(0.15f, 0.35f)
+            .WithSpawnRadius(1.5f)
+            .WithLifetime(0.15f, 0.3f)
             .WithVelocity(
-                new Vector2(-120f, -120f),
-                new Vector2(120f, 120f))
+                new Vector2(-96f, -96f),
+                new Vector2(96f, 96f))
             .WithRotationVelocity(-6f, 6f)
-            .WithColorRange(Color.Orange, Color.Yellow)
+            .WithColorRange(Color.Red, Color.Yellow)
             .WithScaleCurve(curve => curve
                 .AddKey(0f, 0.25f)
                 .AddKey(1f, 0.05f))
-            .WithFadeOut(0.6f)
+            .WithFadeOut(0.5f)
             .Additive()
             .Build();
 
