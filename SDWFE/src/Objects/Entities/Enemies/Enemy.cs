@@ -54,18 +54,21 @@ public abstract class Enemy : GameObject
         this.ReplicatesOverNetwork = true;
 
         RegisterProperty(
+            100,
             nameof(_targetNetId),
             () => _targetNetId ?? -1,
             (v) => _targetNetId = v
         );
 
         RegisterProperty(
+            101,
             nameof(MaxHealth),
             () => MaxHealth,
             (v) => MaxHealth = v
         );
         
         RegisterProperty(
+            102,
             nameof(CurrentHealth),
             () => CurrentHealth,
             (v) => CurrentHealth = v

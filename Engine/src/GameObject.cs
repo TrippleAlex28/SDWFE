@@ -13,24 +13,28 @@ public class GameObject : NetObject
     public GameObject()
     {
         RegisterProperty(
+            0,
             nameof(IsVisible),
             () => IsVisible,
             (v) => IsVisible = v
         );
         
         RegisterProperty(
+            1,
             nameof(GlobalPosition),
             () => GlobalPosition,
             (v) => GlobalPosition = v
         );
         
         RegisterProperty(
+            2,
             nameof(Direction),
             () => Direction,
             (v) => Direction = v
         );
         
         RegisterProperty(
+            3,
             nameof(Velocity),
             () => Velocity,
             (v) => Velocity = v

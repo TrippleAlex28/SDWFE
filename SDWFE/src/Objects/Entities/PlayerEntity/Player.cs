@@ -21,24 +21,28 @@ public partial class Player : GameObject
         this.ReplicatesOverNetwork = true;
         
         RegisterProperty(
+            100,
             nameof(Stats.MaxHealth),
             () => Stats.MaxHealth,
             (v) => Stats.MaxHealth = v
         );
         
         RegisterProperty(
+            101,
             nameof(Stats.CurrentHealth),
             () => Stats.CurrentHealth,
             (v) => Stats.CurrentHealth = v
         );
         
         RegisterProperty(
+            102,
             nameof(Stats.MaxStamina),
             () => Stats.MaxStamina,
             (v) => Stats.MaxStamina = v
         );
         
         RegisterProperty(
+            103,
             nameof(Stats.CurrentStamina),
             () => Stats.CurrentStamina,
             (v) => Stats.CurrentStamina = v

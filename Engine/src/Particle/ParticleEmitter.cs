@@ -138,7 +138,7 @@ public class ParticleEmitter
                     origin,
                     particles[i].Scale,
                     SpriteEffects.None,
-                    0f
+                    1f
                 );
             }
         }

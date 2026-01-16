@@ -4,10 +4,18 @@ namespace Engine.Network.Shared.Object;
 
 public abstract class NetProperty
 {
-    public string Name { get; protected set; }
+    public ushort Id { get; }
+    public string DebugName { get; }
+    
     protected bool isDirty;
     public bool IsDirty => isDirty;
 
+    protected NetProperty(ushort id, string debugName)
+    {
+        Id = id;
+        DebugName = debugName;
+    }
+    
     public void ClearDirty()
     {
         isDirty = false;
@@ -26,12 +34,12 @@ public class NetProperty<T> : NetProperty
     private readonly Action<T> _setter;
     
     public NetProperty(
-        string name,
+        ushort id,
+        string debugName,
         Func<T> getter,
         Action<T> setter
-    )
+    ) : base(id, debugName)
     {
-        Name = name;
         _getter = getter;
         _setter = setter;
         _lastValue = _getter();

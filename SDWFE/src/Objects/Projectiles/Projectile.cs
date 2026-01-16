@@ -102,11 +102,11 @@ public abstract class Projectile : GameObject
         if (_removeRequested)
         {
             Sprite.IsVisible = false;
-            _projectileTrail.Clear();
+            _projectileEmitter?.Stop();
             _removeTimer -= gameTime.DeltaSeconds();
             if (_removeTimer <= 0f)
             {
-                RemoveFromParent();
+                this.RemoveFromParent();
                 return;
             }
         }

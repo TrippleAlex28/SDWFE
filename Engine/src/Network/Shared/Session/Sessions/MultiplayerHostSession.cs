@@ -151,7 +151,9 @@ public class MultiplayerHostSession : GameSession
                 .ToList(),
         };
         
-        _netServer.BroadcastUdp(packet.ToBytes());
+        byte[] payload = packet.ToBytes();
+        Console.WriteLine(payload.Length);
+        _netServer.BroadcastUdp(payload);
 
         scene.ClearDirty();
     }

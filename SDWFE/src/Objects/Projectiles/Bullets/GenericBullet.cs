@@ -32,8 +32,8 @@ public class GenericBullet : Bullet
         damage, 
         ExtendedGame.AssetManager.LoadTexture("GenericBullet", "Entities/Projectiles/"), 
         owner, 
-        ParticlePresets.BulletTrail, 
-        ParticlePresets.BulletImpact,    
+        ParticlePresets.CreateBulletTrail(), 
+        ParticlePresets.CreateBulletImpact(),    
         hitboxManager: hitboxManager
     )
     {
