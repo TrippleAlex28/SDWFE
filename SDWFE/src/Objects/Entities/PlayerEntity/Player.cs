@@ -4,7 +4,6 @@ using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Inventory;
-using SDWFE.UI.Inventory;
 using SDWFE.UI.PlayerData;
 using SDWFE.UI.Dialogue;
 
@@ -75,9 +74,8 @@ public partial class Player : GameObject
             ConstructDialogue();
             
             StatsUI = new UIStats(this);
-            GameState.Instance.CurrentScene?.UIRoot.AddChild(HotbarUI);
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(InventoryUI);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(StatsUI);
-            GameState.Instance.CurrentScene?.UIRoot.AddChild(WeaponsUI);
             
             if (_dialogue != null)
                 GameState.Instance.CurrentScene?.UIRoot.AddChild(_dialogue);

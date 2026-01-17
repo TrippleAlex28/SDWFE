@@ -7,12 +7,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Inventory;
 
-namespace SDWFE.UI.Inventory;
+namespace SDWFE.UI.Inventory2;
 
 public class UIHotbar : UIContainer
 {
     private PlayerInventory _inventory;
-
     private UIVisual _background;
     private UIHBoxContainer _slotRow;
     private List<UIHotbarSlot> _slots = new();
@@ -25,13 +24,13 @@ public class UIHotbar : UIContainer
     private const float BACKGROUND_PADDING_Y = 4f;
     private const float SLOT_SIZE = 16f;
     private const float SPACING = 4f;
-    
+
     public UIHotbar(PlayerInventory inventory)
     {
         _inventory = inventory;
         _inventory.OnInventoryChanged += HandleInventoryChange;
         _inventory.OnHotbarSelectionChanged += HandleHotbarSelectionChange;
-        
+
         _slotSheet = ExtendedGame.AssetManager.LoadTexture("inventorySheet", "UI/");
         _slotSheetRect = new Rectangle(0, 32, 28, 28);
         _selectedSlotSheetRect = new Rectangle(0, 64, 28, 28);
@@ -56,40 +55,38 @@ public class UIHotbar : UIContainer
             Padding = new Vector4(BACKGROUND_PADDING_X, BACKGROUND_PADDING_Y, BACKGROUND_PADDING_X, BACKGROUND_PADDING_Y),
         };
         _background.AddChild(_slotRow);
-        
-        // Create Slots
+
+        // Create slots
         for (int i = 0; i < _inventory.Hotbar.Length; i++)
         {
             var slot = new UIHotbarSlot(
-                index: i,
-                slotSize: SLOT_SIZE,
-                slotSheet: _slotSheet,
-                slotSheetRect: _slotSheetRect,
-                selectedSlotSheetRect: _selectedSlotSheetRect
+                _inventory.Hotbar[i],
+                i,
+                SLOT_SIZE,
+                _slotSheet,
+                _slotSheetRect,
+                _selectedSlotSheetRect
             );
 
             _slots.Add(slot);
             _slotRow.AddChild(slot);
         }
-        
+
         // Update slots & selection
         HandleInventoryChange();
         HandleHotbarSelectionChange(_inventory.SelectedHotbarIndex);
     }
-    
+
     private void HandleInventoryChange()
     {
         for (int i = 0; i < _slots.Count; i++)
         {
-            _slots[i].SetStackCount(_inventory.Hotbar[i].Item?.StackSize ?? 0);
-            _slots[i].SetIcon(_inventory.Hotbar[i].Item?.Icon ?? null);
+            _slots[i].Refresh();
         }
     }
 
     private void HandleHotbarSelectionChange(int newSelection)
     {
-        // _selected.Padding = new Vector4(BACKGROUND_PADDING_X + newSelection * (SLOT_SIZE + SPACING), BACKGROUND_PADDING_Y, 0, 0);
-
         for (int i = 0; i < _slots.Count; i++)
             _slots[i].SetSelected(i == newSelection);
     }

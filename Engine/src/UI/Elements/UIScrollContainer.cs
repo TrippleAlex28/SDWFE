@@ -190,10 +190,13 @@ public class UIScrollContainer : UIContainer
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
         base.DrawSelf(spriteBatch);
-        
-        // Debug drawing
-        Rectangle r = CalculateActualSlot();
-        Color c = _isInside ? new Color(0, 255, 0, 100) : new Color(255, 0, 0, 100);
-        spriteBatch.Draw(EngineResources.BlankSquare, r, c);
+
+        if (false)
+        {
+            // Debug drawing
+            Rectangle r = CalculateActualSlot();
+            Color c = _isInside ? new Color(0, 255, 0, 100) : new Color(255, 0, 0, 100);
+            spriteBatch.Draw(EngineResources.BlankSquare, r, c);
+        }
     }
 }

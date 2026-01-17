@@ -1,23 +1,25 @@
 ﻿using System;
 using Engine.Input;
+using Microsoft.Xna.Framework;
 using SDWFE.Objects.Inventory;
-using SDWFE.UI.Inventory;
+using SDWFE.UI.Inventory2;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
 public partial class Player
 {
     public PlayerInventory Inventory { get; private set; }
-    public UIHotbar HotbarUI { get; set; }
-    public UIWeapons WeaponsUI { get; set; }
+    public UIInventory InventoryUI { get; private set; }
     
     private void ConstructInventory()
     {
         // Inventory Setup
         Inventory = new PlayerInventory();
-        HotbarUI = new UIHotbar(Inventory);
-        WeaponsUI = new UIWeapons(Inventory);
+        InventoryUI = new UIInventory(Inventory);
         this.AddChild(Inventory);
+        
+        // Setup vault access conditions
+        Inventory.Vault.AddAccessCondition(() => true);
 
         // Inventory.AddWeaponByName(ItemSetup.SHOTGUN);
         Inventory.AddWeaponByName(ItemSetup.PISTOL);
@@ -48,13 +50,19 @@ public partial class Player
             Inventory.SelectHotbarSlot(4);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_LEFT))
         {
-            int nextIndex = Inventory.SelectedHotbarIndex + 1;
-            Inventory.SelectHotbarSlot(nextIndex > Inventory.Hotbar.Length - 1 ? 0 : nextIndex);
+            if (!InventoryUI.IsMenuOpen)
+            {
+                int nextIndex = Inventory.SelectedHotbarIndex + 1;
+                Inventory.SelectHotbarSlot(nextIndex > Inventory.Hotbar.Length - 1 ? 0 : nextIndex);
+            }
         }
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_RIGHT))
         {
-            int nextIndex = Inventory.SelectedHotbarIndex - 1;
-            Inventory.SelectHotbarSlot(nextIndex < 0 ? 4 : nextIndex);
+            if (!InventoryUI.IsMenuOpen)
+            {
+                int nextIndex = Inventory.SelectedHotbarIndex - 1;
+                Inventory.SelectHotbarSlot(nextIndex < 0 ? 4 : nextIndex);
+            }
         }
     }
 }

@@ -31,8 +31,7 @@ public partial class Player
 
     private void OnDialogueClosed()
     {
-        if (HotbarUI != null) HotbarUI.IsVisible = true;
-        if (WeaponsUI != null) WeaponsUI.IsVisible = true; 
+        // InventoryUI?.OpenMenu();
         if (StatsUI != null) StatsUI.IsVisible = true; 
     }
 
@@ -56,8 +55,7 @@ public partial class Player
 
     private void OnDialogueOpen()
     {
-        if (HotbarUI != null) HotbarUI.IsVisible = false; 
-        if (WeaponsUI != null) WeaponsUI.IsVisible = false; 
+        // InventoryUI?.CloseMenu();
         if (StatsUI != null) StatsUI.IsVisible = false;
     }
     /// <summary>

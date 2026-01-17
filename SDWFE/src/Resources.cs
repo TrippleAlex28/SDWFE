@@ -14,9 +14,8 @@ public static class Resources
     
     public static void LoadContent()
     {
-
-        TitleFont = ExtendedGame.AssetManager.LoadFont("Visitor", "Fonts/");
-        TextFont = ExtendedGame.AssetManager.LoadFont("Upheavel", "Fonts/");
+        TitleFont = ExtendedGame.AssetManager.LoadFont(VISITOR_FONTNAME, "Fonts/");
+        TextFont = ExtendedGame.AssetManager.LoadFont(UPHEAVEL_FONTNAME, "Fonts/");
     }
 
     /// <summary>
