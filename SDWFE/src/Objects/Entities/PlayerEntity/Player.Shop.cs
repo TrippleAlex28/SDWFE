@@ -81,9 +81,9 @@ public partial class Player
         var input = InputManager.Instance;
         
         // Toggle shop with Tab key (Inventory action)
-        if (input.IsActionPressed(InputSetup.ACTION_INVENTORY))
-        {
-            ToggleShop();
-        }
+        // if (input.IsActionPressed(InputSetup.ACTION_INVENTORY))
+        // {
+        //     ToggleShop();
+        // }
     }
 }

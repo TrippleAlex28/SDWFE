@@ -37,6 +37,10 @@ public class Interactable : GameObject
                 {
                     npc.speechBubble.IsVisible = false;
                 }
+                if (this is ShopKeeper)
+                {
+                    player.CloseShop();
+                }
                 player.ClosestInteractable = null;
                 player.ClosestInteractableDist = int.MaxValue;
             }

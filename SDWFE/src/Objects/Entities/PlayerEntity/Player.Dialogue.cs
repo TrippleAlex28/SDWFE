@@ -98,6 +98,15 @@ public partial class Player
         if (ClosestInteractable is NPC npc)
         {
             npc.speechBubble.IsVisible = true;
+
+            if (npc is ShopKeeper)
+            {
+                if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
+                {
+                    ToggleShop();
+                    return;
+                }
+            }
             if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
             {
                 ShowChoiceDialogue(npc._basenode);
