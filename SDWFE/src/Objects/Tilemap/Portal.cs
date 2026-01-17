@@ -1,5 +1,6 @@
 using Engine;
 using Engine.Hitbox;
+using Engine.Input;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -49,9 +50,11 @@ namespace SDWFE.Objects.Tiles
         }
         private void OnEnterPortal(TriggerHitbox hitbox, object other, TriggerSide side)
         {
+            if (Sprite.IsVisible == false || this.IsVisible == false) return;
             if (other is Player player)
             {
                 player.IsVisible = false;
+                InputManager.Instance.SetActiveProfile(InputSetup.PROFILE_UI);
             }
             this.RemoveChild(Sprite);
             Sprite = new AnimatedSprite(_spriteEnterSheet, 48, 32, 200f, false, true)
