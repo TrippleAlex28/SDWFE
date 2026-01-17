@@ -32,6 +32,7 @@ public partial class Player
     private void OnDialogueClosed()
     {
         if (HotbarUI != null) HotbarUI.IsVisible = true;
+        if (HotbarUI != null) HotbarUI.HandleAbilitiesChanged();
         if (WeaponsUI != null) WeaponsUI.IsVisible = true; 
         if (StatsUI != null) StatsUI.IsVisible = true; 
     }

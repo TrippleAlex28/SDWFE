@@ -63,7 +63,9 @@ public partial class Player
     private void OnWindowClosed()
     {
         if (HotbarUI != null) HotbarUI.IsVisible = true;
+        if (HotbarUI != null) HotbarUI.HandleAbilitiesChanged();
         if (WeaponsUI != null) WeaponsUI.IsVisible = true; 
+        if (WeaponsUI != null) WeaponsUI.HandleInventoryChange();
         if (StatsUI != null) StatsUI.IsVisible = true; 
     }
 

@@ -77,7 +77,7 @@ public class UIWeapons : UIContainer
         HandleWeaponSelectionChange(_inventory.SelectedHotbarIndex);
     }
     
-    private void HandleInventoryChange()
+    public void HandleInventoryChange()
     {
         for (int i = 0; i < _slots.Count; i++)
         {

@@ -88,7 +88,7 @@ public class UIHotbar : UIContainer
         HandleSelectionChange(_player.SelectedAbilitySlot);
     }
     
-    private void HandleAbilitiesChanged()
+    public void HandleAbilitiesChanged()
     {
         var abilities = _player.GetAllAbilities();
         
