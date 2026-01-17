@@ -31,6 +31,7 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Content\Entities\Enemies\" />
+      <Folder Include="src\UI\Inventory\Menu\" />
     </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <DefineConstants>DEBUG</DefineConstants>

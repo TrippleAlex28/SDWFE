@@ -39,7 +39,9 @@ public static class InputSetup
     
     #region UI
     
-    public const string ACTION_UI_SELECT = "UISelect"; // NEVER MODIFY THIS, THE RAW STRING IS USED IN ENGINE FOR UI
+    public const string ACTION_UI_SELECT = "UISelect";          // NEVER MODIFY THIS, THE RAW STRING IS USED IN ENGINE FOR UI
+    public const string ACTION_UI_SCROLL_UP = "UIScrollUp";     // NEVER MODIFY THIS, THE RAW STRING IS USED IN ENGINE FOR UI
+    public const string ACTION_UI_SCROLL_DOWN = "UIScrollDown"; // NEVER MODIFY THIS, THE RAW STRING IS USED IN ENGINE FOR UI
     public const string ACTION_UI_CANCEL = "UICancel";
     public const string ACTION_UI_NAVIGATE_UP = "UINavigateUp";
     public const string ACTION_UI_NAVIGATE_DOWN = "UINavigateDown";
@@ -170,6 +172,14 @@ public static class InputSetup
             .AddBinding(new KeyboardBinding(Keys.Space))
             .AddBinding(new GamePadButtonBinding(Buttons.A));
         
+        var scrollUp = new InputAction(ACTION_UI_SCROLL_UP)
+            .AddBinding(new MouseButtonBinding(MouseButtonBinding.MouseButton.WheelUp))
+            .AddBinding(new GamePadButtonBinding(Buttons.RightThumbstickUp));
+        
+        var scrollDown = new InputAction(ACTION_UI_SCROLL_DOWN)
+            .AddBinding(new MouseButtonBinding(MouseButtonBinding.MouseButton.WheelDown))
+            .AddBinding(new GamePadButtonBinding(Buttons.RightThumbstickDown));
+        
         var cancel = new InputAction(ACTION_UI_CANCEL)
             .AddBinding(new KeyboardBinding(Keys.Escape))
             .AddBinding(new GamePadButtonBinding(Buttons.B));
@@ -199,6 +209,9 @@ public static class InputSetup
             .AddBinding(new GamePadButtonBinding(Buttons.DPadUp));
         
         uiProfile.RegisterAction(select);
+        uiProfile.RegisterAction(scrollUp);
+        uiProfile.RegisterAction(scrollDown);
+        
         uiProfile.RegisterAction(cancel);
         uiProfile.RegisterAction(navigateUp);
         uiProfile.RegisterAction(navigateDown);

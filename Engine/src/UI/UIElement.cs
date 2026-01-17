@@ -201,7 +201,7 @@ public class UIElement : GameObject
         return anchor;
     }
 
-    protected void MarkLayoutDirty()
+    internal void MarkLayoutDirty()
     {
         _layoutDirty = true;
         LayoutDirty?.Invoke(this);
