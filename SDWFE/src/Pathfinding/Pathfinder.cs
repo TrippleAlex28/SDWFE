@@ -10,11 +10,13 @@ public class Pathfinder
 {
     private readonly HitboxManager _hitboxManager;
     private readonly int _gridSize;
+    private readonly object? _ignoreOwner;
 
-    public Pathfinder(HitboxManager hitboxManager, int gridSize = 16)
+    public Pathfinder(HitboxManager hitboxManager, int gridSize = 16, object? ignoreOwner = null)
     {
         _hitboxManager = hitboxManager;
         _gridSize = gridSize;
+        _ignoreOwner = ignoreOwner;
     }
 
     public List<Vector2> FindPath(Vector2 start, Vector2 end, HitboxLayer layer, int maxDistance)
@@ -66,7 +68,7 @@ public class Pathfinder
                     _gridSize
                 );
 
-                if (_hitboxManager.CheckStaticCollision(neighborBounds, layer))
+                if (_hitboxManager.CheckStaticCollision(neighborBounds, layer, _ignoreOwner))
                     continue;
                 
                 // check max distance

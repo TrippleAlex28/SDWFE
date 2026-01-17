@@ -243,6 +243,18 @@
 /processorParam:TextureFormat=Color
 /build:UI/inventorySheet.png
 
+#begin UI/UI_AddButton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/UI_AddButton.png
+
 #begin UI/UI_Chinese.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -408,7 +408,8 @@ public class GameObject : NetObject
                 displacement,
                 HitboxLayer,
                 out bool hitX,
-                out bool hitY
+                out bool hitY,
+                ignoreOwner: this
             );
             this.GlobalPosition = (newPos - CollisionOffset);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Engine;
 using Engine.Hitbox;
@@ -110,6 +111,7 @@ public abstract class Projectile : GameObject
                 return;
             }
         }
+        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 1));
         
         if (_projectileEmitter != null)
             _projectileEmitter.Position = this.GlobalPosition - this.Displacement * gameTime.DeltaSeconds();
@@ -132,13 +134,30 @@ public abstract class Projectile : GameObject
         {
             _trigger.Bounds = hitbox;
         }
+
+        // Update trigger interactions (enemy / player / environment) via HitboxManager
+        if (_hitboxManager != null && _trigger != null && !Collided)
+        {
+            _hitboxManager.UpdateTriggersForObject(this, _trigger.Bounds, HitboxLayer.Projectile);
+        }
         
-        // Check for static (environment) collisions
+        // Check static collisions (environment or static enemy bodies)
         if (_hitboxManager != null && !Collided)
         {
-            if (_hitboxManager.CheckStaticCollision(hitbox, HitboxLayer.Projectile))
+            var collisions = _hitboxManager.GetStaticCollisions(hitbox, HitboxLayer.Projectile, ignoreOwner: _owner ?? this);
+
+            if (collisions.Count > 0)
             {
-                OnCollision(null!); // Hit environment
+                // Prefer hitting an enemy owner if present; otherwise treat as environment
+                var enemy = collisions
+                    .Select(c => c.Owner)
+                    .OfType<GameObject>()
+                    .FirstOrDefault();
+
+                if (enemy != null)
+                    OnCollision(enemy);
+                else
+                    OnCollision(null!); // Hit environment or non-enemy static
             }
         }
         

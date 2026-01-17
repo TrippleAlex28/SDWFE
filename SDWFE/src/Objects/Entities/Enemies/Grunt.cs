@@ -1,5 +1,6 @@
 ﻿using System;
 using Engine;
+using Engine.Hitbox;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,6 +13,8 @@ public class Grunt : ChasingEnemy
 
     public AnimatedSprite Sprite { get; private set; } // TODO: Replace with Animated Sprite
     
+    public StaticHitbox? Hitbox { get; private set; }
+    private bool _hitboxadded = false;
     public Grunt() : base(100, 100f, 32f, 10f, 1.0f)
     {
         
@@ -20,11 +23,21 @@ public class Grunt : ChasingEnemy
     protected override void EnterSelf()
     {
         base.EnterSelf();
-        
+        Hitbox = new StaticHitbox(CollisionBounds)
+        {
+            Owner = this,
+            Layer = HitboxLayer.Enemy,
+            BlocksLayers = HitboxLayer.AllExceptPlayer
+        };
         Texture2D texture = ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/");
         Sprite = new AnimatedSprite(texture, 32, 32, true, true);
-
-        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 16));
+        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 32));
+        if (HitboxManager != null && Hitbox != null)
+        {
+            HitboxManager.AddStatic(Hitbox);
+            _hitboxadded = true;
+        }
+        
         // Sprite = new Sprite(ExtendedGame.AssetManager.LoadTexture("Grunt", "Entities/Enemies/"));
         AddChild(Sprite);
     }
@@ -32,7 +45,20 @@ public class Grunt : ChasingEnemy
     protected override void UpdateSelf(GameTime gameTime)
     {
         base.UpdateSelf(gameTime);
-        
+        if (!_hitboxadded && HitboxManager != null && Hitbox != null)
+        {
+            HitboxManager.AddStatic(Hitbox);
+            _hitboxadded = true;
+        }
+
+        HitboxLayer = HitboxLayer.Enemy;
+
+        if (Hitbox != null)
+        {
+            // Keep the static hitbox aligned with the dynamic collision bounds
+            Hitbox.Bounds = CollisionBounds;
+        }
+        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 32));
         // TODO: Update animation stuff here
     }
 
@@ -50,6 +76,11 @@ public class Grunt : ChasingEnemy
     {
         base.OnDeath();
         
+        if (_hitboxadded && HitboxManager != null && Hitbox != null)
+        {
+            HitboxManager.RemoveStatic(Hitbox);
+        }
+
         // TODO: Play some effect and spawn items
     }
 

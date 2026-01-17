@@ -84,8 +84,8 @@ public abstract class Enemy : GameObject
         Target = target;
 
         HitboxLayer = HitboxLayer.AllExceptEnemy;
-        CollisionSize = new Vector2(16, 32);
-        CollisionOffset = new Vector2(8, 16);
+        CollisionSize = new Vector2(16, 8);
+        CollisionOffset = new Vector2(16, 24);
     }
 
     protected override void UpdateSelf(GameTime gameTime)
@@ -113,10 +113,56 @@ public abstract class Enemy : GameObject
             AttackTimer -= gameTime.DeltaSeconds();
         }
         
+        // Separate overlapping enemies to prevent sticking
+        SeparateFromOverlappingEnemies();
+        
         // Update triggers if HitboxManager is available
         if (HitboxManager != null)
         {
             HitboxManager.UpdateTriggersForObject(this, CollisionBounds, HitboxLayer);
+        }
+    }
+
+    /// <summary>
+    /// Separate this enemy from any overlapping enemies to prevent them from getting stuck.
+    /// </summary>
+    private void SeparateFromOverlappingEnemies()
+    {
+        if (GameState.Instance.CurrentScene == null)
+            return;
+
+        Vector2 separationForce = Vector2.Zero;
+
+        foreach (var obj in GameState.Instance.CurrentScene.SceneObjects)
+        {
+            // Skip self and non-enemies
+            if (obj == this || obj is not Enemy otherEnemy || !otherEnemy.IsAlive)
+                continue;
+
+            // Check if overlapping
+            if (CollisionBounds.Intersects(otherEnemy.CollisionBounds))
+            {
+                // Calculate direction away from other enemy
+                Vector2 directionAway = (this.GlobalPosition - otherEnemy.GlobalPosition);
+                
+                if (directionAway.LengthSquared() > 0)
+                {
+                    directionAway.Normalize();
+                    separationForce += directionAway;
+                }
+                else
+                {
+                    // If exactly on top, push in a random direction
+                    separationForce += new Vector2((float)Math.Cos(this.GlobalPosition.X), (float)Math.Sin(this.GlobalPosition.Y));
+                }
+            }
+        }
+
+        // Apply separation force if needed
+        if (separationForce.LengthSquared() > 0)
+        {
+            separationForce.Normalize();
+            this.GlobalPosition += separationForce * 2f; // Push apart by 2 pixels
         }
     }
 

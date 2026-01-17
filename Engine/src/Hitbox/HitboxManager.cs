@@ -1,4 +1,6 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Engine.Hitbox;
 
@@ -9,6 +11,9 @@ public class HitboxManager
 {
     private readonly List<StaticHitbox> _staticHitboxes = new();
     private readonly List<TriggerHitbox> _triggerHitboxes = new();
+    
+    private bool _debugEnabled = false;
+    private bool _f3PreviouslyPressed = false;
 
     /// <summary>
     /// All registered static hitboxes.
@@ -19,6 +24,15 @@ public class HitboxManager
     /// All registered trigger hitboxes.
     /// </summary>
     public IReadOnlyList<TriggerHitbox> TriggerHitboxes => _triggerHitboxes;
+    
+    /// <summary>
+    /// Whether debug rendering is enabled. Toggle with F3.
+    /// </summary>
+    public bool DebugEnabled
+    {
+        get => _debugEnabled;
+        set => _debugEnabled = value;
+    }
 
     #region Registration
 
@@ -100,10 +114,13 @@ public class HitboxManager
     /// <summary>
     /// Check if a rectangle collides with any static hitbox.
     /// </summary>
-    public bool CheckStaticCollision(Rectangle rect, HitboxLayer layer)
+    public bool CheckStaticCollision(Rectangle rect, HitboxLayer layer, object? ignoreOwner = null)
     {
         foreach (var hitbox in _staticHitboxes)
         {
+            if (ignoreOwner != null && ReferenceEquals(hitbox.Owner, ignoreOwner))
+                continue;
+
             if (hitbox.CheckCollision(rect, layer))
                 return true;
         }
@@ -113,11 +130,14 @@ public class HitboxManager
     /// <summary>
     /// Get all static hitboxes that a rectangle collides with.
     /// </summary>
-    public List<StaticHitbox> GetStaticCollisions(Rectangle rect, HitboxLayer layer)
+    public List<StaticHitbox> GetStaticCollisions(Rectangle rect, HitboxLayer layer, object? ignoreOwner = null)
     {
         var result = new List<StaticHitbox>();
         foreach (var hitbox in _staticHitboxes)
         {
+            if (ignoreOwner != null && ReferenceEquals(hitbox.Owner, ignoreOwner))
+                continue;
+
             if (hitbox.CheckCollision(rect, layer))
                 result.Add(hitbox);
         }
@@ -128,7 +148,7 @@ public class HitboxManager
     /// Try to move a rectangle, stopping at collision.
     /// Returns the valid position after collision resolution.
     /// </summary>
-    public Vector2 MoveAndSlide(Rectangle currentBounds, Vector2 velocity, HitboxLayer layer, out bool hitX, out bool hitY)
+    public Vector2 MoveAndSlide(Rectangle currentBounds, Vector2 velocity, HitboxLayer layer, out bool hitX, out bool hitY, object? ignoreOwner = null)
     {
         hitX = false;
         hitY = false;
@@ -145,7 +165,7 @@ public class HitboxManager
                 currentBounds.Height
             );
 
-            if (!CheckStaticCollision(testRect, layer))
+            if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
                 newPos.X += velocity.X;
             }
@@ -153,7 +173,7 @@ public class HitboxManager
             {
                 hitX = true;
                 // Slide along collision
-                newPos.X = ResolveCollisionX(currentBounds, velocity.X, layer);
+                newPos.X = ResolveCollisionX(currentBounds, velocity.X, layer, ignoreOwner);
             }
         }
 
@@ -167,7 +187,7 @@ public class HitboxManager
                 currentBounds.Height
             );
 
-            if (!CheckStaticCollision(testRect, layer))
+            if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
                 newPos.Y += velocity.Y;
             }
@@ -175,14 +195,14 @@ public class HitboxManager
             {
                 hitY = true;
                 // Slide along collision
-                newPos.Y = ResolveCollisionY(new Rectangle((int)newPos.X, currentBounds.Y, currentBounds.Width, currentBounds.Height), velocity.Y, layer);
+                newPos.Y = ResolveCollisionY(new Rectangle((int)newPos.X, currentBounds.Y, currentBounds.Width, currentBounds.Height), velocity.Y, layer, ignoreOwner);
             }
         }
 
         return newPos;
     }
 
-    private float ResolveCollisionX(Rectangle bounds, float velocityX, HitboxLayer layer)
+    private float ResolveCollisionX(Rectangle bounds, float velocityX, HitboxLayer layer, object? ignoreOwner)
     {
         int step = velocityX > 0 ? 1 : -1;
         float newX = bounds.X;
@@ -190,7 +210,7 @@ public class HitboxManager
         for (int i = 0; i < Math.Abs(velocityX); i++)
         {
             Rectangle test = new Rectangle((int)newX + step, bounds.Y, bounds.Width, bounds.Height);
-            if (CheckStaticCollision(test, layer))
+            if (CheckStaticCollision(test, layer, ignoreOwner))
                 break;
             newX += step;
         }
@@ -198,7 +218,7 @@ public class HitboxManager
         return newX;
     }
 
-    private float ResolveCollisionY(Rectangle bounds, float velocityY, HitboxLayer layer)
+    private float ResolveCollisionY(Rectangle bounds, float velocityY, HitboxLayer layer, object? ignoreOwner)
     {
         int step = velocityY > 0 ? 1 : -1;
         float newY = bounds.Y;
@@ -206,7 +226,7 @@ public class HitboxManager
         for (int i = 0; i < Math.Abs(velocityY); i++)
         {
             Rectangle test = new Rectangle(bounds.X, (int)newY + step, bounds.Width, bounds.Height);
-            if (CheckStaticCollision(test, layer))
+            if (CheckStaticCollision(test, layer, ignoreOwner))
                 break;
             newY += step;
         }
@@ -241,6 +261,67 @@ public class HitboxManager
         foreach (var trigger in _triggerHitboxes)
         {
             trigger.ForceRemove(obj);
+        }
+    }
+
+    #endregion
+
+    #region Debug Rendering
+
+    /// <summary>
+    /// Update debug state (handles F3 key toggle).
+    /// Call this in your Update method.
+    /// </summary>
+    public void UpdateDebug()
+    {
+        var keyboardState = Keyboard.GetState();
+        bool f3Pressed = keyboardState.IsKeyDown(Keys.F3);
+        
+        if (f3Pressed && !_f3PreviouslyPressed)
+        {
+            _debugEnabled = !_debugEnabled;
+        }
+        
+        _f3PreviouslyPressed = f3Pressed;
+    }
+
+    /// <summary>
+    /// Draw debug visualization of all hitboxes.
+    /// Call this in your Draw method when debug is enabled.
+    /// Static hitboxes are drawn in red, trigger hitboxes in green.
+    /// </summary>
+    public void DrawDebug(SpriteBatch spriteBatch)
+    {
+        if (!_debugEnabled) return;
+
+        // Draw static hitboxes in red with semi-transparency
+        foreach (var hitbox in _staticHitboxes)
+        {
+            if (!hitbox.IsEnabled) continue;
+            
+            Color color = new Color(255, 0, 0, 128); // Red, semi-transparent
+            spriteBatch.Draw(
+                EngineResources.BlankSquare,
+                hitbox.Bounds,
+                null,
+                color,
+                0f, Vector2.Zero, SpriteEffects.None, 0.999f
+            );
+        }
+
+        // Draw trigger hitboxes in green with semi-transparency
+        foreach (var trigger in _triggerHitboxes)
+        {
+            if (!trigger.IsEnabled) continue;
+            
+            Color color = new Color(0, 255, 0, 128); // Green, semi-transparent
+            spriteBatch.Draw(
+                EngineResources.BlankSquare,
+                trigger.Bounds,
+                null,
+                color,
+                0f, Vector2.Zero, SpriteEffects.None, 0.999f
+            );
         }
     }
 

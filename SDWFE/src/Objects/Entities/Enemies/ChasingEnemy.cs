@@ -38,7 +38,7 @@ public abstract class ChasingEnemy : Enemy
 
         if (HitboxManager != null)
         {
-            _pathfinder = new Pathfinder(HitboxManager, PATHFINDING_GRID_SIZE);
+            _pathfinder = new Pathfinder(HitboxManager, PATHFINDING_GRID_SIZE, ignoreOwner: this);
         }
     }
 
@@ -183,7 +183,7 @@ public abstract class ChasingEnemy : Enemy
                 (int)CollisionSize.Y
             );
 
-            if (HitboxManager.CheckStaticCollision(checkBounds, HitboxLayer))
+            if (HitboxManager.CheckStaticCollision(checkBounds, HitboxLayer, ignoreOwner: this))
             {
                 return false;
             }

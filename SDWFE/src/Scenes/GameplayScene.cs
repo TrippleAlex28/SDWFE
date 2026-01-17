@@ -142,14 +142,15 @@ public class GameplayScene : Scene
                 HitboxManager.UpdateTriggersForObject(player, playerHitbox, HitboxLayer.All);
             }
         }
+        HitboxManager.UpdateDebug();
         ExtendedGame.LightShaderInstance.SetLights(allWorldLights);
          // Handle pause input
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);
     }
-
     public override void DrawScene(SpriteBatch spriteBatch)
     {
         base.DrawScene(spriteBatch);
+        HitboxManager.DrawDebug(spriteBatch);
     }
 }

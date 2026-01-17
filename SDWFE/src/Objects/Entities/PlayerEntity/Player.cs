@@ -7,7 +7,7 @@ using SDWFE.Objects.Inventory;
 using SDWFE.UI.Inventory;
 using SDWFE.UI.PlayerData;
 using SDWFE.UI.Dialogue;
-
+using SDWFE.UI.Shop;
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
 public partial class Player : GameObject
@@ -103,7 +103,7 @@ public partial class Player : GameObject
         }
         else
         {
-            Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 24));
+            Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 32));
         }
         
         UpdateNPC(gameTime);
