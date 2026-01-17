@@ -1,6 +1,7 @@
 ﻿using System;
 using Engine;
 using Engine.Hitbox;
+using Engine.Sprite;
 using Microsoft.Xna.Framework;
 
 namespace SDWFE.Objects.Entities.Enemies;
@@ -42,6 +43,9 @@ public abstract class Enemy : GameObject
     public float Damage { get; }
     public float AttackCooldown { get; }
     protected float AttackTimer = 0f;
+
+    private Sprite _healthBackground;
+    private Sprite _healthFilling;
 
     public Enemy(
         int maxHealth, 
@@ -86,6 +90,11 @@ public abstract class Enemy : GameObject
         HitboxLayer = HitboxLayer.AllExceptEnemy;
         CollisionSize = new Vector2(16, 8);
         CollisionOffset = new Vector2(16, 24);
+
+        _healthBackground = new Sprite(EngineResources.BlankSquare);
+        _healthFilling = new Sprite(EngineResources.BlankSquare);
+        AddChild(_healthBackground);
+        AddChild(_healthFilling);
     }
 
     protected override void UpdateSelf(GameTime gameTime)
@@ -121,7 +130,26 @@ public abstract class Enemy : GameObject
         {
             HitboxManager.UpdateTriggersForObject(this, CollisionBounds, HitboxLayer);
         }
+
+        // Draw health bar above enemy
+        Vector2 healthBarPos = GlobalPosition + new Vector2(16, 0);
+        float healthPercent = (float)CurrentHealth / MaxHealth;
+        
+
+        // Health (green)
+        _healthFilling.GlobalPosition = healthBarPos;
+        _healthFilling.Scale = new Vector2(16 * healthPercent, 4);
+        _healthFilling.Color = Color.LimeGreen;
+        _healthFilling.BaseDrawLayer = 0.95f;
+
+        // Background (red)
+        _healthBackground.GlobalPosition = healthBarPos;
+        _healthBackground.Scale = new Vector2(16, 4);
+        _healthBackground.Color = Color.Red;
+        _healthBackground.BaseDrawLayer = 0.94f;
+
     }
+
 
     /// <summary>
     /// Separate this enemy from any overlapping enemies to prevent them from getting stuck.
@@ -170,6 +198,13 @@ public abstract class Enemy : GameObject
     {
         if (!IsAlive) return;
         
+        DamageNumber damageNumber = new DamageNumber(amount, Color.Red, 1f);
+
+        var random = new Random();
+        float randomYOffset = (float)(random.NextDouble() * 10 - 5);
+        float randomXOffset = (float)(random.NextDouble() * 10 - 5);
+        damageNumber.GlobalPosition = this.GlobalPosition + new Vector2(16, 16)+new Vector2(randomXOffset, randomYOffset);
+        GameState.Instance.CurrentScene?.AddObject(damageNumber);
         CurrentHealth = Math.Max(0, CurrentHealth - amount);
 
         if (!IsAlive)
@@ -206,6 +241,10 @@ public abstract class Enemy : GameObject
         float bestDistance = float.MaxValue;
         foreach (var obj in GameState.Instance.CurrentScene!.SceneObjects)
         {
+            // Only target Player objects
+            if (obj is not SDWFE.Objects.Entities.PlayerEntity.Player)
+                continue;
+                
             if (bestDistance > GetDistanceToTarget(obj))
             {
                 target = obj;

@@ -7,6 +7,8 @@ using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
 using SDWFE.Objects.Projectiles.Bullets;
 
+#nullable enable
+
 namespace SDWFE;
 
 public static class ItemSetup
@@ -32,7 +34,7 @@ public static class ItemSetup
             {
                 Name = WOOD,
                 MaxStackSize = 64,
-                IconPath = "Medkit",
+                IconPath = "Heal",
             }
         },
         {
@@ -40,7 +42,7 @@ public static class ItemSetup
             {
                 Name = IRON,
                 MaxStackSize = 16,
-                IconPath = "Medkit",
+                IconPath = "Heal",
             }
         },
         {
@@ -48,7 +50,7 @@ public static class ItemSetup
             {
                 Name = BANDAGE,
                 MaxStackSize = 8,
-                IconPath = "Medkit",
+                IconPath = "Heal",
                 UseActionId = ACTION_HEAL,
             }
         },
@@ -57,7 +59,7 @@ public static class ItemSetup
             {
                 Name = MEDKIT,
                 MaxStackSize = 4,
-                IconPath = "Medkit",
+                IconPath = "Heal",
                 UseActionId = ACTION_HEAL_SUPERIOR,
             }
         },

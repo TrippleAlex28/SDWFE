@@ -40,7 +40,7 @@ public class UIStats : UIContainer
     {
         _owner = owner;
         _stats = _owner.Stats;
-        _stats.OnStatsChanged += UpdateStats;
+        _stats.OnStatsChanged += (StatType type, bool decreased) => UpdateStats();
 
         // Load Textures
         _barsSheet = ExtendedGame.AssetManager.LoadTexture("UI_TopLeft_Menu", "UI/");
@@ -169,7 +169,7 @@ public class UIStats : UIContainer
             UIVisual digitSprite = UIVisual.FromTexture(_numberSheet, sourceRect);
             digitSprite.DesiredSize = new Vector2(3, 5) * Scalefactor;
             // Optional: Set Color of the digit
-            digitSprite.Tint = new Color(36, 36, 36);
+            digitSprite.Tint = new Color(235, 235, 235);
             digitSprite.SetDesiredSize();
 
             _coinNumberContainer.AddChild(digitSprite);

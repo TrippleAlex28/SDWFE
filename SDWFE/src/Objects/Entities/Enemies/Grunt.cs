@@ -4,6 +4,9 @@ using Engine.Hitbox;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SDWFE.Objects.Entities.PlayerEntity;
+
+#nullable enable
 
 namespace SDWFE.Objects.Entities.Enemies;
 
@@ -30,7 +33,7 @@ public class Grunt : ChasingEnemy
             BlocksLayers = HitboxLayer.AllExceptPlayer
         };
         Texture2D texture = ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/");
-        Sprite = new AnimatedSprite(texture, 32, 32, true, true);
+        Sprite = new AnimatedSprite(texture, 32, 32, _timePerFrame: 200f, isLooping: true, isPlaying: true);
         Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 32));
         if (HitboxManager != null && Hitbox != null)
         {
@@ -67,6 +70,14 @@ public class Grunt : ChasingEnemy
         Console.WriteLine("Grunt Attack");
         if (Target == null) return;
         
+        if (Vector2.Distance(this.GlobalPosition, Target.GlobalPosition) > AttackRange)
+            return;
+        
+        if (Target is Player player)
+        {
+            player.Stats.CurrentHealth -= Damage;
+
+        }
         // Check if target is within range
         // TODO: Play anim & Do damage to the target 
         

@@ -188,6 +188,7 @@ public enum VisualType
                     spriteBatch.DrawString(font, Text, textPos, color, 0f, Vector2.Zero, 1f, SpriteEffects.None, DrawLayer);
                     break;
                 case VisualType.Color:
+                    if (color.A < 10) { break; }
                     spriteBatch.Draw(EngineResources.BlankSquare, GetDestRect(), SourceRect, color, 0f, Vector2.Zero, SpriteEffects.None, DrawLayer);
                     break;
                 case VisualType.StretchTexture:

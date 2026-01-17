@@ -2,11 +2,13 @@ using Engine.UI;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Engine;
-using Engine.UI;
 
 using System;
 using System.Collections.Generic;
 using Engine.UI.Elements;
+using SDWFE.Objects.Entities.PlayerEntity;
+using SDWFE.Objects.Inventory.Ability;
+using System.IO;
 
 #nullable enable
 
@@ -15,19 +17,19 @@ namespace SDWFE.UI.Shop;
 /// <summary>
 /// ShopOverlay displays a shop window with 5 purchasable items and an exit button.
 /// </summary>
-public sealed class UIShop: GameObject
+public sealed class UIShop: UIElement
 {
 
-    public event Action<string, int> OnItemPurchased;
+    public event Action<string, int>? OnItemPurchased;
 
     private readonly UIRoot _rootElement;
     private UIHBoxContainer? _shopHeader;
+    private Player? _owner;
     
     // UI elements
     private UIVisual? _windowBackground;
     private UIControl? _exitButton;
     private UIVisual? _exitButtonVisual;
-    private UIVisual? _exitButtonText;
     private UIVBoxContainer? _itemsContainer;
     
     // Shop items
@@ -42,8 +44,22 @@ public sealed class UIShop: GameObject
     private Texture2D? _shopTexture;
     private Texture2D? _buyButtonTexture;
 
-    public UIShop() : base()
+    public UIShop(Player player) : base()
     {
+        _owner = player;
+        _coins = _owner.Stats.Coins;
+        _owner.Stats.OnStatsChanged += (StatType type, bool decreased) => OnCoinsChanged(_owner.Stats.Coins);
+        
+        // Check for already unlocked abilities
+        foreach (var abilityName in _owner.GetUnlockedAbilities())
+        {
+            int index = Array.IndexOf(AbilityRegistry.ShopAbilities, abilityName);
+            if (index >= 0 && index < _itemsPurchased.Length)
+            {
+                _itemsPurchased[index] = true;
+            }
+        }
+        
         _rootElement = new UIRoot();
         Rectangle screenRect = new Rectangle(0, 0, 480, 270);
         _rootElement.SetRootRect(screenRect);
@@ -57,7 +73,7 @@ public sealed class UIShop: GameObject
 
         BuildShopWindow();
         
-        Hide();
+        Hide(); // Shop hidden by default
     }
 
     private void BuildShopWindow()
@@ -98,10 +114,22 @@ public sealed class UIShop: GameObject
         _itemsContainer.DesiredSize = new Vector2(300, 200);
         _itemsContainer.Spacing = 5f;
 
-        // Build 5 shop items
-        for (int i = 0; i < 5; i++)
+        // Build 5 shop items from abilities
+        for (int i = 0; i < 5 && i < AbilityRegistry.ShopAbilities.Length; i++)
         {
-            _shopItems[i] = CreateShopItem($"Item {i + 1}", 100 * (i + 1), i);
+            string abilityName = AbilityRegistry.ShopAbilities[i];
+            var abilityData = AbilityRegistry.GetAbility(abilityName);
+            int price = abilityData?.Price ?? 100;
+            
+            _shopItems[i] = CreateShopItem(abilityName, price, i);
+            
+            // Set ability icon
+            if (abilityData != null && _shopItems[i].Icon != null)
+            {
+                _shopItems[i].Icon!.source = abilityData.Icon;
+                _shopItems[i].Icon!.SourceRect = null;
+            }
+            
             _itemsContainer.AddChild(_shopItems[i].Container!);
             
             // Hide button if already purchased
@@ -239,8 +267,6 @@ public sealed class UIShop: GameObject
         buyButton.HoverExited += (control) => OnBuyButtonUnhover(control, buyButtonBg, price);
         buyButton.Pressed += (control) => OnBuyButtonPressed(control, buyButtonBg, price);
         buyButton.Released += (control) => OnBuyButtonReleased(control, buyButtonBg, index, itemName, price);
-        buyButton.Pressed += (control) => OnBuyButtonPressed(control, buyButtonBg, price);
-        buyButton.Released += (control) => OnBuyButtonReleased(control, buyButtonBg, index, itemName, price);
 
         itemContainer.AddChild(contain);
 
@@ -322,12 +348,14 @@ public sealed class UIShop: GameObject
         {   
             if (_shopItems[i].BuyButtonBg == null) continue;
 
-            if (_itemsPurchased[i]){
+            if (_itemsPurchased[i] || _owner!.HasAbility(_shopItems[i].ItemName)){
                 _shopItems[i].BuyButton!.IsVisible = false;
                 _shopItems[i].SoldText!.IsVisible = true;
             }
             else
             {
+                _shopItems[i].BuyButton!.IsVisible = true;
+                _shopItems[i].SoldText!.IsVisible = false;
                 if (_coins >= _shopItems[i].Price)
                 {
                     _shopItems[i].BuyButtonBg!.SourceRect = new Rectangle(0, 0, 30, 22);
@@ -358,9 +386,17 @@ public sealed class UIShop: GameObject
             // Update all other button states based on new coin amount
             UpdateAllButtonStates();
             
+            _owner?.UnlockAbility(actualItemName);
+            _owner?.Inventory.SaveToFile(GetDefaultSavePath(ExtendedGame.GAME_NAME));
             // TODO: Give item to player
             System.Console.WriteLine($"Purchased: {actualItemName} for ${price}. Remaining coins: {_coins}");
         }
+    }
+    public static string GetDefaultSavePath(string gameName)
+    {
+        string appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        string gameFolder = Path.Combine(appData, gameName);
+        return Path.Combine(gameFolder, "inventory_save.json");
     }
     #endregion
 
@@ -379,7 +415,7 @@ public sealed class UIShop: GameObject
     /// </summary>
     public void Hide()
     {
-        this.IsVisible = true;
+        this.IsVisible = false;
     }
 
     public void OnCoinsChanged(int coins)

@@ -158,6 +158,13 @@ public static class InputSetup
         gameplayProfile.RegisterAction(pause);
         gameplayProfile.RegisterAction(dialogue);
         
+        // UI actions needed for shop and other UI during gameplay
+        var uiSelect = new InputAction(ACTION_UI_SELECT)
+            .AddBinding(new MouseButtonBinding(MouseButtonBinding.MouseButton.Left))
+            .AddBinding(new KeyboardBinding(Keys.Space))
+            .AddBinding(new GamePadButtonBinding(Buttons.A));
+        gameplayProfile.RegisterAction(uiSelect);
+        
         InputManager.Instance.RegisterProfile(gameplayProfile);
     }
 

@@ -29,7 +29,7 @@ public class RoomDoor : GameObject
         _staticHitbox.BlocksLayers = HitboxLayer.All;
         _hitboxManager.AddStatic(_staticHitbox);
 
-        _animatedSprite = new AnimatedSprite(_spriteSheet, _tileSize, _tileSize, false, false);
+        _animatedSprite = new AnimatedSprite(_spriteSheet, _tileSize, _tileSize, 200f, false, false);
         _animatedSprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 32)) - 0.0001f;
 
         _animatedSprite.AnimationCompleted += () =>

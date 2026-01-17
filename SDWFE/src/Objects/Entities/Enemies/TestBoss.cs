@@ -40,7 +40,7 @@ public class TestBoss : Enemy
         hitbox.DetectsLayers = HitboxLayer.Player;
         hitbox.OnEnter += OnPlayerEnter;
         Texture2D texture = ExtendedGame.AssetManager.LoadTexture("32x32 Han_Soldier_Idle", "Entities/NPC/");
-        Sprite = new AnimatedSprite(texture, 32, 32, true, true);
+        Sprite = new AnimatedSprite(texture, 32, 32, 200f, true, true);
 
         Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 16));
         // Sprite = new Sprite(ExtendedGame.AssetManager.LoadTexture("Grunt", "Entities/Enemies/"));

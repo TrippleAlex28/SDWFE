@@ -16,6 +16,8 @@ public partial class Player : GameObject
     
     public AnimatedSprite Sprite { get; }
 
+    private Texture2D _hurtTexture = ExtendedGame.AssetManager.LoadTexture("32x16 Hurt-Sheet", "Entities/Player/");
+    private Texture2D _runSheet = ExtendedGame.AssetManager.LoadTexture("32x16 Run-Sheet", "Entities/Player/");
     public Player()
     {
         this.ReplicatesOverNetwork = true;
@@ -50,7 +52,7 @@ public partial class Player : GameObject
         
         // Animated Sprite Setup
         Texture2D spriteSheet = ExtendedGame.AssetManager.LoadTexture("16x32 Idle v2-Sheet", "Entities/Player/");
-        Sprite = new AnimatedSprite(spriteSheet, 16, 32)
+        Sprite = new AnimatedSprite(spriteSheet, 16, 32, 200f, true, true)
         {
             SourceRectangle = new Rectangle(new Point(0, 0), new Point(16, 32)),
             OriginType = OriginType.TopLeft,
@@ -59,6 +61,7 @@ public partial class Player : GameObject
         this.AddChild(Sprite);
         this.CameraOffset = new Vector2(8, 16); // hardcoded numbers from the spritesheet, because brain fog
 
+        InitializeAnimations();
         ConstructInventory();
         // Note: ConstructDialogue is called in EnterSelf for locally owned players only
     }
@@ -67,18 +70,25 @@ public partial class Player : GameObject
     {
         base.EnterSelf();
         
-        Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Blue : Color.Red;
+        //Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Blue : Color.Red;
         
         // Only create UI for the locally owned player
         if (IsLocallyOwned())
         {
             ConstructDialogue();
             
+            ConstructShopUI();
+            ConstructAbilities();
+            ConstructStats(); // Must be after ConstructAbilities (needs Inventory)
+            ConstructHotbarUI(); // Must be after ConstructAbilities
             StatsUI = new UIStats(this);
+            StatsUI.UpdateStats(); // Initial update
+
+            Stats.OnStatsChanged += OnStatsChanged;
             GameState.Instance.CurrentScene?.UIRoot.AddChild(HotbarUI);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(StatsUI);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(WeaponsUI);
-            
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(ShopUI);
             if (_dialogue != null)
                 GameState.Instance.CurrentScene?.UIRoot.AddChild(_dialogue);
             
@@ -108,6 +118,8 @@ public partial class Player : GameObject
         
         UpdateNPC(gameTime);
         UpdateInventory();
+        UpdateAbilities(gameTime);
+        UpdateShop();
         UpdateMovement(gameTime);
         UpdateDialogue(gameTime);
     }

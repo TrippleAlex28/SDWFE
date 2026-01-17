@@ -29,7 +29,7 @@ namespace SDWFE.Objects.Tiles
             labelFont = ExtendedGame.AssetManager.LoadFont("Upheavel", "Fonts/");
             _spriteIdleSheet = ExtendedGame.AssetManager.LoadTexture("TM_Portal_RodHakGames", "Tilemap/");
             _spriteEnterSheet = ExtendedGame.AssetManager.LoadTexture("TM_Portal_Entrance", "Tilemap/");
-            this.Sprite = new AnimatedSprite(_spriteIdleSheet, 48, 32, true, true)
+            this.Sprite = new AnimatedSprite(_spriteIdleSheet, 48, 32,200f, true, true)
             {
                 OriginType = OriginType.TopLeft,
             };
@@ -54,7 +54,7 @@ namespace SDWFE.Objects.Tiles
                 player.IsVisible = false;
             }
             this.RemoveChild(Sprite);
-            Sprite = new AnimatedSprite(_spriteEnterSheet, 48, 32, false, true)
+            Sprite = new AnimatedSprite(_spriteEnterSheet, 48, 32, 200f, false, true)
             {
                 OriginType = OriginType.TopLeft,
             };

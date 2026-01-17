@@ -3,19 +3,20 @@ using Engine.Input;
 using SDWFE.Objects.Inventory;
 using SDWFE.UI.Inventory;
 
+#nullable enable
+
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
 public partial class Player
 {
-    public PlayerInventory Inventory { get; private set; }
-    public UIHotbar HotbarUI { get; set; }
-    public UIWeapons WeaponsUI { get; set; }
+    public PlayerInventory Inventory { get; private set; } = null!;
+    public UIHotbar? HotbarUI { get; set; }
+    public UIWeapons? WeaponsUI { get; set; }
     
     private void ConstructInventory()
     {
         // Inventory Setup
         Inventory = new PlayerInventory();
-        HotbarUI = new UIHotbar(Inventory);
         WeaponsUI = new UIWeapons(Inventory);
         this.AddChild(Inventory);
 
@@ -23,6 +24,14 @@ public partial class Player
         Inventory.AddWeaponByName(ItemSetup.PISTOL);
         Inventory.AddItemByName(ItemSetup.BANDAGE,
             ItemSetup.ItemDataMap.TryGetValue(ItemSetup.BANDAGE, out var data) ? data.MaxStackSize : 1);
+    }
+    
+    /// <summary>
+    /// Constructs the hotbar UI - must be called after ConstructAbilities
+    /// </summary>
+    private void ConstructHotbarUI()
+    {
+        HotbarUI = new UIHotbar(this);
     }
 
     private void UpdateInventory()
@@ -36,25 +45,26 @@ public partial class Player
         if (input.IsActionPressed(InputSetup.ACTION_WEAPON_SWITCH))
             Inventory.SelectWeaponSlot(Inventory.SelectedWeaponIndex == 0 ? 1 : 0);
         
+        // Hotbar keys now select abilities
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_1))
-            Inventory.SelectHotbarSlot(0);
+            SelectAbilitySlot(0);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_2))
-            Inventory.SelectHotbarSlot(1);
+            SelectAbilitySlot(1);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_3))
-            Inventory.SelectHotbarSlot(2);
+            SelectAbilitySlot(2);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_4))
-            Inventory.SelectHotbarSlot(3);
+            SelectAbilitySlot(3);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_5))
-            Inventory.SelectHotbarSlot(4);
+            SelectAbilitySlot(4);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_LEFT))
         {
-            int nextIndex = Inventory.SelectedHotbarIndex + 1;
-            Inventory.SelectHotbarSlot(nextIndex > Inventory.Hotbar.Length - 1 ? 0 : nextIndex);
+            int nextIndex = SelectedAbilitySlot + 1;
+            SelectAbilitySlot(nextIndex > 4 ? 0 : nextIndex);
         }
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_RIGHT))
         {
-            int nextIndex = Inventory.SelectedHotbarIndex - 1;
-            Inventory.SelectHotbarSlot(nextIndex < 0 ? 4 : nextIndex);
+            int nextIndex = SelectedAbilitySlot - 1;
+            SelectAbilitySlot(nextIndex < 0 ? 4 : nextIndex);
         }
     }
 }

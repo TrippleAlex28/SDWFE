@@ -17,6 +17,14 @@ public class PlayerInventoryData
     public InventorySlot[] Inventory { get; set; } = Array.Empty<InventorySlot>();
     public InventorySlot[] WeaponSlots { get; set; } = Array.Empty<InventorySlot>();
     public InventorySlot[] Vault { get; set; } = Array.Empty<InventorySlot>();
+    public string[] UnlockedAbilities { get; set; } = Array.Empty<string>();
+    
+    // Player stats
+    public float CurrentHealth { get; set; } = 500f;
+    public float MaxHealth { get; set; } = 500f;
+    public float CurrentStamina { get; set; } = 100f;
+    public float MaxStamina { get; set; } = 100f;
+    public int Coins { get; set; } = 1000;
 }
 
 public class PlayerInventory : GameObject
@@ -33,6 +41,30 @@ public class PlayerInventory : GameObject
 
     public int SelectedHotbarIndex { get; private set; } = 0;
     public int SelectedWeaponIndex { get; private set; } = 0;
+    
+    /// <summary>
+    /// Unlocked abilities to be saved/loaded
+    /// </summary>
+    public string[] UnlockedAbilities { get; set; } = Array.Empty<string>();
+    
+    /// <summary>
+    /// Player stats to be saved/loaded
+    /// </summary>
+    public float SavedCurrentHealth { get; set; } = 500f;
+    public float SavedMaxHealth { get; set; } = 500f;
+    public float SavedCurrentStamina { get; set; } = 100f;
+    public float SavedMaxStamina { get; set; } = 100f;
+    public int SavedCoins { get; set; } = 1000;
+    
+    /// <summary>
+    /// Event fired when abilities are loaded from file
+    /// </summary>
+    public event Action<string[]>? OnAbilitiesLoaded;
+    
+    /// <summary>
+    /// Event fired when stats are loaded from file
+    /// </summary>
+    public event Action? OnStatsLoaded;
     
     public event Action? OnInventoryChanged;
     public event Action<int>? OnHotbarSelectionChanged;
@@ -361,6 +393,12 @@ public class PlayerInventory : GameObject
                 Inventory = Inventory,
                 WeaponSlots = WeaponSlots,
                 Vault = Vault.Slots,
+                UnlockedAbilities = UnlockedAbilities,
+                CurrentHealth = SavedCurrentHealth,
+                MaxHealth = SavedMaxHealth,
+                CurrentStamina = SavedCurrentStamina,
+                MaxStamina = SavedMaxStamina,
+                Coins = SavedCoins,
             };
 
             var options = new JsonSerializerOptions
@@ -423,6 +461,21 @@ public class PlayerInventory : GameObject
                 WeaponSlots = saveData.WeaponSlots;
             if (saveData.Vault.Length == 60)
                 Vault.Slots = saveData.Vault;
+            
+            // Load unlocked abilities
+            if (saveData.UnlockedAbilities != null && saveData.UnlockedAbilities.Length > 0)
+            {
+                UnlockedAbilities = saveData.UnlockedAbilities;
+                OnAbilitiesLoaded?.Invoke(saveData.UnlockedAbilities);
+            }
+            
+            // Load player stats
+            SavedCurrentHealth = saveData.CurrentHealth;
+            SavedMaxHealth = saveData.MaxHealth;
+            SavedCurrentStamina = saveData.CurrentStamina;
+            SavedMaxStamina = saveData.MaxStamina;
+            SavedCoins = saveData.Coins;
+            OnStatsLoaded?.Invoke();
 
             OnInventoryChanged?.Invoke();
             return true;
