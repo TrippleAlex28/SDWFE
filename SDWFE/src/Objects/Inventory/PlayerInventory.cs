@@ -30,7 +30,7 @@ public class PlayerInventoryData
 public class PlayerInventory : GameObject
 {
     private const int HOTBAR_SIZE = 5;
-    private const int INVENTORY_SIZE = 10;
+    private const int INVENTORY_SIZE = 9;
     private const int WEAPON_SLOTS = 2;
     
     public InventorySlot[] Hotbar { get; private set; }

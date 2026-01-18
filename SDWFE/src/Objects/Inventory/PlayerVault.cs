@@ -7,7 +7,7 @@ namespace SDWFE.Objects.Inventory;
 
 public class PlayerVault
 {
-    private const int VAULT_SIZE = 60;
+    private const int VAULT_SIZE = 30;
     
     public InventorySlot[] Slots { get; set; }
     
