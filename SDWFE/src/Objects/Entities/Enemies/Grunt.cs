@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.Items;
 using SDWFE.Objects.Entities.PlayerEntity;
+using SDWFE.Objects.Inventory.Item;
 
 #nullable enable
 
@@ -79,8 +80,7 @@ public class Grunt : ChasingEnemy
             player.Stats.CurrentHealth -= Damage;
 
         }
-        // Check if target is within range
-        // TODO: Play anim & Do damage to the target 
+        // TODO: Play animation or something
         
     }
 
@@ -88,22 +88,25 @@ public class Grunt : ChasingEnemy
     {
         base.OnDeath();
         
+        // Remove collisions
         if (_hitboxadded && HitboxManager != null && Hitbox != null)
         {
             HitboxManager.RemoveStatic(Hitbox);
         }
+        
+        // Drop coins
         for (int i = 0; i < 5; i++)
         {
             Coins.CreateRandomDrop(GlobalPosition, HitboxManager!);
         }
-        
-        // TODO: Play some effect and spawn items
-    }
 
-    protected override void DrawSelf(SpriteBatch spriteBatch)
-    {
-        base.DrawSelf(spriteBatch);
+        // Drop items
+        var droppedItem = LootTables.RollLootTable(LootTables.GruntLootTable);
+        if (droppedItem != null)
+        {
+            var pickup = new ItemPickup(droppedItem, HitboxManager);
+        }
 
-        // TODO: Possibly draw a small healthbar
+        // TODO: Play some effect
     }
 }

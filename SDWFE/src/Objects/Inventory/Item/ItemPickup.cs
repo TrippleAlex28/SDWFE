@@ -44,12 +44,6 @@ public class ItemPickup : GameObject
         this.Hitbox.OnEnter += OnPlayerCollect;
     }
 
-    public void Pickup(Player player)
-    {
-        if (player.Inventory.AddItem(_item))
-            RemoveFromParent();
-    }
-
     private void OnPlayerCollect(TriggerHitbox hitbox, object other, TriggerSide side)
     {
         if (other is not Player player) return;

@@ -4,6 +4,8 @@ using Engine;
 
 namespace SDWFE.Objects.Inventory.Item;
 
+// TODO: Better to create a base loot table class with its own roll function i think
+
 public class LootTableEntry
 {
     public string ItemName;
@@ -15,11 +17,11 @@ public static class LootTables
 {
     public static List<KeyValuePair<LootTableEntry?, int>> GruntLootTable = new()
     {
-        new KeyValuePair<LootTableEntry?, int>(
+        new (
             null,
             50
         ),
-        new KeyValuePair<LootTableEntry?, int>(
+        new (
             new LootTableEntry
             {
                 ItemName = ItemSetup.BANDAGE,
@@ -28,7 +30,7 @@ public static class LootTables
             },
             40
         ),
-        new KeyValuePair<LootTableEntry?, int>(
+        new (
             new LootTableEntry
             {
                 ItemName = ItemSetup.MEDKIT,
@@ -39,6 +41,58 @@ public static class LootTables
         ),
     };
 
+    public static List<KeyValuePair<LootTableEntry?, int>> TurretLootTable = new()
+    {
+        new (
+            null,
+            50
+        ),
+        new (
+            new LootTableEntry
+            {
+                ItemName = ItemSetup.BANDAGE,
+                MinStackSize = 1,
+                MaxStackSize = 3
+            },
+            40
+        ),
+        new (
+            new LootTableEntry
+            {
+                ItemName = ItemSetup.MEDKIT,
+                MinStackSize = 1,
+                MaxStackSize = 1
+            },
+            10
+        ),
+    };
+    
+    public static List<KeyValuePair<LootTableEntry?, int>> BossLootTable = new()
+    {
+        new (
+            null,
+            50
+        ),
+        new (
+            new LootTableEntry
+            {
+                ItemName = ItemSetup.BANDAGE,
+                MinStackSize = 1,
+                MaxStackSize = 3
+            },
+            40
+        ),
+        new (
+            new LootTableEntry
+            {
+                ItemName = ItemSetup.MEDKIT,
+                MinStackSize = 1,
+                MaxStackSize = 1
+            },
+            10
+        ),
+    };
+    
     public static InventoryItem? RollLootTable(List<KeyValuePair<LootTableEntry?, int>> lootTable)
     {
         if (lootTable == null || lootTable.Count <= 0) throw new ArgumentNullException(nameof(lootTable));
