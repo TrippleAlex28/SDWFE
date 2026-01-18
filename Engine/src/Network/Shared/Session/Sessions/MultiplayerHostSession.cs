@@ -1,6 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Net;
-using Engine.Network.Client;
 using Engine.Network.Server;
 using Engine.Network.Shared.Command;
 using Engine.Network.Shared.Packet;
@@ -207,6 +205,9 @@ public class MultiplayerHostSession : GameSession
     
     private void HandleCommandPacket(CommandPacket packet)
     {
+        // If the sender of the command packet is the listen server itself, applying the command packet will cause the packet to be applied twice, so ignore this client
+        if (packet.ClientId == GameState.Instance.SessionManager.CurrentSession!.LocalClientId) return;
+        
         Scene.Scene? scene = GameState.Instance.CurrentScene;
         if (scene == null) return;
         

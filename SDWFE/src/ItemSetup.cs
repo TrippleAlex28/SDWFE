@@ -129,7 +129,7 @@ public static class ItemSetup
         {
             var weaponData = data as WeaponData;
             
-            Scene scene = GameState.Instance.CurrentScene;
+            Scene? scene = GameState.Instance.CurrentScene;
             if (scene == null) return;
             
             switch (weaponData!.BulletType)
