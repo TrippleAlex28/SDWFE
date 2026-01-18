@@ -125,7 +125,7 @@ public class UIDialogueChoice : UIControl
         // Create speaker name background
         Rectangle sourceRect = new Rectangle(new Point(32, 0), new Point(32, 32));
         _speakerNameBackground = UIVisual.FromStretchableTexture(_spriteSheetTexture, new Vector4(6, 6, 6, 6), sourceRect);
-        _speakerNameBackground.DesiredSize = new Vector2(UIExtensionMethods.GetScreenPercentageWidth(20), 32);
+        _speakerNameBackground.DesiredSize = new Vector2(UIExtensionMethods.GetScreenPercentageWidth(40), 32);
 
         _speakerNameText = UIVisual.FromText(" ", _font, Color.White);
         _speakerNameText.Margin = new Vector4(10, 10, 10, 10);

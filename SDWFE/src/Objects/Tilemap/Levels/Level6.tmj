@@ -152,6 +152,29 @@
                  "width":0,
                  "x":880,
                  "y":1232
+                }, 
+                {
+                 "height":0,
+                 "id":3,
+                 "name":"Portal",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"level",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"wave",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":848,
+                 "y":640
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -271,7 +294,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":3,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -279,11 +302,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"Main.tsx"
+         "source":"..\/..\/..\/..\/..\/..\/..\/..\/Downloads\/TM_Main.tsx"
         }, 
         {
          "firstgid":232,
-         "source":"Collision.tsx"
+         "source":"..\/..\/..\/..\/..\/..\/..\/..\/Downloads\/Collision.tsx"
         }],
  "tilewidth":16,
  "type":"map",
