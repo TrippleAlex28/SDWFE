@@ -439,6 +439,7 @@ public class PlayerInventory : GameObject
         {
             filePath = GetDefaultSavePath(ExtendedGame.GAME_NAME);
         }
+
         try
         {
             if (!File.Exists(filePath))
@@ -459,24 +460,24 @@ public class PlayerInventory : GameObject
                 Console.WriteLine($"Failed to deserialize inventory save data");
                 return false;
             }
-            
+
             // Load data into inventory
             if (saveData.Hotbar.Length == HOTBAR_SIZE)
-                Hotbar = saveData.Hotbar;
+                CopySlots(Hotbar, saveData.Hotbar);
             if (saveData.Inventory.Length == INVENTORY_SIZE)
-                Inventory = saveData.Inventory;
+                CopySlots(Inventory, saveData.Inventory);
             if (saveData.WeaponSlots.Length == WEAPON_SLOTS)
-                WeaponSlots = saveData.WeaponSlots;
-            if (saveData.Vault.Length == 60)
+                CopySlots(WeaponSlots, saveData.WeaponSlots);
+            if (saveData.Vault.Length == 30)
                 Vault.Slots = saveData.Vault;
-            
+
             // Load unlocked abilities
             if (saveData.UnlockedAbilities != null && saveData.UnlockedAbilities.Length > 0)
             {
                 UnlockedAbilities = saveData.UnlockedAbilities;
                 OnAbilitiesLoaded?.Invoke(saveData.UnlockedAbilities);
             }
-            
+
             // Load player stats
             SavedCurrentHealth = saveData.CurrentHealth;
             SavedMaxHealth = saveData.MaxHealth;
@@ -521,6 +522,13 @@ public class PlayerInventory : GameObject
 
     #region Helper Methods
 
+    private static void CopySlots(InventorySlot[] dst, InventorySlot[] src)
+    {
+        int n = Math.Min(dst.Length, src.Length);
+        for (int i = 0; i < n; i++)
+            dst[i].SlotData = src[i].SlotData;
+    }
+    
     private int TryAddToExistingStacks(InventorySlot[] slots, InventoryItem item, int amount)
     {
         foreach (var slot in slots)

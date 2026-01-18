@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Engine;
 using Engine.Hitbox;
+using Engine.Input;
 using Engine.Scene;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,6 +22,8 @@ public abstract class GameplayLevel : Scene
         _levelSuffix = $"{levelSuffix}.tmj";
         
         SetDefaultPlayerClass<Player>(() => new Player());
+        
+        InputManager.Instance.SetActiveProfile(InputSetup.PROFILE_GAMEPLAY);
     }
 
     public override void Enter()
@@ -30,7 +33,6 @@ public abstract class GameplayLevel : Scene
         map = new Tilemap(_levelSuffix, HitboxManager);
         SpawnPoint = map.SpawnPoint;
         map.RegisterHitboxes(HitboxManager);
-        this.AddObject(map);
         
         WaveManager waveManager = new WaveManager(map.Portals, map.Doors, map.Enemies, HitboxManager);
         this.AddObject(waveManager);
@@ -38,7 +40,7 @@ public abstract class GameplayLevel : Scene
         this.LevelIndex = SceneData.levelIndex;
         
         // Manage hub level special wave case
-        if (LevelIndex == -1)
+        if (LevelIndex is -1 or 0)
         {
             foreach (var portalData in map.Portals)
             {
@@ -68,6 +70,8 @@ public abstract class GameplayLevel : Scene
         }
         
         SetUpHitboxes();
+        
+        this.AddObject(map);
     }
 
     public override void Update(GameTime gameTime)
