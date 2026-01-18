@@ -89,6 +89,7 @@ public partial class Player : GameObject
             GameState.Instance.CurrentScene?.UIRoot.AddChild(StatsUI);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(ShopUI);
             
+            this.HitboxLayer = Engine.Hitbox.HitboxLayer.Player;
             if (_dialogue != null)
                 GameState.Instance.CurrentScene?.UIRoot.AddChild(_dialogue);
             

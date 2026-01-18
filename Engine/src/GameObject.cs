@@ -60,24 +60,32 @@ public class GameObject : NetObject
     
     #region Positioning
     
+    /// <summary>
+    /// Stores the precise (float) position for sub-pixel movement.
+    /// </summary>
+    public Vector2 PrecisePosition { get; set; } = Vector2.Zero;
+
     public Vector2 GlobalPosition
     {
         get
         {
             if (this.Parent == null)
-                return this.LocalPosition;
-
-            return this.LocalPosition + this.Parent.GlobalPosition;
+                return this.PrecisePosition;
+            return this.PrecisePosition + this.Parent.GlobalPosition;
         }
         set
         {
             if (this.Parent == null)
-                this.LocalPosition = value;
+                this.PrecisePosition = value;
             else
-                this.LocalPosition += value - this.GlobalPosition;
+                this.PrecisePosition += value - this.GlobalPosition;
         }
     }
-    public Vector2 LocalPosition { get; set; } = Vector2.Zero;
+    public Vector2 LocalPosition
+    {
+        get => this.PrecisePosition;
+        set => this.PrecisePosition = value;
+    }
 
     public Vector2 Direction
     {
@@ -392,31 +400,31 @@ public class GameObject : NetObject
     private void UpdatePosition(float deltaSeconds)
     {
         Vector2 displacement = this.Displacement * deltaSeconds;
-        
         // When on stairs, bypass collision and move directly along stair direction
         if (IsOnStairs && StairDirection.LengthSquared() > 0f)
         {
-            this.GlobalPosition += displacement;
+            this.PrecisePosition += displacement;
             return;
         }
-
         // If HitboxManager is set, use physics-based collision
         if (HitboxManager != null)
         {
             Vector2 newPos = HitboxManager.MoveAndSlide(
-                CollisionBounds,
+                new Rectangle((int)(this.PrecisePosition.X + this.CollisionOffset.X), (int)(this.PrecisePosition.Y + this.CollisionOffset.Y), (int)this.CollisionSize.X, (int)this.CollisionSize.Y),
                 displacement,
                 HitboxLayer,
                 out bool hitX,
                 out bool hitY,
                 ignoreOwner: this
             );
-            this.GlobalPosition = (newPos - CollisionOffset);
+            // Only update the precise position with the float delta actually moved
+            Vector2 moved = newPos - new Vector2((int)(this.PrecisePosition.X + this.CollisionOffset.X), (int)(this.PrecisePosition.Y + this.CollisionOffset.Y));
+            this.PrecisePosition += moved;
         }
         else
         {
             // No collision system - just move freely
-            this.GlobalPosition += displacement;
+            this.PrecisePosition += displacement;
         }
     }
     #endregion

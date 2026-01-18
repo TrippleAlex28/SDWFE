@@ -159,7 +159,7 @@ public class HitboxManager
         if (velocity.X != 0)
         {
             Rectangle testRect = new Rectangle(
-                currentBounds.X + (int)velocity.X,
+                (int)(currentBounds.X + velocity.X),
                 currentBounds.Y,
                 currentBounds.Width,
                 currentBounds.Height
@@ -182,7 +182,7 @@ public class HitboxManager
         {
             Rectangle testRect = new Rectangle(
                 (int)newPos.X,
-                currentBounds.Y + (int)velocity.Y,
+                (int)MathF.Ceiling(currentBounds.Y + velocity.Y),
                 currentBounds.Width,
                 currentBounds.Height
             );
@@ -190,9 +190,11 @@ public class HitboxManager
             if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
                 newPos.Y += velocity.Y;
+                Console.WriteLine($"New Y position: {newPos.Y}");
             }
             else
             {
+                Console.WriteLine("Collision Y detected");
                 hitY = true;
                 // Slide along collision
                 newPos.Y = ResolveCollisionY(new Rectangle((int)newPos.X, currentBounds.Y, currentBounds.Width, currentBounds.Height), velocity.Y, layer, ignoreOwner);
