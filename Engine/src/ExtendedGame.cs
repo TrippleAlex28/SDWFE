@@ -206,12 +206,6 @@ public class ExtendedGame : Game
                 Matrix.CreateTranslation(presentationRect.X, presentationRect.Y, 0)
         );
         GameState.Instance.DrawUI(SpriteBatch);
-        // Draw Mouse
-        SpriteBatch.Draw(
-            EngineResources.BlankCircle,
-            GetMouseUIPosition() - new Vector2(EngineResources.BlankCircle.Width / 2f),
-            Color.White
-        );
         SpriteBatch.End();
         
         #endregion
