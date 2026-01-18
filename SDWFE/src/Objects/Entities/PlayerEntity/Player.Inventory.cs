@@ -1,37 +1,39 @@
 ﻿using System;
 using Engine.Input;
+using Microsoft.Xna.Framework;
 using SDWFE.Objects.Inventory;
-using SDWFE.UI.Inventory;
-
-#nullable enable
+using SDWFE.UI.Inventory2;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
 public partial class Player
 {
-    public PlayerInventory Inventory { get; private set; } = null!;
-    public UIHotbar? HotbarUI { get; set; }
-    public UIWeapons? WeaponsUI { get; set; }
+    public PlayerInventory Inventory { get; private set; }
+    public UIInventory InventoryUI { get; private set; }
     
     private void ConstructInventory()
     {
         // Inventory Setup
         Inventory = new PlayerInventory();
-        WeaponsUI = new UIWeapons(Inventory);
+        InventoryUI = new UIInventory(Inventory);
         this.AddChild(Inventory);
+        
+        // Setup vault access conditions
+        Inventory.Vault.AddAccessCondition(() => true);
 
         // Inventory.AddWeaponByName(ItemSetup.SHOTGUN);
-        Inventory.AddWeaponByName(ItemSetup.PISTOL);
+        Inventory.AddItemByName(ItemSetup.PISTOL);
+        Inventory.AddItemByName(ItemSetup.ASSAULT_RIFLE);
+        Inventory.AddItemByName(ItemSetup.SHOTGUN);
+        Inventory.AddItemByName(ItemSetup.FIREWORK_LAUNCHER);
         Inventory.AddItemByName(ItemSetup.BANDAGE,
-            ItemSetup.ItemDataMap.TryGetValue(ItemSetup.BANDAGE, out var data) ? data.MaxStackSize : 1);
-    }
-    
-    /// <summary>
-    /// Constructs the hotbar UI - must be called after ConstructAbilities
-    /// </summary>
-    private void ConstructHotbarUI()
-    {
-        HotbarUI = new UIHotbar(this);
+            ItemSetup.ItemDataMap.TryGetValue(ItemSetup.BANDAGE, out var data1) ? data1.MaxStackSize : 1);
+        Inventory.AddItemByName(ItemSetup.MEDKIT,
+            ItemSetup.ItemDataMap.TryGetValue(ItemSetup.MEDKIT, out var data2) ? data2.MaxStackSize : 1);
+        Inventory.AddItemByName(ItemSetup.WOOD,
+            ItemSetup.ItemDataMap.TryGetValue(ItemSetup.MEDKIT, out var data3) ? data3.MaxStackSize : 1);
+        Inventory.AddItemByName(ItemSetup.IRON,
+            ItemSetup.ItemDataMap.TryGetValue(ItemSetup.MEDKIT, out var data4) ? data4.MaxStackSize : 1);
     }
 
     private void UpdateInventory()
@@ -45,26 +47,31 @@ public partial class Player
         if (input.IsActionPressed(InputSetup.ACTION_WEAPON_SWITCH))
             Inventory.SelectWeaponSlot(Inventory.SelectedWeaponIndex == 0 ? 1 : 0);
         
-        // Hotbar keys now select abilities
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_1))
-            SelectAbilitySlot(0);
+            Inventory.SelectHotbarSlot(0);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_2))
-            SelectAbilitySlot(1);
+            Inventory.SelectHotbarSlot(1);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_3))
-            SelectAbilitySlot(2);
+            Inventory.SelectHotbarSlot(2);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_4))
-            SelectAbilitySlot(3);
+            Inventory.SelectHotbarSlot(3);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_5))
-            SelectAbilitySlot(4);
+            Inventory.SelectHotbarSlot(4);
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_LEFT))
         {
-            int nextIndex = SelectedAbilitySlot + 1;
-            SelectAbilitySlot(nextIndex > 4 ? 0 : nextIndex);
+            if (!InventoryUI.IsMenuOpen)
+            {
+                int nextIndex = Inventory.SelectedHotbarIndex + 1;
+                Inventory.SelectHotbarSlot(nextIndex > Inventory.Hotbar.Length - 1 ? 0 : nextIndex);
+            }
         }
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_RIGHT))
         {
-            int nextIndex = SelectedAbilitySlot - 1;
-            SelectAbilitySlot(nextIndex < 0 ? 4 : nextIndex);
+            if (!InventoryUI.IsMenuOpen)
+            {
+                int nextIndex = Inventory.SelectedHotbarIndex - 1;
+                Inventory.SelectHotbarSlot(nextIndex < 0 ? 4 : nextIndex);
+            }
         }
     }
 }

@@ -5,17 +5,13 @@ using Engine.UI;
 using Engine.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SDWFE.Objects.Entities.PlayerEntity;
-using SDWFE.Objects.Inventory.Ability;
+using SDWFE.Objects.Inventory;
 
-#nullable enable
-
-namespace SDWFE.UI.Inventory;
+namespace SDWFE.UI.Inventory2;
 
 public class UIHotbar : UIContainer
 {
-    private Player _player;
-
+    private PlayerInventory _inventory;
     private UIVisual _background;
     private UIHBoxContainer _slotRow;
     private List<UIHotbarSlot> _slots = new();
@@ -26,15 +22,15 @@ public class UIHotbar : UIContainer
 
     private const float BACKGROUND_PADDING_X = 8f;
     private const float BACKGROUND_PADDING_Y = 4f;
-    private const float SLOT_SIZE = 20f;
+    private const float SLOT_SIZE = 16f;
     private const float SPACING = 4f;
-    private const int ABILITY_COUNT = 5;
-    
-    public UIHotbar(Player player)
+
+    public UIHotbar(PlayerInventory inventory)
     {
-        _player = player;
-        _player.OnAbilitiesChanged += HandleAbilitiesChanged;
-        
+        _inventory = inventory;
+        _inventory.OnInventoryChanged += HandleInventoryChange;
+        _inventory.OnHotbarSelectionChanged += HandleHotbarSelectionChange;
+
         _slotSheet = ExtendedGame.AssetManager.LoadTexture("inventorySheet", "UI/");
         _slotSheetRect = new Rectangle(0, 32, 28, 28);
         _selectedSlotSheetRect = new Rectangle(0, 64, 28, 28);
@@ -43,9 +39,9 @@ public class UIHotbar : UIContainer
         Margin = new Vector4(0, 0, 0, 10);
 
         // Create background
-        _background = UIVisual.FromColor(new Color(255, 20, 20, 0));
+        _background = UIVisual.FromColor(new Color(20, 20, 20, 100));
         _background.AlignmentPoint = Alignment.BottomMiddle;
-        float width = (SLOT_SIZE * ABILITY_COUNT) + (SPACING * Math.Max(0, ABILITY_COUNT - 1)) + BACKGROUND_PADDING_X * 2f;
+        float width = (SLOT_SIZE * _inventory.Hotbar.Length) + (SPACING * Math.Max(0, _inventory.Hotbar.Length - 1)) + BACKGROUND_PADDING_X * 2f;
         float height = SLOT_SIZE + BACKGROUND_PADDING_Y * 2f;
         _background.DesiredSize = new Vector2(width, height);
         AddChild(_background);
@@ -59,75 +55,39 @@ public class UIHotbar : UIContainer
             Padding = new Vector4(BACKGROUND_PADDING_X, BACKGROUND_PADDING_Y, BACKGROUND_PADDING_X, BACKGROUND_PADDING_Y),
         };
         _background.AddChild(_slotRow);
-        
-        // Create Slots for each ability
-        for (int i = 0; i < ABILITY_COUNT; i++)
+
+        // Create slots
+        for (int i = 0; i < _inventory.Hotbar.Length; i++)
         {
             var slot = new UIHotbarSlot(
-                index: i,
-                slotSize: SLOT_SIZE,
-                slotSheet: _slotSheet,
-                slotSheetRect: _slotSheetRect,
-                selectedSlotSheetRect: _selectedSlotSheetRect
+                _inventory.Hotbar[i],
+                i,
+                SLOT_SIZE,
+                _slotSheet,
+                _slotSheetRect,
+                _selectedSlotSheetRect
             );
-            
-            // Set placeholder icon (grayed out ability icon)
-            var abilityName = AbilityRegistry.ShopAbilities[i];
-            var abilityData = AbilityRegistry.GetAbility(abilityName);
-            if (abilityData != null)
-            {
-                slot.SetPlaceholderIcon(abilityData.Icon);
-            }
 
             _slots.Add(slot);
             _slotRow.AddChild(slot);
         }
-        
-        // Initialize with current abilities
-        HandleAbilitiesChanged();
-        HandleSelectionChange(_player.SelectedAbilitySlot);
+
+        // Update slots & selection
+        HandleInventoryChange();
+        HandleHotbarSelectionChange(_inventory.SelectedHotbarIndex);
     }
-    
-    public void HandleAbilitiesChanged()
+
+    private void HandleInventoryChange()
     {
-        var abilities = _player.GetAllAbilities();
-        
-        for (int i = 0; i < _slots.Count && i < abilities.Length; i++)
+        for (int i = 0; i < _slots.Count; i++)
         {
-            if (abilities[i] != null)
-            {
-                _slots[i].SetAbility(abilities[i]);
-            }
-            else
-            {
-                // Show grayed out placeholder
-                var abilityName = AbilityRegistry.ShopAbilities[i];
-                var abilityData = AbilityRegistry.GetAbility(abilityName);
-                if (abilityData != null)
-                {
-                    _slots[i].SetPlaceholderIcon(abilityData.Icon);
-                }
-            }
+            _slots[i].Refresh();
         }
     }
 
-    private void HandleSelectionChange(int newSelection)
+    private void HandleHotbarSelectionChange(int newSelection)
     {
         for (int i = 0; i < _slots.Count; i++)
             _slots[i].SetSelected(i == newSelection);
-    }
-    
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-        
-        // Update cooldown visuals each frame
-        for (int i = 0; i < _slots.Count; i++)
-        {
-            _slots[i].UpdateCooldown();
-        }
-        
-        // Update selection
-        HandleSelectionChange(_player.SelectedAbilitySlot);
     }
 }

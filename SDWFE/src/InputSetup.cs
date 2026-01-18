@@ -39,7 +39,9 @@ public static class InputSetup
     
     #region UI
     
-    public const string ACTION_UI_SELECT = "UISelect"; // NEVER MODIFY THIS, THE RAW STRING IS USED IN ENGINE FOR UI
+    public const string ACTION_UI_SELECT = "UISelect";          // NEVER MODIFY THIS, THE RAW STRING IS USED IN ENGINE FOR UI
+    public const string ACTION_UI_SCROLL_UP = "UIScrollUp";     // NEVER MODIFY THIS, THE RAW STRING IS USED IN ENGINE FOR UI
+    public const string ACTION_UI_SCROLL_DOWN = "UIScrollDown"; // NEVER MODIFY THIS, THE RAW STRING IS USED IN ENGINE FOR UI
     public const string ACTION_UI_CANCEL = "UICancel";
     public const string ACTION_UI_NAVIGATE_UP = "UINavigateUp";
     public const string ACTION_UI_NAVIGATE_DOWN = "UINavigateDown";
@@ -47,6 +49,16 @@ public static class InputSetup
     public const string ACTION_UI_NAVIGATE_RIGHT = "UINavigateRight";
 
     public const string ACTION_UI_INVENTORY = "UIInventory";
+    public const string ACTION_UI_WEAPON_1 = "UIWeapon1";
+    public const string ACTION_UI_WEAPON_2 = "UIWeapon2";
+    public const string ACTION_UI_HOTBAR_1 = "UIHotbar1";
+    public const string ACTION_UI_HOTBAR_2 = "UIHotbar2";
+    public const string ACTION_UI_HOTBAR_3 = "UIHotbar3";
+    public const string ACTION_UI_HOTBAR_4 = "UIHotbar4";
+    public const string ACTION_UI_HOTBAR_5 = "UIHotbar5";
+
+    public const string ACTION_UI_HWSWAP = "UIHWSwap";
+    public const string ACTION_UI_IVSWAP = "UIIVSwap";
     
     #endregion
     
@@ -177,6 +189,14 @@ public static class InputSetup
             .AddBinding(new KeyboardBinding(Keys.Space))
             .AddBinding(new GamePadButtonBinding(Buttons.A));
         
+        var scrollUp = new InputAction(ACTION_UI_SCROLL_UP)
+            .AddBinding(new MouseButtonBinding(MouseButtonBinding.MouseButton.WheelUp))
+            .AddBinding(new GamePadButtonBinding(Buttons.RightThumbstickUp));
+        
+        var scrollDown = new InputAction(ACTION_UI_SCROLL_DOWN)
+            .AddBinding(new MouseButtonBinding(MouseButtonBinding.MouseButton.WheelDown))
+            .AddBinding(new GamePadButtonBinding(Buttons.RightThumbstickDown));
+        
         var cancel = new InputAction(ACTION_UI_CANCEL)
             .AddBinding(new KeyboardBinding(Keys.Escape))
             .AddBinding(new GamePadButtonBinding(Buttons.B));
@@ -202,10 +222,36 @@ public static class InputSetup
             .AddBinding(new GamePadButtonBinding(Buttons.LeftThumbstickRight));
 
         var inventory = new InputAction(ACTION_UI_INVENTORY)
-            .AddBinding(new KeyboardBinding(Keys.T))
+            .AddBinding(new KeyboardBinding(Keys.Tab))
             .AddBinding(new GamePadButtonBinding(Buttons.DPadUp));
+            
+        var weapon1 = new InputAction(ACTION_UI_WEAPON_1)
+            .AddBinding(new KeyboardBinding(Keys.D1));
+        var weapon2 = new InputAction(ACTION_UI_WEAPON_2)
+            .AddBinding(new KeyboardBinding(Keys.D2));
+        
+        var hotbar1 = new InputAction(ACTION_UI_HOTBAR_1)
+            .AddBinding(new KeyboardBinding(Keys.D3));
+        var hotbar2 = new InputAction(ACTION_UI_HOTBAR_2)
+            .AddBinding(new KeyboardBinding(Keys.D4));
+        var hotbar3 = new InputAction(ACTION_UI_HOTBAR_3)
+            .AddBinding(new KeyboardBinding(Keys.D5));
+        var hotbar4 = new InputAction(ACTION_UI_HOTBAR_4)
+            .AddBinding(new KeyboardBinding(Keys.D6));
+        var hotbar5 = new InputAction(ACTION_UI_HOTBAR_5)
+            .AddBinding(new KeyboardBinding(Keys.D7));
+
+        var hwSwap = new InputAction(ACTION_UI_HWSWAP)
+            .AddBinding(new KeyboardBinding(Keys.F));
+        
+        var ivSwap = new InputAction(ACTION_UI_IVSWAP)
+            .AddBinding(new KeyboardBinding(Keys.E));
+        
         
         uiProfile.RegisterAction(select);
+        uiProfile.RegisterAction(scrollUp);
+        uiProfile.RegisterAction(scrollDown);
+        
         uiProfile.RegisterAction(cancel);
         uiProfile.RegisterAction(navigateUp);
         uiProfile.RegisterAction(navigateDown);
@@ -213,6 +259,18 @@ public static class InputSetup
         uiProfile.RegisterAction(navigateRight);
 
         uiProfile.RegisterAction(inventory);
+        
+        uiProfile.RegisterAction(weapon1);
+        uiProfile.RegisterAction(weapon2);
+        
+        uiProfile.RegisterAction(hotbar1);
+        uiProfile.RegisterAction(hotbar2);
+        uiProfile.RegisterAction(hotbar3);
+        uiProfile.RegisterAction(hotbar4);
+        uiProfile.RegisterAction(hotbar5);
+        
+        uiProfile.RegisterAction(hwSwap);
+        uiProfile.RegisterAction(ivSwap);
         
         InputManager.Instance.RegisterProfile(uiProfile);
     }

@@ -4,10 +4,9 @@ using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Inventory;
-using SDWFE.UI.Inventory;
 using SDWFE.UI.PlayerData;
 using SDWFE.UI.Dialogue;
-using SDWFE.UI.Shop;
+
 namespace SDWFE.Objects.Entities.PlayerEntity;
 
 public partial class Player : GameObject
@@ -52,7 +51,7 @@ public partial class Player : GameObject
         
         // Animated Sprite Setup
         Texture2D spriteSheet = ExtendedGame.AssetManager.LoadTexture("16x32 Idle v2-Sheet", "Entities/Player/");
-        Sprite = new AnimatedSprite(spriteSheet, 16, 32, 200f, true, true)
+        Sprite = new AnimatedSprite(spriteSheet, 16, 32)
         {
             SourceRectangle = new Rectangle(new Point(0, 0), new Point(16, 32)),
             OriginType = OriginType.TopLeft,
@@ -70,7 +69,7 @@ public partial class Player : GameObject
     {
         base.EnterSelf();
         
-        //Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Blue : Color.Red;
+        Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Blue : Color.Red;
         
         // Only create UI for the locally owned player
         if (IsLocallyOwned())
@@ -80,15 +79,16 @@ public partial class Player : GameObject
             ConstructShopUI();
             ConstructAbilities();
             ConstructStats(); // Must be after ConstructAbilities (needs Inventory)
-            ConstructHotbarUI(); // Must be after ConstructAbilities
+            
+            // Add inventory UI
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(InventoryUI);
+
             StatsUI = new UIStats(this);
             StatsUI.UpdateStats(); // Initial update
-
             Stats.OnStatsChanged += OnStatsChanged;
-            GameState.Instance.CurrentScene?.UIRoot.AddChild(HotbarUI);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(StatsUI);
-            GameState.Instance.CurrentScene?.UIRoot.AddChild(WeaponsUI);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(ShopUI);
+            
             if (_dialogue != null)
                 GameState.Instance.CurrentScene?.UIRoot.AddChild(_dialogue);
             
