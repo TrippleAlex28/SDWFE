@@ -8,8 +8,8 @@ namespace SDWFE.UI.Inventory2;
 
 public class UIInventorySlot : UIControl
 {
-    protected InventorySlot _slot;
-    protected int _index;
+    public InventorySlot Slot { get; protected set; }
+    public int Index { get; protected set; }
     
     protected UIVisual _background;
     protected UIVisual _selected;
@@ -31,8 +31,8 @@ public class UIInventorySlot : UIControl
         Rectangle slotSheetRect,
         Rectangle selectedSlotSheetRect)
     {
-        _slot = slot;
-        _index = index;
+        Slot = slot;
+        Index = index;
         _slotSize = slotSize;
         _slotSheet = slotSheet;
         _slotSheetRect = slotSheetRect;
@@ -77,20 +77,20 @@ public class UIInventorySlot : UIControl
             _stackText = null;
         }
 
-        if (_slot.IsEmpty())
+        if (Slot.IsEmpty())
             return;
 
         // Add icon
-        if (_slot.Item?.Icon != null)
+        if (Slot.Item?.Icon != null)
         {
-            _icon = UIVisual.FromTexture(_slot.Item.Icon);
+            _icon = UIVisual.FromTexture(Slot.Item.Icon);
             _icon.AlignmentPoint = Alignment.MiddleCenter;
             _icon.DesiredSize = new Vector2(_slotSize * 0.6f);
             AddChild(_icon);
         }
 
         // Add stack count
-        int stackSize = _slot.Item?.StackSize ?? 0;
+        int stackSize = Slot.Item?.StackSize ?? 0;
         if (stackSize > 1)
         {
             _stackText = UIVisual.FromText(stackSize.ToString(), Resources.TextFont, Color.White);
