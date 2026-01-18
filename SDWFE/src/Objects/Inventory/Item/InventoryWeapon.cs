@@ -7,6 +7,7 @@ public enum BulletType
     Generic,
     Shotgun,
     FireworkRocket,
+    Arrow,
 }
 
 public class WeaponData : ItemData

@@ -3,6 +3,7 @@ using System.Reflection.Metadata;
 using System.Runtime.Intrinsics.X86;
 using System.Text.Json.Serialization;
 using Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.PlayerEntity;
 
@@ -50,6 +51,11 @@ public class InventoryItem
     public virtual InventoryItem Clone()
     {
         return new InventoryItem(Name, StackSize);;
+    }
+
+    public void RemoveStack()
+    {
+        StackSize = Math.Max(0, StackSize - 1);
     }
     
     /// <summary>

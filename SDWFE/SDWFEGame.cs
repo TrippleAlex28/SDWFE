@@ -37,8 +37,12 @@ public class SDWFEGame : ExtendedGame
         NetObjectRegistry.Register<GenericBullet>((uint)NetObjects.GenericBullet);
         NetObjectRegistry.Register<ShotgunBullet>((uint)NetObjects.ShotgunBullet);
         NetObjectRegistry.Register<FireworkRocket>((uint)NetObjects.FireworkRocket);
+        NetObjectRegistry.Register<Arrow>((uint)NetObjects.Arrow);
+        NetObjectRegistry.Register<Orb>((uint)NetObjects.Orb);
+        
         NetObjectRegistry.Register<Grunt>((uint)NetObjects.Grunt);
         NetObjectRegistry.Register<Turret>((uint)NetObjects.Turret);
+        NetObjectRegistry.Register<Boss>((uint)NetObjects.Boss);
         
         // --- NET COMMANDS SETUP ---
         NetCommandRegistry.Register<WalkCommand>((uint)NetCommands.Move);
@@ -192,8 +196,10 @@ public class SDWFEGame : ExtendedGame
 
             if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_USE))
             {
-                if (player.Inventory.GetSelectedItem() != null && player.Inventory.GetSelectedItem()!.Data.UseActionId != null)
+                if (player.Inventory.GetSelectedItem() != null && player.Inventory.GetSelectedItem()!.Data.UseActionId != null && player.Inventory.GetSelectedItem()!.StackSize > 0)
                 {
+                    player.Inventory.GetSelectedItem()!.RemoveStack();
+                    player.Inventory.ForceRefresh();
                     commands.Add(new UseCommand(player.Inventory.GetSelectedItem()!.Name, lookDirection));
                 }
             }

@@ -1,6 +1,4 @@
-﻿using System;
-using Engine.Input;
-using Microsoft.Xna.Framework;
+﻿using Engine.Input;
 using SDWFE.Objects.Inventory;
 using SDWFE.UI.Inventory2;
 
@@ -41,11 +39,20 @@ public partial class Player
         var input = InputManager.Instance;
 
         if (input.IsActionPressed(InputSetup.ACTION_WEAPON_1))
+        {
             Inventory.SelectWeaponSlot(0);
+            ResetShootCooldown();
+        }
         if (input.IsActionPressed(InputSetup.ACTION_WEAPON_2))
+        {
             Inventory.SelectWeaponSlot(1);
+            ResetShootCooldown();
+        }
         if (input.IsActionPressed(InputSetup.ACTION_WEAPON_SWITCH))
+        {
             Inventory.SelectWeaponSlot(Inventory.SelectedWeaponIndex == 0 ? 1 : 0);
+            ResetShootCooldown();
+        }
         
         if (input.IsActionPressed(InputSetup.ACTION_HOTBAR_1))
             Inventory.SelectHotbarSlot(0);

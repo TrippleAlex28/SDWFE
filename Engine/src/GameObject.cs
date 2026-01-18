@@ -184,7 +184,7 @@ public class GameObject : NetObject
     /// A value in the range [0, 1].
     /// Overshooting values are automatically clamped.
     /// Be smart about what values you use (in relation to FineDrawLayer).
-    /// Pick relatively large values compard to FineDrawLayer (e.g. 0.1f, 0.2f).
+    /// Pick relatively large values compared to FineDrawLayer (e.g. 0.1f, 0.2f).
     /// </summary>
     public float BaseDrawLayer
     {
