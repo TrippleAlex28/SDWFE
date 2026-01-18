@@ -260,7 +260,7 @@
                         {
                          "name":"level",
                          "type":"int",
-                         "value":-1
+                         "value":1
                         }, 
                         {
                          "name":"wave",
@@ -271,30 +271,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":288,
-                 "y":496
-                }, 
-                {
-                 "height":0,
-                 "id":6,
-                 "name":"Portal",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":288,
+                 "x":280,
                  "y":496
                 }, 
                 {
@@ -317,7 +294,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":352,
+                 "x":344,
                  "y":480
                 }, 
                 {
@@ -340,30 +317,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":416,
-                 "y":464
-                }, 
-                {
-                 "height":0,
-                 "id":9,
-                 "name":"Portal",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":3
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":416,
+                 "x":408,
                  "y":464
                 }, 
                 {
@@ -398,7 +352,7 @@
                         {
                          "name":"level",
                          "type":"int",
-                         "value":5
+                         "value":6
                         }, 
                         {
                          "name":"wave",
@@ -421,7 +375,7 @@
                         {
                          "name":"level",
                          "type":"int",
-                         "value":6
+                         "value":7
                         }, 
                         {
                          "name":"wave",

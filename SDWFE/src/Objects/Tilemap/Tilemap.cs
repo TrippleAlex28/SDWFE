@@ -236,11 +236,17 @@ public class Tilemap : GameObject
         {
             if (obj.name == "StairL")
             {
-                Stairs.Add(new Stair(new Vector2(obj.x, obj.y), StairFacing.Left));
+                Stair newStair = new Stair(new Vector2(obj.x, obj.y), StairFacing.Left);
+                newStair.ElevationLevel = GetPropertyByName(obj, "elevation")?.value ?? 0;
+                Stairs.Add(newStair);
+
             }
             else if (obj.name == "StairR")
             {
-                Stairs.Add(new Stair(new Vector2(obj.x, obj.y), StairFacing.Right));
+                Stair newStair = new Stair(new Vector2(obj.x, obj.y), StairFacing.Right);
+                newStair.ElevationLevel = GetPropertyByName(obj, "elevation")?.value ?? 0;
+                Console.WriteLine(newStair.ElevationLevel);
+                Stairs.Add(newStair);
             }
             else if (obj.name == "RoomDoor")
             {

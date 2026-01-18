@@ -12,7 +12,7 @@ public enum BulletType
 
 public class WeaponData : ItemData
 {
-    public float Damage { get; set; } = 10f;
+    public float Damage { get; set; } = 100f;
     public float AttackSpeed { get; set; } = 1f; // Shots per second
     public float Range { get; set; } = 500f;
     public float Velocity { get; set; } = 250f;
