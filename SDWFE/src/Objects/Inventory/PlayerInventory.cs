@@ -599,4 +599,9 @@ public class PlayerInventory : GameObject
     }
 
     #endregion
+
+    public void ForceRefresh()
+    {
+        OnInventoryChanged?.Invoke();
+    }
 }
