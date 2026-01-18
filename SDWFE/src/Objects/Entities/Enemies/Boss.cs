@@ -311,6 +311,7 @@ public class Boss : Enemy
         if (droppedItem != null)
         {
             var pickup = new ItemPickup(droppedItem, HitboxManager);
+            GameState.Instance.CurrentScene?.AddObject(pickup);
         }
         
         // TODO: Play some effect

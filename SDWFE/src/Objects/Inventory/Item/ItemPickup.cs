@@ -24,7 +24,7 @@ public class ItemPickup : GameObject
         _sprite = new Sprite(_item.Icon)
         {
             OriginType = OriginType.Center,
-            Scale = new Vector2(16f / _sprite.SourceRectangle.Width, 16f / _sprite.SourceRectangle.Height)
+            Scale = new Vector2(16f / _item.Icon.Width, 16f / _item.Icon.Height)
         };
         AddChild(_sprite);
         
