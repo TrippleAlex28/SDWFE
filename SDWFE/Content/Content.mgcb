@@ -213,6 +213,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Visitor.spritefont
 
+#begin Items/16x16 Bronze Coin.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Items/16x16 Bronze Coin.png
+
 #begin Items/Adrenaline.png
 /importer:TextureImporter
 /processor:TextureProcessor

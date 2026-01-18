@@ -383,8 +383,12 @@ public class PlayerInventory : GameObject
     /// <summary>
     /// Saves the inventory & vault to a JSON file
     /// </summary>
-    public bool SaveToFile(string filePath)
+    public bool SaveToFile(string filePath = "")
     {
+        if (string.IsNullOrEmpty(filePath))
+        {
+            filePath = GetDefaultSavePath(ExtendedGame.GAME_NAME);
+        }
         try
         {
             var saveData = new PlayerInventoryData
@@ -429,8 +433,12 @@ public class PlayerInventory : GameObject
     /// <summary>
     /// Loads the inventory & vault from a JSON file
     /// </summary>
-    public bool LoadFromFile(string filePath)
+    public bool LoadFromFile(string filePath = "")
     {
+        if (string.IsNullOrEmpty(filePath))
+        {
+            filePath = GetDefaultSavePath(ExtendedGame.GAME_NAME);
+        }
         try
         {
             if (!File.Exists(filePath))

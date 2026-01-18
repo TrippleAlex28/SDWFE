@@ -8,12 +8,12 @@ public static class EngineResources
     /// <summary>
     /// 1x1 Placeholder white block texture that can be used for testing purposes
     /// </summary>
-    public static Texture2D BlankSquare { get; private set; }
+    public static Texture2D BlankSquare { get; private set; } = null!;
 
     /// <summary>
     /// 32x32 Placeholder white circle texture that can be used for testing purposes
     /// </summary>
-    public static Texture2D BlankCircle { get; private set; }
+    public static Texture2D BlankCircle { get; private set; } = null!;
     
     public static void LoadContent(GraphicsDevice graphics)
     {

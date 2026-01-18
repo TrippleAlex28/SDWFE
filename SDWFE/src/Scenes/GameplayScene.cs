@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Managers;
 using SDWFE.Objects.Entities;
 using SDWFE.Objects.Entities.Enemies;
+using SDWFE.Objects.Entities.Items;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Tilemap;
 using SDWFE.Objects.Tiles;
@@ -151,6 +152,8 @@ public class GameplayScene : Scene
         }
         HitboxManager.UpdateDebug();
         ExtendedGame.LightShaderInstance.SetLights(allWorldLights);
+        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
+            Coins.CreateRandomDrop(new Vector2(100, 100), HitboxManager);
          // Handle pause input
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_PAUSE))
             GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, MainMenuScene.KEY);

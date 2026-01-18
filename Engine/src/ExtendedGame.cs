@@ -15,17 +15,17 @@ public class ExtendedGame : Game
     public static string GAME_NAME { get; protected set; } = "SDWFE";
     public static string GAME_NAME_SUBTITLE { get; protected set; } = "Warrior of the Fallen Empire";
 
-    public static AssetManager AssetManager { get; private set; }
-    public static Random Random { get; private set; }
-    public static FollowCamera FollowCamera { get; private set; }
+    public static AssetManager AssetManager { get; private set; } = null!;
+    public static Random Random { get; private set; } = null!;
+    public static FollowCamera FollowCamera { get; private set; } = null!;
     
     public readonly GraphicsDeviceManager GraphicsDeviceManager;
-    public SpriteBatch SpriteBatch { get; private set; }
-    public RenderTarget2D RenderTarget { get; private set; }
+    public SpriteBatch SpriteBatch { get; private set; } = null!;
+    public RenderTarget2D RenderTarget { get; private set; } = null!;
     public static readonly Point DrawResolution = new(480, 270);
     private static Point _cachedBackBufferSize;
 
-    public static LightShader LightShaderInstance { get; private set; }
+    public static LightShader LightShaderInstance { get; private set; } = null!;
     
     public static string ContentRootDirectory
     {

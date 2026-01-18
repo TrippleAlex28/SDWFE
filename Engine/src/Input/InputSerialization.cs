@@ -14,7 +14,7 @@ public class SerializedInputConfig
 [Serializable]
 public class SerializedProfile
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public List<SerializedAction> Actions { get; set; }
 
     public SerializedProfile()
@@ -26,7 +26,7 @@ public class SerializedProfile
 [Serializable]
 public class SerializedAction
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public List<SerializedBinding> Bindings { get; set; }
 
     public SerializedAction()
@@ -38,8 +38,8 @@ public class SerializedAction
 [Serializable]
 public class SerializedBinding
 {
-    public string Type { get; set; } // "Keyboard" "Mouse" "GamePad"
-    public string Data { get; set; } // Binding data
+    public string Type { get; set; } = string.Empty; // "Keyboard" "Mouse" "GamePad"
+    public string Data { get; set; } = string.Empty; // Binding data
     
     public SerializedBinding() { }
 

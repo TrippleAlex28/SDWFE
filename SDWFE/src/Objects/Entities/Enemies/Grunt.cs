@@ -4,6 +4,7 @@ using Engine.Hitbox;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SDWFE.Objects.Entities.Items;
 using SDWFE.Objects.Entities.PlayerEntity;
 
 #nullable enable
@@ -91,7 +92,10 @@ public class Grunt : ChasingEnemy
         {
             HitboxManager.RemoveStatic(Hitbox);
         }
-
+        for (int i = 0; i < 5; i++)
+        {
+            Coins.CreateRandomDrop(GlobalPosition, HitboxManager!);
+        }
         // TODO: Play some effect and spawn items
     }
 

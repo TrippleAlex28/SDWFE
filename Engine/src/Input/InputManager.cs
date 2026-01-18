@@ -23,7 +23,7 @@ public sealed class InputManager
     }
 
     private Dictionary<string, InputProfile> _profiles;
-    private InputProfile _activeProfile;
+    private InputProfile? _activeProfile;
     private InputState _inputState;
     
     private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
@@ -68,7 +68,7 @@ public sealed class InputManager
     /// <summary>
     /// Gets a profile by name
     /// </summary>
-    public InputProfile GetProfile(string profileName)
+    public InputProfile? GetProfile(string profileName)
     {
         _profiles.TryGetValue(profileName, out var profile);
         return profile;
@@ -92,7 +92,7 @@ public sealed class InputManager
     /// <summary>
     /// Gets the currently active profile
     /// </summary>
-    public InputProfile GetActiveProfile()
+    public InputProfile? GetActiveProfile()
     {
         return _activeProfile;
     }
@@ -155,7 +155,7 @@ public sealed class InputManager
             string json = JsonSerializer.Serialize(config, _jsonOptions);
             
             // Ensure directory exists
-            string directory = Path.GetDirectoryName(filePath);
+            string? directory = Path.GetDirectoryName(filePath);
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);

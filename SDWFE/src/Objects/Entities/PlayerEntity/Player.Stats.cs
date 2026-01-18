@@ -49,11 +49,27 @@ public partial class Player
     /// </summary>
     private void SyncStatsToInventory(StatType changedStat, bool decreased)
     {
-        Inventory.SavedCurrentHealth = Stats.CurrentHealth;
-        Inventory.SavedMaxHealth = Stats.MaxHealth;
-        Inventory.SavedCurrentStamina = Stats.CurrentStamina;
-        Inventory.SavedMaxStamina = Stats.MaxStamina;
-        Inventory.SavedCoins = Stats.Coins;
+        switch (changedStat)
+        {
+            case StatType.MaxHealth:
+                Inventory.SavedMaxHealth = Stats.MaxHealth;
+                break;
+            case StatType.CurrentHealth:
+                Inventory.SavedCurrentHealth = Stats.CurrentHealth;
+                break;
+            case StatType.MaxStamina:
+                Inventory.SavedMaxStamina = Stats.MaxStamina;
+                break;
+            case StatType.CurrentStamina:
+                Inventory.SavedCurrentStamina = Stats.CurrentStamina;
+                break;
+            case StatType.Coins:
+                Inventory.SavedCoins = Stats.Coins;
+                break;
+        }
+        Inventory.SaveToFile();
+        Console.WriteLine("Synced stats to inventory for saving.");
+        //Inventory.LoadFromFile(); // For debugging purposes
     }
 }
 
