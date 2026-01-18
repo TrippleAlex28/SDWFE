@@ -37,8 +37,12 @@ public class SDWFEGame : ExtendedGame
         NetObjectRegistry.Register<GenericBullet>((uint)NetObjects.GenericBullet);
         NetObjectRegistry.Register<ShotgunBullet>((uint)NetObjects.ShotgunBullet);
         NetObjectRegistry.Register<FireworkRocket>((uint)NetObjects.FireworkRocket);
+        NetObjectRegistry.Register<Arrow>((uint)NetObjects.Arrow);
+        NetObjectRegistry.Register<Orb>((uint)NetObjects.Orb);
+        
         NetObjectRegistry.Register<Grunt>((uint)NetObjects.Grunt);
         NetObjectRegistry.Register<Turret>((uint)NetObjects.Turret);
+        NetObjectRegistry.Register<Boss>((uint)NetObjects.Boss);
         
         // --- NET COMMANDS SETUP ---
         NetCommandRegistry.Register<WalkCommand>((uint)NetCommands.Move);

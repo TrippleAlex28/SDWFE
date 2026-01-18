@@ -9,8 +9,9 @@ public enum NetObjects : uint
     GenericBullet = 2,
     ShotgunBullet = 3,
     FireworkRocket = 4,
-    Grunt = 5,
-    Turret = 6,
-    Orb = 7,
-    Boss = 8
+    Arrow = 5,
+    Grunt = 6,
+    Turret = 7,
+    Orb = 8,
+    Boss = 9
 } 

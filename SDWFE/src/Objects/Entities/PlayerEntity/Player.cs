@@ -151,5 +151,6 @@ public partial class Player : GameObject
         UpdateShop();
         UpdateMovement(gameTime);
         UpdateDialogue(gameTime);
+        UpdateWeapons(gameTime);
     }
 }

@@ -18,6 +18,7 @@ public static class ItemSetup
     public const string BANDAGE = "Bandage";
     public const string MEDKIT = "Medkit";
 
+    public const string BOW = "Bow";
     public const string PISTOL = "Pistol";
     public const string ASSAULT_RIFLE = "Assault Rifle";
     public const string SHOTGUN = "Shotgun";
@@ -64,11 +65,24 @@ public static class ItemSetup
             }
         },
         {
+            BOW, new WeaponData
+            {
+                Name = BOW,
+                Damage = 25f,
+                AttackSpeed = 5f,
+                Range = 150f,
+                Velocity = 200f,
+                IconPath = "32x32 Bow",
+                UseActionId = ACTION_SHOOT,
+                BulletType = BulletType.Arrow,
+            }
+        },
+        {
             PISTOL, new WeaponData
             {
                 Name = PISTOL,
                 Damage = 50f,
-                AttackSpeed = 5f,
+                AttackSpeed = 2f,
                 Range = 250f,
                 Velocity = 350f,
                 IconPath = "Pistol",
@@ -79,7 +93,7 @@ public static class ItemSetup
             ASSAULT_RIFLE, new WeaponData
             {
                 Name = ASSAULT_RIFLE,
-                Damage = 30f,
+                Damage = 50f,
                 AttackSpeed = 5f,
                 Range = 500f,
                 Velocity = 550f,
@@ -104,8 +118,8 @@ public static class ItemSetup
             FIREWORK_LAUNCHER, new WeaponData
             {
                 Name = FIREWORK_LAUNCHER,
-                Damage = 500f,
-                AttackSpeed = 1f,
+                Damage = 250f,
+                AttackSpeed = .5f,
                 Range = 1000f,
                 Velocity = 200f,
                 BulletType = BulletType.FireworkRocket,
@@ -127,6 +141,10 @@ public static class ItemSetup
         });
         ItemActionRegistry.RegisterUse(ACTION_SHOOT, (player, data, direction) =>
         {
+            // ===== CHECK COOLDOWN =====
+            if (!player.CanShoot) return;
+            
+            // ===== SHOOT =====
             var weaponData = data as WeaponData;
             
             Scene? scene = GameState.Instance.CurrentScene;
@@ -164,9 +182,15 @@ public static class ItemSetup
                 case BulletType.FireworkRocket:
                     scene.AddObject(new FireworkRocket(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
                     break;
+                case BulletType.Arrow:
+                    scene.AddObject(new Arrow(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
+                    break;
                 default:
                     break;
             }
+            
+            // ===== SET COOLDOWN =====
+            player.SetShootCooldownFromAttackSpeed(weaponData.AttackSpeed);
         });
     }
 }
