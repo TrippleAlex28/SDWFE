@@ -97,7 +97,7 @@ public abstract class Bullet : Projectile
 
         if (other is Player player)
         {
-            // player.Stats.CurrentHealth -= _damage;
+            player.Stats.CurrentHealth -= _damage;
         }
         
         base.OnCollision(other);

@@ -200,7 +200,7 @@
             236, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0, 232, 232, 232, 232, 235, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0,
             236, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 234, 232, 232, 235, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0,
             236, 0, 0, 0, 237, 237, 237, 237, 237, 237, 237, 237, 237, 237, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0,
-            236, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0,
+            236, 0, 0, 0, 0, 0, 0, 0, 232, 232, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0,
             236, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 238, 237, 237, 237, 237, 237, 237, 0, 0,
             236, 237, 237, 237, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 237, 237, 237, 239, 0, 0, 0, 0, 238, 237, 237, 237, 237, 0, 0, 0, 0, 0, 0, 0, 0,
             236, 232, 232, 232, 232, 232, 232, 232, 0, 0, 232, 232, 232, 232, 232, 232, 232, 238, 237, 237, 237, 237, 237, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -340,12 +340,35 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":464,
+                 "x":456,
                  "y":352
                 }, 
                 {
                  "height":0,
                  "id":11,
+                 "name":"Portal",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"level",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"wave",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":392,
+                 "y":336
+                }, 
+                {
+                 "height":0,
+                 "id":16,
                  "name":"Portal",
                  "point":true,
                  "properties":[
@@ -363,122 +386,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":400,
-                 "y":336
-                }, 
-                {
-                 "height":0,
-                 "id":12,
-                 "name":"Portal",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":7
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":336,
-                 "y":320
-                }, 
-                {
-                 "height":0,
-                 "id":13,
-                 "name":"Portal",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":7
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":288,
-                 "y":208
-                }, 
-                {
-                 "height":0,
-                 "id":14,
-                 "name":"Portal",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":8
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":352,
-                 "y":192
-                }, 
-                {
-                 "height":0,
-                 "id":15,
-                 "name":"Portal",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":9
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":416,
-                 "y":176
-                }, 
-                {
-                 "height":0,
-                 "id":16,
-                 "name":"Portal",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"level",
-                         "type":"int",
-                         "value":10
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":480,
+                 "x":472,
                  "y":48
                 }, 
                 {
@@ -492,6 +400,60 @@
                  "width":0,
                  "x":144,
                  "y":624
+                }, 
+                {
+                 "height":0,
+                 "id":18,
+                 "name":"NPC",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"index",
+                         "type":"int",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":80,
+                 "y":448
+                }, 
+                {
+                 "height":0,
+                 "id":19,
+                 "name":"NPC",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"index",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":224,
+                 "y":608
+                }, 
+                {
+                 "height":0,
+                 "id":20,
+                 "name":"NPC",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"index",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
+                 "y":208
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -500,7 +462,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":18,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -508,15 +470,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/hmm\/Tiles_V2.1.tsx"
+         "source":"..\/..\/..\/..\/..\/..\/..\/..\/Downloads\/TM_Main.tsx"
         }, 
         {
          "firstgid":232,
-         "source":"..\/hmm\/Tiles_v2.2.tsx"
-        }, 
-        {
-         "firstgid":232,
-         "source":"..\/hmm\/Collision.tsx"
+         "source":"..\/..\/..\/..\/..\/..\/..\/..\/Downloads\/Collision.tsx"
         }],
  "tilewidth":16,
  "type":"map",

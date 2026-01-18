@@ -31,6 +31,11 @@ public class Boss : Enemy
     private float attackPatternTimer = 20f;
     private bool isAttacking = false;
 
+    private float attackSpeed;
+    private float standardAttackTimer = 5f;
+
+    public bool IsIdle = true;
+
     private List<Vector2> SpawnPoints = new List<Vector2>()
     {
         new Vector2(-100, -100),
@@ -69,6 +74,7 @@ public class Boss : Enemy
 
     protected override void UpdateSelf(GameTime gameTime)
     {
+        if (IsIdle) { return; }
         base.UpdateSelf(gameTime);
         if (!_hitboxadded && HitboxManager != null && Hitbox != null)
         {
@@ -116,9 +122,11 @@ public class Boss : Enemy
         switch (currentStage)
         {
             case BossStage.Stage1:
+                AttackTimer = AttackCooldown;
                 AttackTypeA();
                 break;
             case BossStage.Stage2:
+                AttackTimer = AttackCooldown * 0.8f;
                 int randomChoice = ExtendedGame.Random.Next(0, 2);
                 if (randomChoice == 0)
                     AttackTypeA();
@@ -126,19 +134,21 @@ public class Boss : Enemy
                     AttackTypeC();
                 break;
             case BossStage.Stage3:
+                AttackTimer = AttackCooldown * 0.6f;
                 int randomChoiceStage3 = ExtendedGame.Random.Next(0, 3);
                 if (randomChoiceStage3 == 0)
                     AttackTypeB();
-                else if (randomChoiceStage3 == 1)
+                else if (randomChoiceStage3 == 1){
+                    AttackTimer = AttackCooldown * 0.2f;
                     AttackTypeC();
-                else
+                } 
+                else if (_spawnedEnemies.Count < 1)
                     AttackTypeD();
                 break; 
             default:
                 AttackTypeA();
                 break;
         }
-        AttackTimer = AttackCooldown;
     }
     protected override void Attack()
     {
@@ -175,7 +185,7 @@ public class Boss : Enemy
             Orb newOrb = new Orb(
             startPos,
             Vector2.Normalize(Target.GlobalPosition + new Vector2(8, 28) - startPos),
-            200f,
+            300f,
             500f,
             Damage,
             this,
@@ -214,14 +224,14 @@ public class Boss : Enemy
     }
     private void UpdateAttackBPattern()
     {
-        if (currentAttackPatternIndex >= 8){
+        if (currentAttackPatternIndex >= 16){
             isAttacking = false;
             currentAttackPatternIndex = 0;
             attackPatternTimer = 0.2f;
             return;
         }
         if (attackPatternTimer <= 0f){
-            float angle = currentAttackPatternIndex * (MathF.PI / 4); // 45 degrees apart
+            float angle = currentAttackPatternIndex * (MathF.PI / 8); // 45 degrees apart
             Vector2 direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
             Vector2 startPos = this.GlobalPosition + new Vector2(24, 0);
             Orb newOrb = new Orb(
@@ -254,15 +264,15 @@ public class Boss : Enemy
         {
             float randomOffset = ExtendedGame.Random.NextSingle() * MathF.PI;
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 16; i++)
             {
-                float angle = i * (MathF.PI / 4) + randomOffset;
+                float angle = i * (MathF.PI / 8) + randomOffset;
                 Vector2 direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
                 Vector2 startPos = this.GlobalPosition + new Vector2(24, 0);
                 Orb newOrb = new Orb(
                 startPos,
                 direction,
-                200f,
+                400f,
                 500f,
                 Damage,
                 this,
@@ -276,13 +286,18 @@ public class Boss : Enemy
     {
         if (Target is Player player)
         {
-            Grunt grunt = new Grunt();
-            grunt.GlobalPosition = this.GlobalPosition + new Vector2(0, 32);
-            grunt.HitboxManager = HitboxManager;
-            grunt.OnDeathEvent += deleteSpawnedEnemy;
+            AttackTimer = AttackCooldown * 2f;
+            for (int i = 0; i < 4; i++)
+            {
+                Vector2 spawnPos = this.GlobalPosition + SpawnPoints[i];
+                Grunt grunt = new Grunt();
+                grunt.GlobalPosition = spawnPos;
+                grunt.HitboxManager = HitboxManager;
+                grunt.OnDeathEvent += deleteSpawnedEnemy;
 
-            GameState.Instance.CurrentScene?.AddObject(grunt);
-            _spawnedEnemies.Add(grunt);
+                GameState.Instance.CurrentScene?.AddObject(grunt);
+                _spawnedEnemies.Add(grunt);
+            }
         }
     }
     private void deleteSpawnedEnemy(Enemy enemy)

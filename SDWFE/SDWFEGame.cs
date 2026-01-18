@@ -57,6 +57,7 @@ public class SDWFEGame : ExtendedGame
         SceneRegistry.Register<Level3>(Level3.KEY);
         SceneRegistry.Register<Level4>(Level4.KEY);
         SceneRegistry.Register<Level5>(Level5.KEY);
+        SceneRegistry.Register<Level6>(Level6.KEY);
     }
 
     protected override void Initialize()
