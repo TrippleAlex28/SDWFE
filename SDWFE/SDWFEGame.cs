@@ -196,8 +196,10 @@ public class SDWFEGame : ExtendedGame
 
             if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_USE))
             {
-                if (player.Inventory.GetSelectedItem() != null && player.Inventory.GetSelectedItem()!.Data.UseActionId != null)
+                if (player.Inventory.GetSelectedItem() != null && player.Inventory.GetSelectedItem()!.Data.UseActionId != null && player.Inventory.GetSelectedItem()!.StackSize > 0)
                 {
+                    player.Inventory.GetSelectedItem()!.RemoveStack();
+                    player.Inventory.ForceRefresh();
                     commands.Add(new UseCommand(player.Inventory.GetSelectedItem()!.Name, lookDirection));
                 }
             }

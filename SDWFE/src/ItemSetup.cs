@@ -133,11 +133,11 @@ public static class ItemSetup
     {
         ItemActionRegistry.RegisterUse(ACTION_HEAL, (player, data, direction) =>
         {
-            Console.WriteLine($"Heal Player{player.OwningClientId}: {direction}");
+            player.Stats.CurrentHealth += 100;
         });
         ItemActionRegistry.RegisterUse(ACTION_HEAL_SUPERIOR, (player, data, direction) =>
         {
-            Console.WriteLine($"Heal Superior Player{player.OwningClientId}: {direction}");
+            player.Stats.CurrentHealth += 250;
         });
         ItemActionRegistry.RegisterUse(ACTION_SHOOT, (player, data, direction) =>
         {
