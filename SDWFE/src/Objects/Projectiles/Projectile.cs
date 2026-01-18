@@ -154,7 +154,7 @@ public abstract class Projectile : GameObject
         // Check static collisions (environment or static enemy bodies)
         if (_hitboxManager != null && !Collided)
         {
-            var collisions = _hitboxManager.GetStaticCollisions(hitbox, HitboxLayer.Projectile, ignoreOwner: _owner ?? this);
+            var collisions = _hitboxManager.GetStaticCollisions(new FloatRect(hitbox), HitboxLayer.Projectile, ignoreOwner: _owner ?? this);
 
             if (collisions.Count > 0)
             {

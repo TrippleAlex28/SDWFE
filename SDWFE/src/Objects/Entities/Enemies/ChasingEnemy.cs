@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Engine;
+using Engine.Hitbox;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Pathfinding;
@@ -184,7 +185,7 @@ public abstract class ChasingEnemy : Enemy
                 (int)CollisionSize.Y
             );
 
-            if (HitboxManager.CheckStaticCollision(checkBounds, HitboxLayer, ignoreOwner: this))
+            if (HitboxManager.CheckStaticCollision(new FloatRect(checkBounds), HitboxLayer, ignoreOwner: this))
             {
                 return false;
             }

@@ -83,11 +83,11 @@ public class StaticHitbox : IHitbox
     /// Check if this hitbox would block movement from a given layer.
     /// Returns true if collision should occur.
     /// </summary>
-    public bool CheckCollision(Rectangle movingRect, HitboxLayer movingLayer)
+    public bool CheckCollision(FloatRect movingRect, HitboxLayer movingLayer)
     {
         if (!IsEnabled) return false;
         if (!BlocksLayer(movingLayer)) return false;
-        return _bounds.Intersects(movingRect);
+        return new FloatRect(_bounds).Intersects(movingRect);
     }
 
     /// <summary>

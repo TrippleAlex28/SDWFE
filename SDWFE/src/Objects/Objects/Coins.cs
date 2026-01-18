@@ -79,7 +79,7 @@ namespace SDWFE.Objects.Entities.Items
                 (int)CollisionSize.X,
                 (int)CollisionSize.Y);
             
-            if (_hitboxManager.CheckStaticCollision(verticalBounds, HitboxLayer))
+            if (_hitboxManager.CheckStaticCollision(new FloatRect(verticalBounds), HitboxLayer))
             {
                 velocity.Y = -velocity.Y * bounceDamping;
                 velocity.X = -velocity.X * 0.8f;

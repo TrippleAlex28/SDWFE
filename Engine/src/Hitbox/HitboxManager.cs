@@ -114,7 +114,7 @@ public class HitboxManager
     /// <summary>
     /// Check if a rectangle collides with any static hitbox.
     /// </summary>
-    public bool CheckStaticCollision(Rectangle rect, HitboxLayer layer, object? ignoreOwner = null)
+    public bool CheckStaticCollision(FloatRect rect, HitboxLayer layer, object? ignoreOwner = null)
     {
         foreach (var hitbox in _staticHitboxes)
         {
@@ -130,7 +130,7 @@ public class HitboxManager
     /// <summary>
     /// Get all static hitboxes that a rectangle collides with.
     /// </summary>
-    public List<StaticHitbox> GetStaticCollisions(Rectangle rect, HitboxLayer layer, object? ignoreOwner = null)
+    public List<StaticHitbox> GetStaticCollisions(FloatRect rect, HitboxLayer layer, object? ignoreOwner = null)
     {
         var result = new List<StaticHitbox>();
         foreach (var hitbox in _staticHitboxes)
@@ -153,21 +153,22 @@ public class HitboxManager
         hitX = false;
         hitY = false;
 
+        Vector2 nextPos = currentBounds.Location.ToVector2() + velocity;
         Vector2 newPos = new Vector2(currentBounds.X, currentBounds.Y);
 
         // Try X movement
         if (velocity.X != 0)
         {
-            Rectangle testRect = new Rectangle(
-                (int)(currentBounds.X + velocity.X),
-                currentBounds.Y,
+            FloatRect testRect = new FloatRect(
+                currentBounds.X + velocity.X,
+                newPos.Y,
                 currentBounds.Width,
                 currentBounds.Height
             );
 
             if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
-                newPos.X += (int)velocity.X;
+                newPos.X += (int)(velocity.X / MathF.Sqrt(2));
             }
             else
             {
@@ -180,16 +181,16 @@ public class HitboxManager
         // Try Y movement
         if (velocity.Y != 0)
         {
-            Rectangle testRect = new Rectangle(
-                (int)newPos.X,
-                (int)MathF.Ceiling(currentBounds.Y + velocity.Y),
+            FloatRect testRect = new FloatRect(
+                newPos.X,
+                currentBounds.Y + velocity.Y,
                 currentBounds.Width,
                 currentBounds.Height
             );
 
             if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
-                newPos.Y += (int)velocity.Y;
+                newPos.Y += (int)(velocity.Y / MathF.Sqrt(2));
             }
             else
             {
@@ -209,7 +210,7 @@ public class HitboxManager
 
         for (int i = 0; i < Math.Abs(velocityX); i++)
         {
-            Rectangle test = new Rectangle((int)newX + step, bounds.Y, bounds.Width, bounds.Height);
+            FloatRect test = new FloatRect(newX + step, bounds.Y, bounds.Width, bounds.Height);
             if (CheckStaticCollision(test, layer, ignoreOwner))
                 break;
             newX += step;
@@ -225,7 +226,7 @@ public class HitboxManager
 
         for (int i = 0; i < Math.Abs(velocityY); i++)
         {
-            Rectangle test = new Rectangle(bounds.X, (int)newY + step, bounds.Width, bounds.Height);
+            FloatRect test = new FloatRect(bounds.X, newY + step, bounds.Width, bounds.Height);
             if (CheckStaticCollision(test, layer, ignoreOwner))
                 break;
             newY += step;
@@ -326,4 +327,37 @@ public class HitboxManager
     }
 
     #endregion
+}
+public struct FloatRect
+{
+    public float X;
+    public float Y;
+    public float Width;
+    public float Height;
+
+    public FloatRect(float x, float y, float width, float height)
+    {
+        X = x;
+        Y = y;
+        Width = width;
+        Height = height;
+    }
+    public FloatRect(Rectangle rect)
+    {
+        X = rect.X;
+        Y = rect.Y;
+        Width = rect.Width;
+        Height = rect.Height;
+    }
+    public bool Intersects(FloatRect other)
+    {
+        return !(other.X > X + Width ||
+                 other.X + other.Width < X ||
+                 other.Y > Y + Height ||
+                 other.Y + other.Height < Y);
+    }
+    public Rectangle ToRectangle()
+    {
+        return new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+    }
 }

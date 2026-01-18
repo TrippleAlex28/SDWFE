@@ -413,7 +413,7 @@ public class GameObject : NetObject
                 out bool hitY,
                 ignoreOwner: this
             );
-            this.GlobalPosition = (newPos - CollisionOffset);
+            this.GlobalPosition = newPos - CollisionOffset;
         }
         else
         {

@@ -68,7 +68,7 @@ public class Pathfinder
                     _gridSize
                 );
 
-                if (_hitboxManager.CheckStaticCollision(neighborBounds, layer, _ignoreOwner))
+                if (_hitboxManager.CheckStaticCollision(new FloatRect(neighborBounds), layer, _ignoreOwner))
                     continue;
                 
                 // check max distance
