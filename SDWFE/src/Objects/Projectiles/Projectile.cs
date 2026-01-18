@@ -22,7 +22,7 @@ public abstract class Projectile : GameObject
     private readonly ParticleEmitter? _collisionEmitter;
     private readonly HitboxManager? _hitboxManager;
     protected readonly Sprite Sprite;
-
+    private readonly Vector2? _size = null;
     protected bool Collided = false;
 
     private bool _removeRequested = false;
@@ -44,9 +44,11 @@ public abstract class Projectile : GameObject
         GameObject? owner = null, 
         ParticleEmitter? projectileEmitter = null, 
         ParticleEmitter? collisionEmitter = null,
-        HitboxManager? hitboxManager = null
+        HitboxManager? hitboxManager = null,
+        Vector2? size = null
     )
     {
+        this._size = size;
         this.GlobalPosition = startPos;
         this.Direction = direction;
         this.Velocity = velocity;
@@ -66,13 +68,15 @@ public abstract class Projectile : GameObject
     {
         base.EnterSelf();
         
+        Rectangle bounds = new Rectangle(
+            (int)this.GlobalPosition.X, 
+            (int)this.GlobalPosition.Y, 
+            _size?.X != null ? (int)_size?.X : Sprite.SourceRectangle.Width, 
+            _size?.Y != null ? (int)_size?.Y : Sprite.SourceRectangle.Height
+        );
         _trigger = new TriggerHitbox(
-            new Rectangle(
-                (int)this.GlobalPosition.X, 
-                (int)this.GlobalPosition.Y, 
-                Sprite.SourceRectangle.Width, 
-                Sprite.SourceRectangle.Height
-            ))
+            bounds
+        )
         {
             Owner = this,
             Layer = HitboxLayer.Projectile,
@@ -122,11 +126,14 @@ public abstract class Projectile : GameObject
         _projectileTrail.Update(gameTime.DeltaSeconds());
         
         Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 0));
+
+        var x = _size?.X != null ? (int)_size?.X : Sprite.SourceRectangle.Width;
+        var y = _size?.Y != null ? (int)_size?.Y : Sprite.SourceRectangle.Height;
         Rectangle hitbox = new Rectangle(
-            (int)GlobalPosition.X, 
-            (int)GlobalPosition.Y, 
-            1, 
-            1
+            (int)GlobalPosition.X - (x / 2), 
+            (int)GlobalPosition.Y - (y / 2), 
+            x, 
+            y
         );
         
         // Update our trigger's bounds to match projectile position

@@ -83,4 +83,20 @@ public static class ParticlePresets
         .WithFadeInOut(0.05f, 0.5f)
         .AlphaBlend()
         .Build();
+    public static ParticleEmitter CreateOrbTrail() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
+        .WithMaxParticles(512)
+        .WithEmissionRate(32f)
+        .Continuous()
+        .WithSpawnRadius(1.5f)
+        .WithLifetime(0.05f, 0.1f)
+        .WithVelocity(new Vector2(-5f, -5f), new Vector2(5f, 5f))
+        .WithRotationVelocity(-5f, 5f)
+        .WithColorRange(Color.Green, Color.Lime)
+        .WithScaleCurve(c => c
+            .AddKey(0f, 0.1f)
+            .AddKey(0.4f, 0.2f)
+            .AddKey(1f, 0.05f))
+        .WithFadeInOut(0.05f, 0.55f)
+        .Additive()
+        .Build();
 }

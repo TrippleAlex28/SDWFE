@@ -46,17 +46,19 @@ public abstract class Enemy : GameObject
 
     private Sprite _healthBackground;
     private Sprite _healthFilling;
+    private Vector2 _healthBarOffset = new Vector2(16, 0);
 
     public Enemy(
         int maxHealth, 
         float attackRange, 
         float damage,
         float attackCooldown,
+        Vector2? healthBarOffset = null,
         GameObject? target = null
     )
     {
         this.ReplicatesOverNetwork = true;
-
+        _healthBarOffset = healthBarOffset ?? _healthBarOffset;
         RegisterProperty(
             100,
             nameof(_targetNetId),
@@ -132,7 +134,7 @@ public abstract class Enemy : GameObject
         }
 
         // Draw health bar above enemy
-        Vector2 healthBarPos = GlobalPosition + new Vector2(16, 0);
+        Vector2 healthBarPos = GlobalPosition + _healthBarOffset;
         float healthPercent = (float)CurrentHealth / MaxHealth;
         
 

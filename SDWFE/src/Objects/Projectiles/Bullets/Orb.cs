@@ -1,22 +1,23 @@
-﻿using Engine;
+using Engine;
 using Engine.Hitbox;
 using Microsoft.Xna.Framework;
+using SDWFE;
+using SDWFE.Objects;
+using SDWFE.Objects.Projectiles.Bullets;
 
-namespace SDWFE.Objects.Projectiles.Bullets;
-
-public class GenericBullet : Bullet
+public class Orb : Bullet
 {
-    public override uint TypeId => (uint)NetObjects.GenericBullet;
-
+    public override uint TypeId => (uint)NetObjects.Orb;
+    
     /// <summary>
     /// Empty constructor, should ONLY be used for network object instantiation
     /// </summary>
-    public GenericBullet()
+    public Orb()
     {
         
     }
     
-    public GenericBullet(
+    public Orb(
         Vector2 startPos, 
         Vector2 direction, 
         float velocity, 
@@ -30,14 +31,13 @@ public class GenericBullet : Bullet
         velocity, 
         range, 
         damage, 
-        ExtendedGame.AssetManager.LoadTexture("GenericBullet", "Entities/Projectiles/"), 
+        ExtendedGame.AssetManager.LoadTexture("16x16 Wizard Projectile", "Entities/Projectiles/"), 
         owner, 
-        ParticlePresets.CreateBulletTrail(), 
-        ParticlePresets.CreateBulletImpact(),    
-        hitboxManager: hitboxManager,
-        new Vector2(4, 4)
+        ParticlePresets.CreateOrbTrail(), 
+        ParticlePresets.CreateRocketImpact,
+        hitboxManager: hitboxManager
     )
     {
-        Sprite.Scale = new Vector2(0.5f);
+        
     }
 }

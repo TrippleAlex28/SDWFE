@@ -1,16 +1,151 @@
 ﻿using System;
+using Engine;
+using Engine.Hitbox;
+using Engine.Sprite;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using SDWFE.Objects.Entities.Items;
+using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Objects.Entities.Enemies;
 
 public class Turret : Enemy
 {
-    public Turret() : base(100, 50f, 8f, .25f)
+    public override uint TypeId => (uint)NetObjects.Grunt;
+
+    public AnimatedSprite Sprite { get; private set; } // TODO: Replace with Animated Sprite
+    
+    public StaticHitbox? Hitbox { get; private set; }
+    private bool _hitboxadded = false;
+    public Turret() : base(100, 400f, 50f, 5f, new Vector2(0, 0))
     {
         
     }
 
+    protected override void EnterSelf()
+    {
+        base.EnterSelf();
+        CollisionSize = new Vector2(16, 32);
+        CollisionOffset = Vector2.Zero;
+        Hitbox = new StaticHitbox(CollisionBounds)
+        {
+            Owner = this,
+            Layer = HitboxLayer.Enemy,
+            BlocksLayers = HitboxLayer.AllExceptPlayer
+        };
+        Texture2D texture = ExtendedGame.AssetManager.LoadTexture("32x16 Idle-Sheet", "Entities/Enemies/");
+        Sprite = new AnimatedSprite(texture, 16, 32, _timePerFrame: 200f, isLooping: true, isPlaying: true);
+        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 16));
+        if (HitboxManager != null && Hitbox != null)
+        {
+            HitboxManager.AddStatic(Hitbox);
+            _hitboxadded = true;
+        }
+        
+        // Sprite = new Sprite(ExtendedGame.AssetManager.LoadTexture("Grunt", "Entities/Enemies/"));
+        AddChild(Sprite);
+    }
+
+    protected override void UpdateSelf(GameTime gameTime)
+    {
+        base.UpdateSelf(gameTime);
+        if (!_hitboxadded && HitboxManager != null && Hitbox != null)
+        {
+            HitboxManager.AddStatic(Hitbox);
+            _hitboxadded = true;
+        }
+
+        HitboxLayer = HitboxLayer.Enemy;
+
+        if (Hitbox != null)
+        {
+            // Keep the static hitbox aligned with the dynamic collision bounds
+            Hitbox.Bounds = CollisionBounds;
+        }
+
+        if (Target != null && IsTargetInRange(Target, DetectionRange))
+        {
+            AttackCalculator(gameTime);
+        }
+
+        Sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 32));
+        // TODO: Update animation stuff here
+    }
+    private void AttackCalculator(GameTime gameTime)
+    {
+        if (!IsAlive) return;
+        Console.WriteLine("Turret Attack Calc");
+        if (AttackTimer > 0f)
+        {
+            AttackTimer -= gameTime.DeltaSeconds();
+        }
+        else
+        {
+            AttackTimer = AttackCooldown;
+            AnimationData attackAnimation = new AnimationData(
+                ExtendedGame.AssetManager.LoadTexture("32x16 Encourage-Sheet", "Entities/Enemies/"),
+                0,
+                200f,
+                false
+            );
+            Sprite.PlayOneShot(attackAnimation);
+            Sprite.AnimationCompleted += onAttackAnimationCompleted;
+        }
+    }
+    private void onAttackAnimationCompleted()
+    {
+        // This method is called when the attack animation completes
+        Attack();
+        State = EnemyState.Idle;
+        Sprite.AnimationCompleted -= onAttackAnimationCompleted;
+    }
+
     protected override void Attack()
     {
-        Console.WriteLine("Turret Attack");
+        if (Target == null) return;
+        
+        if (Vector2.Distance(this.GlobalPosition, Target.GlobalPosition) > AttackRange)
+            return;
+        
+        if (Target is Player player)
+        {
+            player.Stats.CurrentHealth -= Damage;
+
+        }
+        Orb newOrb = new Orb(
+            this.GlobalPosition,
+            Vector2.Normalize(Target.GlobalPosition - this.GlobalPosition),
+            200f,
+            500f,
+            Damage,
+            this,
+            HitboxManager
+        );
+        GameState.Instance.CurrentScene?.AddObject(newOrb);
+        // Check if target is within range
+        // TODO: Play anim & Do damage to the target 
+        
+    }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        
+        if (_hitboxadded && HitboxManager != null && Hitbox != null)
+        {
+            HitboxManager.RemoveStatic(Hitbox);
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            Coins.CreateRandomDrop(GlobalPosition, HitboxManager!);
+        }
+        // TODO: Play some effect and spawn items
+    }
+
+    protected override void DrawSelf(SpriteBatch spriteBatch)
+    {
+        base.DrawSelf(spriteBatch);
+
+        // TODO: Possibly draw a small healthbar
     }
 }

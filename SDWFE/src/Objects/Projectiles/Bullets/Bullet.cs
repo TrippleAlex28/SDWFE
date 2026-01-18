@@ -31,8 +31,9 @@ public abstract class Bullet : Projectile
         GameObject? owner = null, 
         ParticleEmitter? projectileEmitter = null, 
         ParticleEmitter? collisionEmitter = null,
-        HitboxManager? hitboxManager = null
-    ) : base(startPos, direction, velocity, texture, owner, projectileEmitter, collisionEmitter, hitboxManager)
+        HitboxManager? hitboxManager = null,
+        Vector2? size = null
+    ) : base(startPos, direction, velocity, texture, owner, projectileEmitter, collisionEmitter, hitboxManager, size)
     {
         this.ReplicatesOverNetwork = false;
         

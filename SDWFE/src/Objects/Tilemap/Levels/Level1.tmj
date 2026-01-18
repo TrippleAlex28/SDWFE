@@ -370,7 +370,7 @@
                         {
                          "name":"type",
                          "type":"int",
-                         "value":0
+                         "value":1
                         }, 
                         {
                          "name":"wave",
@@ -393,7 +393,7 @@
                         {
                          "name":"type",
                          "type":"int",
-                         "value":0
+                         "value":1
                         }, 
                         {
                          "name":"wave",
@@ -416,7 +416,7 @@
                         {
                          "name":"type",
                          "type":"int",
-                         "value":0
+                         "value":1
                         }, 
                         {
                          "name":"wave",
@@ -439,7 +439,7 @@
                         {
                          "name":"type",
                          "type":"int",
-                         "value":0
+                         "value":1
                         }, 
                         {
                          "name":"wave",
