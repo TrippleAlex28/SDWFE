@@ -167,7 +167,7 @@ public class HitboxManager
 
             if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
-                newPos.X += velocity.X;
+                newPos.X += (int)velocity.X;
             }
             else
             {
@@ -189,7 +189,7 @@ public class HitboxManager
 
             if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
-                newPos.Y += velocity.Y;
+                newPos.Y += (int)velocity.Y;
                 Console.WriteLine($"New Y position: {newPos.Y}");
             }
             else
