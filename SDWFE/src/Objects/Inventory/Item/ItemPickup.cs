@@ -42,7 +42,19 @@ public class ItemPickup : GameObject
         {
             DetectsLayers = HitboxLayer.Player
         };
+        HitboxManager.AddTrigger(Hitbox);
         this.Hitbox.OnEnter += OnPlayerCollect;
+    }
+    protected override void UpdateSelf(GameTime gameTime)
+    {
+        base.UpdateSelf(gameTime);
+        
+        // UPDATE HITBOX POSITION
+        Hitbox.Bounds = new Rectangle(
+            (int)(this.GlobalPosition.X - CollisionSize.X / 2),
+            (int)(this.GlobalPosition.Y - CollisionSize.Y / 2),
+            (int)CollisionSize.X,
+            (int)CollisionSize.Y);
     }
 
     private void OnPlayerCollect(TriggerHitbox hitbox, object other, TriggerSide side)
