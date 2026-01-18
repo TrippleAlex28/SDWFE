@@ -8,6 +8,7 @@ using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.Enemies;
+using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Objects.Projectiles;
 
@@ -27,6 +28,7 @@ public abstract class Projectile : GameObject
 
     private bool _removeRequested = false;
     private float _removeTimer = 0f;
+    private float damag = 10f; // Example damage value
     
     /// <summary>
     /// Empty constructor, should ONLY be used for network object instantiation
@@ -45,7 +47,8 @@ public abstract class Projectile : GameObject
         ParticleEmitter? projectileEmitter = null, 
         ParticleEmitter? collisionEmitter = null,
         HitboxManager? hitboxManager = null,
-        Vector2? size = null
+        Vector2? size = null,
+        float damage = 10f
     )
     {
         this._size = size;
@@ -190,7 +193,6 @@ public abstract class Projectile : GameObject
             _hitboxManager.RemoveTrigger(_trigger);
             _trigger = null;
         }
-
         if (_collisionEmitter != null)
         {
             bool isInfinite = _collisionEmitter.Config.Duration.IsApproximatelyEqual(-1f);

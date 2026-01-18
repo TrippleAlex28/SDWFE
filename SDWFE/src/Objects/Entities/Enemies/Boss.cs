@@ -141,17 +141,10 @@ public class Boss : Enemy
     }
     protected override void Attack()
     {
-        Console.WriteLine("Boss Attack!");
         if (Target == null) return;
         
         if (Vector2.Distance(this.GlobalPosition, Target.GlobalPosition) > AttackRange)
             return;
-        
-        if (Target is Player player)
-        {
-            player.Stats.CurrentHealth -= Damage;
-
-        }
 
         switch (currentStage)
         {
@@ -175,7 +168,6 @@ public class Boss : Enemy
 
     private void AttackTypeA()
     {
-        Console.WriteLine("Boss Attack Type A!");
         if (Target is Player player)
         {
             Vector2 startPos = this.GlobalPosition + new Vector2(24, 0);
@@ -247,7 +239,6 @@ public class Boss : Enemy
     }
     private void AttackTypeB()
     {
-        Console.WriteLine("Boss Attack Type B!");
         if (Target is Player player)
         {
             isAttacking = true;

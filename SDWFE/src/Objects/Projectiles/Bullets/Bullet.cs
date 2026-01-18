@@ -5,6 +5,7 @@ using Engine.Particle;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.Enemies;
+using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Objects.Projectiles.Bullets;
 
@@ -33,7 +34,7 @@ public abstract class Bullet : Projectile
         ParticleEmitter? collisionEmitter = null,
         HitboxManager? hitboxManager = null,
         Vector2? size = null
-    ) : base(startPos, direction, velocity, texture, owner, projectileEmitter, collisionEmitter, hitboxManager, size)
+    ) : base(startPos, direction, velocity, texture, owner, projectileEmitter, collisionEmitter, hitboxManager, size, damage)
     {
         this.ReplicatesOverNetwork = false;
         
@@ -60,6 +61,11 @@ public abstract class Bullet : Projectile
         if (other is Enemy enemy)
         {
             enemy.TakeDamage((int)_damage);
+        }
+
+        if (other is Player player)
+        {
+            player.Stats.CurrentHealth -= _damage;
         }
         
         base.OnCollision(other);

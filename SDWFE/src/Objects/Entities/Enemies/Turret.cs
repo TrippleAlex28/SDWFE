@@ -74,7 +74,6 @@ public class Turret : Enemy
     private void AttackCalculator(GameTime gameTime)
     {
         if (!IsAlive) return;
-        Console.WriteLine("Turret Attack Calc");
         if (AttackTimer > 0f)
         {
             AttackTimer -= gameTime.DeltaSeconds();

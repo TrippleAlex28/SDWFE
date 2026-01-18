@@ -127,7 +127,6 @@ namespace SDWFE.Objects.Entities.Items
             float verticalSpeed = (float)(ExtendedGame.Random.NextDouble() * -50 - 50);
 
             Vector2 initialVelocity = new Vector2(horizontalSpeed, verticalSpeed);
-            Console.WriteLine($"Creating coin drop at {dropPosition} with initial velocity {initialVelocity}");
             return new Coins(dropPosition, initialVelocity, hitboxManager);
         }
 
