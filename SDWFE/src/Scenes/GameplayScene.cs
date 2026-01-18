@@ -31,14 +31,7 @@ public class GameplayScene : Scene
         // Set dynamic background color based on the session type
         var currentSession = GameState.Instance.SessionManager.CurrentSession;
         BackgroundColor = new Color(22, 17, 11);
-        // BackgroundColor = currentSession != null 
-        //     ? currentSession.Type == SessionType.Singleplayer
-        //         ? Color.Green
-        //         : currentSession.Type == SessionType.MultiplayerClient
-        //             ? Color.Red
-        //             : Color.Blue
-        //     : Color.Black;
-        
+
         SetDefaultPlayerClass<Player>(() => new Player());
 
         InputManager.Instance.SetActiveProfile(InputSetup.PROFILE_GAMEPLAY);
@@ -87,8 +80,6 @@ public class GameplayScene : Scene
 
             this.AddObject(newNPC);
         }
-            
-        
         
         SetUpHitboxes();
         
@@ -144,6 +135,7 @@ public class GameplayScene : Scene
             }
         }
         HitboxManager.UpdateDebug();
+        
         ExtendedGame.LightShaderInstance.SetLights(allWorldLights);
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
             Coins.CreateRandomDrop(new Vector2(100, 100), HitboxManager);
