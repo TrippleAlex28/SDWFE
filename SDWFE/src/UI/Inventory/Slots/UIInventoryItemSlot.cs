@@ -13,7 +13,7 @@ public class UIInventoryItemSlot : UIInventorySlot
     public bool IsVault { get; private set; }
 
     public bool IsFocused { get; private set; }
-    private UIVisual? _focusOverlay;
+    private UIContainer? _focusOverlay;
     private UIVisual? _focusPopup;
     public event Action<bool>? OnFocusChange;
     
@@ -112,10 +112,34 @@ public class UIInventoryItemSlot : UIInventorySlot
         // Create focus overlay (bright border / glow effect)
         if (_focusOverlay == null)
         {
-            _focusOverlay = UIVisual.FromColor(new Color(255, 255, 0, 100));
-            _focusOverlay.AlignmentPoint = Alignment.MiddleCenter;
-            _focusOverlay.DesiredSize = new Vector2(_slotSize + 4);
+            _focusOverlay = new UIContainer
+            {
+                AlignmentPoint = Alignment.TopLeft,
+                DesiredSize = new Vector2(_slotSize),
+                MinSize = DesiredSize,
+                MaxSize = DesiredSize,
+            };
             AddChild(_focusOverlay);
+            
+            var topEdge = UIVisual.FromColor(new Color(255, 255, 0, 255));
+            topEdge.AlignmentPoint = Alignment.TopLeft;
+            topEdge.DesiredSize = new Vector2(_slotSize, 4);
+            _focusOverlay.AddChild(topEdge);
+            
+            var leftEdge = UIVisual.FromColor(new Color(255, 255, 0, 255));
+            leftEdge.AlignmentPoint = Alignment.TopLeft;
+            leftEdge.DesiredSize = new Vector2(4, _slotSize);
+            _focusOverlay.AddChild(leftEdge);
+            
+            var rightEdge = UIVisual.FromColor(new Color(255, 255, 0, 255));
+            rightEdge.AlignmentPoint = Alignment.TopRight;
+            rightEdge.DesiredSize = new Vector2(4, _slotSize);
+            _focusOverlay.AddChild(rightEdge);
+            
+            var bottomEdge = UIVisual.FromColor(new Color(255, 255, 0, 255));
+            bottomEdge.AlignmentPoint = Alignment.BottomLeft;
+            bottomEdge.DesiredSize = new Vector2(_slotSize, 4);
+            _focusOverlay.AddChild(bottomEdge);
         }
 
         // Create popup with instructions
