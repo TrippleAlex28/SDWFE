@@ -62,17 +62,12 @@ public partial class Player
     }
     private void OnWindowClosed()
     {
-        if (HotbarUI != null) HotbarUI.IsVisible = true;
-        if (HotbarUI != null) HotbarUI.HandleAbilitiesChanged();
-        if (WeaponsUI != null) WeaponsUI.IsVisible = true; 
-        if (WeaponsUI != null) WeaponsUI.HandleInventoryChange();
         if (StatsUI != null) StatsUI.IsVisible = true; 
     }
 
     private void OnWindowOpen()
     {
-        if (HotbarUI != null) HotbarUI.IsVisible = false; 
-        if (WeaponsUI != null) WeaponsUI.IsVisible = false; 
+        if (InventoryUI.IsMenuOpen) InventoryUI.CloseMenu();
         if (StatsUI != null) StatsUI.IsVisible = false;
     }
     /// <summary>

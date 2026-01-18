@@ -31,7 +31,6 @@ public partial class Player
 
     private void OnDialogueClosed()
     {
-        // InventoryUI?.OpenMenu();
         if (StatsUI != null) StatsUI.IsVisible = true; 
     }
 
@@ -57,7 +56,7 @@ public partial class Player
     {
         CloseShop();
         
-        // InventoryUI?.CloseMenu();
+        if (InventoryUI.IsMenuOpen) InventoryUI?.CloseMenu();
         if (StatsUI != null) StatsUI.IsVisible = false;
     }
     /// <summary>
