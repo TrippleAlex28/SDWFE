@@ -32,6 +32,7 @@ namespace SDWFE.Objects.Entities.Items
             };
             Sprite.Scale = new Vector2(0.5f, 0.5f);
             AddChild(Sprite);
+            
             this.CollisionSize = new Vector2(Sprite.SourceRectangle.Width, Sprite.SourceRectangle.Height);
             this.CollisionOffset = new Vector2(0, 16);
             this.HitboxManager = hitboxManager;
