@@ -29,7 +29,7 @@ public abstract class GameplayLevel : Scene
     public override void Enter()
     {
         base.Enter();
-        
+        ExtendedGame.LightShaderInstance.Enabled = true;
         map = new Tilemap(_levelSuffix, HitboxManager);
         SpawnPoint = map.SpawnPoint;
         map.RegisterHitboxes(HitboxManager);
