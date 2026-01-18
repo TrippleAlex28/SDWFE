@@ -156,6 +156,12 @@ public class WaveManager : GameObject
                 case 0:
                     enemy = new Grunt();
                     break;
+                case 1:
+                    enemy = new Turret();
+                    break;
+                case 2:
+                    enemy = new Boss();
+                    break;
                 default:
                     enemy = new Turret(); // Default to Grunt if unknown type
                     break;

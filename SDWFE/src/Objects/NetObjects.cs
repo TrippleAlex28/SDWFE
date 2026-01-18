@@ -12,5 +12,5 @@ public enum NetObjects : uint
     Grunt = 5,
     Turret = 6,
     Orb = 7,
-    
+    Boss = 8
 } 

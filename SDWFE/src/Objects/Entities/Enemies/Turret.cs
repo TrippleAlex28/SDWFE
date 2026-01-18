@@ -25,8 +25,8 @@ public class Turret : Enemy
     protected override void EnterSelf()
     {
         base.EnterSelf();
-        CollisionSize = new Vector2(16, 32);
-        CollisionOffset = Vector2.Zero;
+        CollisionSize = new Vector2(16, 8);
+        CollisionOffset = new Vector2(0, 24);
         Hitbox = new StaticHitbox(CollisionBounds)
         {
             Owner = this,
@@ -107,21 +107,17 @@ public class Turret : Enemy
         if (Vector2.Distance(this.GlobalPosition, Target.GlobalPosition) > AttackRange)
             return;
         
-        if (Target is Player player)
-        {
-            player.Stats.CurrentHealth -= Damage;
 
-        }
-        Orb newOrb = new Orb(
-            this.GlobalPosition,
-            Vector2.Normalize(Target.GlobalPosition - this.GlobalPosition),
-            200f,
-            500f,
-            Damage,
-            this,
-            HitboxManager
-        );
-        GameState.Instance.CurrentScene?.AddObject(newOrb);
+        // Orb newOrb = new Orb(
+        //     this.GlobalPosition,
+        //     Vector2.Normalize((Target.GlobalPosition + new Vector2(8, 28)) - this.GlobalPosition),
+        //     200f,
+        //     500f,
+        //     Damage,
+        //     this,
+        //     HitboxManager
+        // );
+        // GameState.Instance.CurrentScene?.AddObject(newOrb);
         // Check if target is within range
         // TODO: Play anim & Do damage to the target 
         

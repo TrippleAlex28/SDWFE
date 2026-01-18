@@ -96,6 +96,7 @@ public class Grunt : ChasingEnemy
         {
             Coins.CreateRandomDrop(GlobalPosition, HitboxManager!);
         }
+        
         // TODO: Play some effect and spawn items
     }
 

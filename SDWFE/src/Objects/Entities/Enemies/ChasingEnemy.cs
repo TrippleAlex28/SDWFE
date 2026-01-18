@@ -26,8 +26,9 @@ public abstract class ChasingEnemy : Enemy
         float attackRange,
         float damage,
         float attackCooldown,
+        Vector2? healthBarOffset = null,
         GameObject? target = null
-    ) : base(maxHealth, attackRange, damage, attackCooldown, null, target)
+    ) : base(maxHealth, attackRange, damage, attackCooldown, healthBarOffset, target)
     {
         MoveSpeed = moveSpeed;
     }

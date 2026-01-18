@@ -184,7 +184,6 @@ public abstract class Projectile : GameObject
     {
         Collided = true;
         Velocity = 0f;
-        
         // Remove the trigger since we've collided
         if (_trigger != null && _hitboxManager != null)
         {

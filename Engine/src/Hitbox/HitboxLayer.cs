@@ -16,6 +16,7 @@ public enum HitboxLayer
     Trigger = 1 << 5,
     Item = 1 << 6,
     NPC = 1 << 7,
+    Boss = 1 << 8,
     
     // Common combinations
     All = ~0,

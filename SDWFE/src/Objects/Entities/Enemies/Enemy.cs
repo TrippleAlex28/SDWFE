@@ -198,7 +198,7 @@ public abstract class Enemy : GameObject
 
     public void TakeDamage(int amount)
     {
-        if (!IsAlive) return;
+        if (!IsAlive || this is Boss boss && boss.IsImmortal) return;
         
         DamageNumber damageNumber = new DamageNumber(amount, Color.Red, 1f);
 

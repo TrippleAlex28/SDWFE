@@ -37,6 +37,30 @@
 /processorParam:TextureFormat=Color
 /build:Entities/Enemies/32x16 Idle-Sheet.png
 
+#begin Entities/Enemies/Boss/32x32 Idle-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/Enemies/Boss/32x32 Idle-Sheet.png
+
+#begin Entities/Enemies/Boss/32x32 run-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/Enemies/Boss/32x32 run-Sheet.png
+
 #begin Entities/NPC/16x32 Speechbubble_Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor

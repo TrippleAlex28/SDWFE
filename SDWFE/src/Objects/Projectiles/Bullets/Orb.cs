@@ -34,7 +34,7 @@ public class Orb : Bullet
         ExtendedGame.AssetManager.LoadTexture("16x16 Wizard Projectile", "Entities/Projectiles/"), 
         owner, 
         ParticlePresets.CreateOrbTrail(), 
-        ParticlePresets.CreateRocketImpact,
+        ParticlePresets.CreateBulletImpact(),
         hitboxManager: hitboxManager
     )
     {
