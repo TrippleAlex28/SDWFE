@@ -17,6 +17,7 @@ namespace SDWFE.Managers;
 /// </summary>
 public class WaveManager : GameObject
 {
+    public Boss bossEntity;
     private readonly List<Wave> _waves;
     private List<RoomDoor> _doors = new();
     private List<Portal> _portals = new();
@@ -166,6 +167,7 @@ public class WaveManager : GameObject
                     break;
                 case 2:
                     enemy = new Boss();
+                    bossEntity = (Boss)enemy;
                     break;
                 default:
                     enemy = new Turret(); // Default to Grunt if unknown type

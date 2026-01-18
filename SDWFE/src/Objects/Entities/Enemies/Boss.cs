@@ -34,6 +34,8 @@ public class Boss : Enemy
     private float attackSpeed;
     private float standardAttackTimer = 5f;
 
+    public bool IsIdle = true;
+
     private List<Vector2> SpawnPoints = new List<Vector2>()
     {
         new Vector2(-100, -100),
@@ -72,6 +74,7 @@ public class Boss : Enemy
 
     protected override void UpdateSelf(GameTime gameTime)
     {
+        if (IsIdle) { return; }
         base.UpdateSelf(gameTime);
         if (!_hitboxadded && HitboxManager != null && Hitbox != null)
         {

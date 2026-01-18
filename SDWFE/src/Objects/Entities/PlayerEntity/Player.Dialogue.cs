@@ -15,6 +15,7 @@ public partial class Player
     /// </summary>
     public UIDialogue? Dialogue => _dialogue;
     public UIDialogueChoice? DialogueChoice => _dialogueChoice;
+
     
     /// <summary>
     /// Whether the player is currently viewing a dialogue.

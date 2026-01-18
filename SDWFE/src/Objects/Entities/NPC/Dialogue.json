@@ -51,7 +51,7 @@
     ]
   },
   {
-    "Id": "test_boss_intro",
+    "Id": "boss_intro",
     "SpeakerName": "Evil Wizzard",
     "Text": "Hello there you pathetic little warrior, it seems like you made it through all of my guards. How brave of you, you're already better than that even more pathetic warrior that came before you. He only made it through the first level, before cowardly running away. Not that any of that matters, because you might've been able to defeat my guards, but know that that was just the warmup. You will never be able to defeat me, the great evil wizzard, and stop my spell from casting an eternal shadow over this land; destroying the empire and making me the ruler over the whole land! HAHAHAHAHA!",
     "Choices": []

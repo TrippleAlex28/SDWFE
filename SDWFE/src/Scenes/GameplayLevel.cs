@@ -15,7 +15,8 @@ namespace SDWFE.Scenes.Levels;
 public abstract class GameplayLevel : Scene
 {
     private string _levelSuffix;
-    private Tilemap map;
+    protected Tilemap map;
+    protected WaveManager waveManager;
     
     public GameplayLevel(string key, string levelSuffix) : base(key)
     {
@@ -34,7 +35,7 @@ public abstract class GameplayLevel : Scene
         SpawnPoint = map.SpawnPoint;
         map.RegisterHitboxes(HitboxManager);
         
-        WaveManager waveManager = new WaveManager(this, map.Portals, map.Doors, map.Enemies, HitboxManager);
+        waveManager = new WaveManager(this, map.Portals, map.Doors, map.Enemies, HitboxManager);
         this.AddObject(waveManager);
         
         this.LevelIndex = SceneData.levelIndex;
