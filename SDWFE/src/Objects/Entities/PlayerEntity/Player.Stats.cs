@@ -41,7 +41,7 @@ public partial class Player
         Stats.MaxStamina = Inventory.SavedMaxStamina;
         Stats.CurrentStamina = Inventory.SavedCurrentStamina;
         Stats.Coins = Inventory.SavedCoins;
-        Console.WriteLine($"Loaded stats from save: Health={Stats.CurrentHealth}/{Stats.MaxHealth}, Coins={Stats.Coins}");
+        Console.WriteLine($"Loaded stats from save: Health={Stats.CurrentHealth}/{Stats.MaxHealth}, Stamina={Stats.CurrentStamina}/{Stats.MaxStamina}, Coins={Stats.Coins}");
     }
     
     /// <summary>
@@ -68,8 +68,6 @@ public partial class Player
                 break;
         }
         Inventory.SaveToFile();
-        Console.WriteLine("Synced stats to inventory for saving.");
-        //Inventory.LoadFromFile(); // For debugging purposes
     }
 }
 
