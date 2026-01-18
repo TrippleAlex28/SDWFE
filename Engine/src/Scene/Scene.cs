@@ -21,6 +21,7 @@ public abstract class Scene
      public GameObject SceneRoot { get; private set; }
      private int _nextNetworkId = 1;
      public List<GameObject> SceneObjects { get; private set; } = [];
+     public int LevelIndex { get; set; } = -1;
      
      public HitboxManager HitboxManager { get; private set; } = new HitboxManager();
      public UIRoot UIRoot { get; private set; }

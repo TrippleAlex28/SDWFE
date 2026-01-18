@@ -107,15 +107,15 @@ public class Turret : Enemy
             return;
         
 
-        // Orb newOrb = new Orb(
-        //     this.GlobalPosition,
-        //     Vector2.Normalize((Target.GlobalPosition + new Vector2(8, 28)) - this.GlobalPosition),
-        //     200f,
-        //     500f,
-        //     Damage,
-        //     this,
-        //     HitboxManager
-        // );
+        Orb newOrb = new Orb(
+            this.GlobalPosition,
+            Vector2.Normalize((Target.GlobalPosition + new Vector2(8, 28)) - this.GlobalPosition),
+            200f,
+            500f,
+            Damage,
+            this,
+            HitboxManager
+        );
         // GameState.Instance.CurrentScene?.AddObject(newOrb);
         // Check if target is within range
         // TODO: Play anim & Do damage to the target 

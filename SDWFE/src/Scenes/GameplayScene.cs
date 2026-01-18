@@ -23,7 +23,7 @@ public class GameplayScene : Scene
 {
     public const string KEY = "GameplayScene";
     
-    private const string INTRO_DIALOGUE = "To the Chosen Warrior, |p In the ninth year of my reign, beneath Heaven's watchful gaze, I write to you with a burdened heart. The year is 967, and a dark curse has fallen upon our kingdom. Fields grow silent, rivers run uneasy, and the people whisper of ill fate. This calamity was wrought by a wandering wizard, learned in forbidden arts, whose magic now binds our land in suffering.|p By the Mandate of Heaven, I command you-brave warrior-to journey beyond our borders and seek this wizard. Face his trials, endure his deceptions, and compel him to lift the curse that shackles our realm.|p The fate of the kingdom rests upon your blade and your resolve.|p Return with victory, and your name shall be etched in history. Fail, and our dynasty may fade into shadow.|p May the spirits guide your path,and may Heaven grant you strength.|p-The King";
+    private const string INTRO_DIALOGUE = "Greatings mighty warrior, |p You were choosen by the emperor to battle the mighty wizard, who has cursed this land with a terrible spell. This curse will cause our empire to fall in an endless shadow, and we will never know peace again. You have to battle your way through the temple and fight countless enemies, and it will not be easy, but you are the only one who can do it. |p You will have to enter multiple levels of this temple, and fight your way through rooms and waves full of enemies to reach the evil wizzard at the top, who you will hopefully defeat. |p Good luck on your quest warrior, our fate depends on you.";
 
     private Tilemap map;
     public GameplayScene() : base(KEY)
@@ -58,7 +58,7 @@ public class GameplayScene : Scene
         WaveManager waveManager = new WaveManager(map.Portals, map.Doors, map.Enemies, HitboxManager);
         
         this.AddObject(waveManager);
-
+        this.LevelIndex = SceneData.levelIndex;
         // Hub level
         if (SceneData.levelIndex == -1)
         {

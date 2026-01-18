@@ -30,10 +30,16 @@ namespace SDWFE.Objects.Tiles
             labelFont = ExtendedGame.AssetManager.LoadFont("Upheavel", "Fonts/");
             _spriteIdleSheet = ExtendedGame.AssetManager.LoadTexture("TM_Portal_RodHakGames", "Tilemap/");
             _spriteEnterSheet = ExtendedGame.AssetManager.LoadTexture("TM_Portal_Entrance", "Tilemap/");
-            this.Sprite = new AnimatedSprite(_spriteIdleSheet, 48, 32,200f, true, true)
+            
+            var column = SceneData.levelsUnlocked >= _portalData.LevelIndex ? 0 : 1;
+            
+            AnimationData animData = new AnimationData(_spriteIdleSheet, column, 200f, true);
+            
+            this.Sprite = new AnimatedSprite(_spriteIdleSheet, 48, 32, 200f, true, true)
             {
                 OriginType = OriginType.TopLeft,
             };
+            this.Sprite.SetAnimation(animData);
 
             int height = Sprite._spriteHeight;
             int width = Sprite._spriteWidth;
@@ -50,7 +56,8 @@ namespace SDWFE.Objects.Tiles
         }
         private void OnEnterPortal(TriggerHitbox hitbox, object other, TriggerSide side)
         {
-            if (Sprite.IsVisible == false || this.IsVisible == false) return;
+            bool isUnlocked = SceneData.levelsUnlocked >= _portalData.LevelIndex;
+            if (Sprite.IsVisible == false || this.IsVisible == false || !isUnlocked) return;
             if (other is Player player)
             {
                 player.IsVisible = false;

@@ -248,6 +248,7 @@ public class WaveManager : GameObject
         foreach (Portal portal in _portals)
         {
             portal.IsVisible = true;
+            SceneData.levelsUnlocked = Math.Max(SceneData.levelsUnlocked, GameState.Instance.CurrentScene?.LevelIndex + 1 ?? 0);
             Console.WriteLine($"[WaveManager] Activated portal at {portal.GlobalPosition}.");
         }
 
