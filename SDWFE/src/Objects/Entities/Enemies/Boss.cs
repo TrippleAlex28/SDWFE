@@ -11,6 +11,7 @@ using SDWFE.Objects;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.Items;
 using SDWFE.Objects.Entities.PlayerEntity;
+using SDWFE.Objects.Inventory.Item;
 
 public class Boss : Enemy
 {
@@ -162,7 +163,7 @@ public class Boss : Enemy
                 break;
         }
         // Check if target is within range
-        // TODO: Play anim & Do damage to the target 
+        // TODO: Play anim
         
     }
 
@@ -293,22 +294,30 @@ public class Boss : Enemy
     {
         base.OnDeath();
         
+        // Remove collision
         if (_hitboxadded && HitboxManager != null && Hitbox != null)
         {
             HitboxManager.RemoveStatic(Hitbox);
         }
+        
+        // Spawn coins
         for (int i = 0; i < 5; i++)
         {
             Coins.CreateRandomDrop(GlobalPosition, HitboxManager!);
         }
-        // TODO: Play some effect and spawn items
-    }
-
-    protected override void DrawSelf(SpriteBatch spriteBatch)
-    {
-        base.DrawSelf(spriteBatch);
-
-        // TODO: Possibly draw a small healthbar
+        
+        // Drop items
+        var droppedItem = LootTables.RollLootTable(LootTables.GruntLootTable);
+        if (droppedItem != null)
+        {
+            var pickup = new ItemPickup(droppedItem, HitboxManager)
+            {
+                GlobalPosition = this.GlobalPosition
+            };
+            GameState.Instance.CurrentScene?.AddObject(pickup);
+        }
+        
+        // TODO: Play some effect
     }
 }
 public enum AttackPattern

@@ -198,8 +198,11 @@ public class SDWFEGame : ExtendedGame
             {
                 if (player.Inventory.GetSelectedItem() != null && player.Inventory.GetSelectedItem()!.Data.UseActionId != null && player.Inventory.GetSelectedItem()!.StackSize > 0)
                 {
-                    player.Inventory.GetSelectedItem()!.RemoveStack();
-                    player.Inventory.ForceRefresh();
+                    if (player.Inventory.GetSelectedItem()!.Data.ItemType != ItemType.Weapon)
+                    {
+                        player.Inventory.GetSelectedItem()!.RemoveStack();
+                        player.Inventory.ForceRefresh();
+                    }
                     commands.Add(new UseCommand(player.Inventory.GetSelectedItem()!.Name, lookDirection));
                 }
             }
