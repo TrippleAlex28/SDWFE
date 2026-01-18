@@ -116,7 +116,7 @@ public class Turret : Enemy
             this,
             HitboxManager
         );
-        // GameState.Instance.CurrentScene?.AddObject(newOrb);
+        GameState.Instance.CurrentScene?.AddObject(newOrb);
         // Check if target is within range
         // TODO: Play anim & Do damage to the target 
         
