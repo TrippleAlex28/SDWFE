@@ -104,7 +104,10 @@ public class Grunt : ChasingEnemy
         var droppedItem = LootTables.RollLootTable(LootTables.GruntLootTable);
         if (droppedItem != null)
         {
-            var pickup = new ItemPickup(droppedItem, HitboxManager);
+            var pickup = new ItemPickup(droppedItem, HitboxManager)
+            {
+                GlobalPosition = this.GlobalPosition
+            };
             GameState.Instance.CurrentScene?.AddObject(pickup);
         }
 

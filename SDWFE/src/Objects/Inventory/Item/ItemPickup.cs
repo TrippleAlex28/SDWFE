@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using System;
+using Engine;
 using Engine.Hitbox;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
@@ -47,6 +48,8 @@ public class ItemPickup : GameObject
     private void OnPlayerCollect(TriggerHitbox hitbox, object other, TriggerSide side)
     {
         if (other is not Player player) return;
+        
+        Console.WriteLine("PICKUP");
         
         if (player.Inventory.AddItem(_item))
             this.RemoveSelf();
