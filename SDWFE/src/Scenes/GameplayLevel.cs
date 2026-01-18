@@ -16,9 +16,8 @@ namespace SDWFE.Scenes.Levels;
 public abstract class GameplayLevel : Scene
 {
     private string _levelSuffix;
-    private Tilemap map;
-
     public GameplayLevelManager LevelManager { get; set; }
+
     protected Tilemap map;
     protected WaveManager waveManager;
     
