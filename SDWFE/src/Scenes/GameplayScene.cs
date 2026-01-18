@@ -88,14 +88,7 @@ public class GameplayScene : Scene
             this.AddObject(newNPC);
         }
             
-        if (GameState.Instance.SessionManager.IsHost || GameState.Instance.SessionManager.IsSingleplayer)
-        {
-            var grunt = new Grunt()
-            {
-                GlobalPosition = new Vector2(350, 350),
-            };
-            AddObject(grunt);
-        }
+        
         
         SetUpHitboxes();
         

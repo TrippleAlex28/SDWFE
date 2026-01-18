@@ -209,7 +209,7 @@ public class Tilemap : GameObject
 
             var texture = GetTileSheet(tileId);
             bool isYSortable = YSortableTileIds.Contains(tileId) || WallTileIds.Contains(tileId);
-            int ySortOffset = WallTileIds.Contains(tileId) ? 24 : 8;
+            int ySortOffset = WallTileIds.Contains(tileId) ? 32 : 16;
             
             result[new Vector2(x, y)] = new TileData(tileId, texture, isYSortable, ySortOffset);
         }

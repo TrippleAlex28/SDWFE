@@ -19,6 +19,8 @@ public class RoomDoor : GameObject
     private StaticHitbox? _staticHitbox;
     private readonly HitboxManager _hitboxManager;
 
+    public bool IsOpen = false;
+
     public RoomDoor(Vector2 globalPosition, HitboxManager hitboxManager)
     {
         this._spriteSheet = ExtendedGame.AssetManager.LoadTexture("TM_Door_Anim", "Tilemap/");
@@ -32,21 +34,22 @@ public class RoomDoor : GameObject
         _animatedSprite = new AnimatedSprite(_spriteSheet, _tileSize, _tileSize, 200f, false, false);
         _animatedSprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 32)) - 0.0001f;
 
-        _animatedSprite.AnimationCompleted += () =>
-        {
-            disableHitbox();
-        };
+
         this.AddChild(_animatedSprite);
     }
     public void Open()
     {
+        if (IsOpen) return;
         _animatedSprite?.Play();
+        disableHitbox();
+        IsOpen = true;
     }
 
     public void Reset()
     {
         _animatedSprite?.Reset();
         _staticHitbox.IsEnabled = true;
+        IsOpen = false;
     }
 
     private void disableHitbox()

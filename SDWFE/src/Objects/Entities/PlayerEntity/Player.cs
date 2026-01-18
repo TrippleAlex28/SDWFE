@@ -113,7 +113,7 @@ public partial class Player : GameObject
         }
         else
         {
-            Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 32));
+            Sprite.BaseDrawLayer = ExtendedGame.GetYSort(this.GlobalPosition, new Vector2(0, 31));
         }
         
         UpdateNPC(gameTime);
