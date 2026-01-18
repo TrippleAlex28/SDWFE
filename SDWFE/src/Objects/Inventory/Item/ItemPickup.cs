@@ -31,7 +31,7 @@ public class ItemPickup : GameObject
         
         // SETUP COLLISION
         this.CollisionSize = new Vector2(16f, 16f);
-        this.CollisionOffset = new Vector2(0, 16);
+        this.CollisionOffset = new Vector2(0, 0);
         this.HitboxManager = hitboxManager;
         this.HitboxLayer = HitboxLayer.Enemy;
         this.Hitbox = new TriggerHitbox(new Rectangle(
