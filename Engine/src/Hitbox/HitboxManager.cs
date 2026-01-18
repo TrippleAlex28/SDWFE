@@ -190,11 +190,9 @@ public class HitboxManager
             if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
                 newPos.Y += (int)velocity.Y;
-                Console.WriteLine($"New Y position: {newPos.Y}");
             }
             else
             {
-                Console.WriteLine("Collision Y detected");
                 hitY = true;
                 // Slide along collision
                 newPos.Y = ResolveCollisionY(new Rectangle((int)newPos.X, currentBounds.Y, currentBounds.Width, currentBounds.Height), velocity.Y, layer, ignoreOwner);
