@@ -54,4 +54,10 @@ public class ItemPickup : GameObject
         if (player.Inventory.AddItem(_item))
             this.RemoveSelf();
     }
+
+    protected override void ExitSelf()
+    {
+        _hitboxManager.RemoveTrigger(Hitbox);
+        base.ExitSelf();
+    }
 }
