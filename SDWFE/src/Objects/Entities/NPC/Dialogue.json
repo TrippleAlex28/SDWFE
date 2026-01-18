@@ -2,194 +2,58 @@
   {
     "Id": "anwei_root",
     "SpeakerName": "Anwei",
-    "Text": "You look tired, warrior. It is not safe here. A curse hit our town and the night changed.",
+    "Text": "Hello mighty warrior and welcome in this temple, here resides the evil wizzard. You are ready to defeat him, right?",
     "Choices": [
-      { "ChoiceText": "The curse", "NextId": "anwei_curse" },
-      { "ChoiceText": "The wizard", "NextId": "anwei_wizard" }
+      { "ChoiceText": "Isn't it dangerous?", "NextId": "anwei_dangerous" }
     ]
   },
   {
-    "Id": "anwei_curse",
+    "Id": "anwei_dangerous",
     "SpeakerName": "Anwei",
-    "Text": "One night the lamps went blue. The well water tasted wrong. Then a black mark showed up on doors. After that people got lost in their own streets.",
+    "Text": "Yes it will be dangerous, but the whole land depends on you, you don't want to end op as an anti-hero, like that pathatic warrior that was chosen to defeat the wizard before you.",
     "Choices": [
-      { "ChoiceText": "The symbol", "NextId": "anwei_symbol" },
-      { "ChoiceText": "Leave", "NextId": "anwei_end" }
+      { "ChoiceText": "More ready than ever!", "NextId": "anwei_ready" }
     ]
   },
   {
-    "Id": "anwei_symbol",
+    "Id": "anwei_ready",
     "SpeakerName": "Anwei",
-    "Text": "That mark is the curse. It ties the town down. It makes you forget the right way and walk into danger.",
-    "Choices": [
-      { "ChoiceText": "Break it", "NextId": "anwei_break" },
-      { "ChoiceText": "Leave", "NextId": "anwei_end" }
-    ]
-  },
-  {
-    "Id": "anwei_wizard",
-    "SpeakerName": "Anwei",
-    "Text": "Days before it began a stranger came in a hood. He talked like a scholar. He carried a brush case. After he left the mark appeared.",
-    "Choices": [
-      { "ChoiceText": "Why me", "NextId": "anwei_chosen" },
-      { "ChoiceText": "Any leads", "NextId": "anwei_leads" }
-    ]
-  },
-  {
-    "Id": "anwei_chosen",
-    "SpeakerName": "Anwei",
-    "Text": "You are not from this town. The curse grips the people who belong here. Outsiders can still think straight. That is why you can help.",
-    "Choices": [
-      { "ChoiceText": "Any leads", "NextId": "anwei_leads" },
-      { "ChoiceText": "Leave", "NextId": "anwei_end" }
-    ]
-  },
-  {
-    "Id": "anwei_break",
-    "SpeakerName": "Anwei",
-    "Text": "To break it you must find where the mark was first made. If you ruin the first mark the rest should weaken.",
-    "Choices": [
-      { "ChoiceText": "Any leads", "NextId": "anwei_leads" },
-      { "ChoiceText": "Leave", "NextId": "anwei_end" }
-    ]
-  },
-  {
-    "Id": "anwei_leads",
-    "SpeakerName": "Anwei",
-    "Text": "The first mark showed up by the old hillside shrine. People who go there come back quiet and scared. If you want a charm ask the Blacksmith.",
-    "Choices": [
-      { "ChoiceText": "Blacksmith", "NextId": "blacksmith_root" },
-      { "ChoiceText": "Leave", "NextId": "anwei_end" }
-    ]
-  },
-  {
-    "Id": "anwei_end",
-    "SpeakerName": "Anwei",
-    "Text": "Be careful. Keep moving and do not linger in the dark.",
+    "Text": "Thank you warrior for your help! It won't be easy but we believe in you, give that wizard the karma he deserves!",
     "Choices": []
   },
-  {
-    "Id": "fireman_end",
-    "SpeakerName": "Fireman",
-    "Text": "Then go with clear eyes. The curse loves hesitation.",
-    "Choices": []
-  },
-
   {
     "Id": "archer_root",
     "SpeakerName": "Mulan",
-    "Text": "I watch the road. The night went wrong and the town changed. You should not be here.",
-    "Choices": [
-      { "ChoiceText": "What happened", "NextId": "archer_ward" },
-      { "ChoiceText": "The wizard", "NextId": "archer_wizard" }
-    ]
-  },
-  {
-    "Id": "archer_ward",
-    "SpeakerName": "Mulan",
-    "Text": "It started after sunset. Lamps went blue. Dogs went quiet. Then that black mark appeared on doors. In the morning people walked in circles like they forgot home.",
-    "Choices": [
-      { "ChoiceText": "The mark", "NextId": "archer_shrine" },
-      { "ChoiceText": "Any leads", "NextId": "archer_leads" }
-    ]
-  },
-  {
-    "Id": "archer_wizard",
-    "SpeakerName": "Mulan",
-    "Text": "I saw a hooded stranger near the shrine path. He carried a brush case. He stopped at the first gate and drew something fast. After that the air felt cold.",
-    "Choices": [
-      { "ChoiceText": "Any leads", "NextId": "archer_leads" },
-      { "ChoiceText": "The mark", "NextId": "archer_shrine" }
-    ]
-  },
-  {
-    "Id": "archer_shrine",
-    "SpeakerName": "Mulan",
-    "Text": "The mark looks like ash and scratches. It shows up most near the hillside shrine. When the wind dies the mark feels warmer than the stone.",
-    "Choices": [
-      { "ChoiceText": "Any leads", "NextId": "archer_leads" },
-      { "ChoiceText": "Advice", "NextId": "archer_advice" }
-    ]
-  },
-  {
-    "Id": "archer_leads",
-    "SpeakerName": "Mulan",
-    "Text": "I followed tracks from the first marked door. They went uphill toward the shrine, then vanished. Like the ground forgot them.",
-    "Choices": [
-      { "ChoiceText": "Go shrine", "NextId": "archer_end" },
-      { "ChoiceText": "Advice", "NextId": "archer_advice" }
-    ]
-  },
-  {
-    "Id": "archer_advice",
-    "SpeakerName": "Mulan",
-    "Text": "Keep to light. Count your turns. If you feel lost, stop and listen. The curse wants you to rush.",
-    "Choices": [
-      { "ChoiceText": "Thanks", "NextId": "archer_end" },
-      { "ChoiceText": "Back", "NextId": "archer_root" }
-    ]
-  },
-  {
-    "Id": "archer_end",
-    "SpeakerName": "Mulan",
-    "Text": "Bring our dawn back, traveler.",
+    "Text": "This temple here is the evil creation of that wizard, it is designed to test your strenght and willpower. It will not be easy as the temple might appear like some labyrinth. But you must persist, or the curse of that evil mastermind of a wizard will destroy our entire land and all we will ever know is death and endless shadow.",
     "Choices": []
   },
-
   {
     "Id": "wizard_root",
     "SpeakerName": "Mage Theron",
-    "Text": "Ah, a seeker of truth. I sense you carry questions about what plagues this town. The curse is old magic, twisted and hungry.",
+    "Text": "Hello there, we were send here by emperor to welcome the warriors who are brave enough to enter this dangerous temple do you have a question?",
     "Choices": [
-      { "ChoiceText": "You caused this", "NextId": "wizard_denial" },
-      { "ChoiceText": "How to stop it", "NextId": "wizard_solution" }
+      { "ChoiceText": "What is my reward?", "NextId": "wizard_denial" }
     ]
   },
   {
     "Id": "wizard_denial",
     "SpeakerName": "Mage Theron",
-    "Text": "I? No. But I came too close to studying what dwells beneath the shrine. My curiosity may have woken something better left sleeping.",
-    "Choices": [
-      { "ChoiceText": "Make it right", "NextId": "wizard_solution" },
-      { "ChoiceText": "Leave", "NextId": "wizard_end" }
+    "Text": "The emperor has promised to cover the one who defeats the wizard with wealth. If you wish your whole house could even be bejeweled, I don't know why you would want that though.",
+    "Choices": [ 
+      { "ChoiceText": "Why don't you all come with me?", "NextId": "wizard_solution" }
     ]
   },
   {
     "Id": "wizard_solution",
     "SpeakerName": "Mage Theron",
-    "Text": "The mark must be unmade where it began. At the shrine's heart lies a stone inscribed with the curse's true name. Destroy it and all the marks will fade.",
+    "Text": "Why we have to stay here you ask? Well, there are multiple enemies ahead, and we are not strong enough to defeat them, so only a warrior like you can defeat him. Sorry, but when you enter the temple, you're on own, kid.",
     "Choices": [
-      { "ChoiceText": "I will try", "NextId": "wizard_blessing" },
-      { "ChoiceText": "Anything else", "NextId": "wizard_warning" }
     ]
   },
-  {
-    "Id": "wizard_blessing",
-    "SpeakerName": "Mage Theron",
-    "Text": "Then go with my blessing. Take this ward. It will shield your mind from the curse's whispers.",
-    "Choices": [
-      { "ChoiceText": "Thank you", "NextId": "wizard_end" }
-    ]
-  },
-  {
-    "Id": "wizard_warning",
-    "SpeakerName": "Mage Theron",
-    "Text": "Beware. The curse will fight to stay. It feeds on doubt and fear. Trust your path and do not turn back.",
-    "Choices": [
-      { "ChoiceText": "I understand", "NextId": "wizard_end" }
-    ]
-  },
-  {
-    "Id": "wizard_end",
-    "SpeakerName": "Mage Theron",
-    "Text": "Go now. The town's fate rests on your shoulders.",
-    "Choices": []
-  },
-
   {
     "Id": "test_boss_intro",
     "SpeakerName": "Test Boss",
-    "Text": "So, you have finally arrived, brave warrior. I have been expecting you. Your journey has been long and arduous, but it ends here. Prepare yourself for the ultimate challenge!",
+    "Text": "Hello there you pathetic little warrior, it seems like you made it through all of my guards. How brave of you, you're already better than that even more pathetic warrior that came before you. He only made it through the first level, before cowardly running away. Not that any of that matters, because you might've been able to defeat my guards, but know that that was just the warmup. You will never be able to defeat me, the great evil wizzard, and stop my spell from casting an eternal shadow over this land; destroying the empire and making me the ruler over the whole land! HAHAHAHAHA!",
     "Choices": []
   }
 ]
