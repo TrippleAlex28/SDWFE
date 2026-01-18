@@ -61,11 +61,17 @@ public class NetProperty<T> : NetProperty
 
         switch(default(T))
         {
+            case byte:
+                bw.Write((byte)value!);
+                break;
             case bool:
                 bw.Write((bool)value!);
                 break;
             case int:
                 bw.Write((int)value!);
+                break;
+            case uint:
+                bw.Write((uint)value!);
                 break;
             case float:
                 bw.Write((float)value!);
@@ -87,11 +93,17 @@ public class NetProperty<T> : NetProperty
 
         switch(default(T))
         {
+            case byte:
+                value = (T)(object)br.ReadByte();
+                break;
             case bool:
                 value = (T)(object)br.ReadBoolean();
                 break;
             case int:
                 value = (T)(object)br.ReadInt32();
+                break;
+            case uint:
+                value = (T)(object)br.ReadUInt32();
                 break;
             case float:
                 value = (T)(object)br.ReadSingle();

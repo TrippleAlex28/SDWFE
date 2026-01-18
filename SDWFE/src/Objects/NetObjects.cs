@@ -13,5 +13,6 @@ public enum NetObjects : uint
     Grunt = 6,
     Turret = 7,
     Orb = 8,
-    Boss = 9
+    Boss = 9,
+    GameplayLevelManager = 10,
 } 

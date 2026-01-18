@@ -4,10 +4,17 @@ using Engine.Sprite;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Inventory;
+using SDWFE.Scenes.Levels;
 using SDWFE.UI.PlayerData;
 using SDWFE.UI.Dialogue;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
+
+public enum LifeState : byte
+{
+    Alive = 0,
+    Dead = 1,
+}
 
 public partial class Player : GameObject
 {
@@ -17,6 +24,10 @@ public partial class Player : GameObject
 
     private Texture2D _hurtTexture = ExtendedGame.AssetManager.LoadTexture("32x16 Hurt-Sheet", "Entities/Player/");
     private Texture2D _runSheet = ExtendedGame.AssetManager.LoadTexture("32x16 Run-Sheet", "Entities/Player/");
+
+    public LifeState State = LifeState.Alive;
+    public uint RespawnAtTick;
+    
     public Player()
     {
         this.ReplicatesOverNetwork = true;
@@ -77,6 +88,20 @@ public partial class Player : GameObject
             (v) => Stats.CurrentStamina = v
         );
         
+        RegisterProperty(
+            8,
+            nameof(State),
+            () => (byte)State,
+            (v) => State = (LifeState)v
+        );
+        
+        RegisterProperty(
+            9,
+            nameof(RespawnAtTick),
+            () => RespawnAtTick,
+            (v) => RespawnAtTick = v
+        );
+        
         // Animated Sprite Setup
         Texture2D spriteSheet = ExtendedGame.AssetManager.LoadTexture("16x32 Idle v2-Sheet", "Entities/Player/");
         Sprite = new AnimatedSprite(spriteSheet, 16, 32)
@@ -114,6 +139,8 @@ public partial class Player : GameObject
             StatsUI = new UIStats(this);
             StatsUI.UpdateStats(); // Initial update
             Stats.OnStatsChanged += OnStatsChanged;
+            Stats.OnDeath += OnDeath;
+            
             GameState.Instance.CurrentScene?.UIRoot.AddChild(StatsUI);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(ShopUI);
             
@@ -124,11 +151,6 @@ public partial class Player : GameObject
             if (_dialogueChoice != null)
                 GameState.Instance.CurrentScene?.UIRoot.AddChild(_dialogueChoice);
         }
-    }
-
-    protected void OnDeath()
-    {
-        
     }
     
     protected override void UpdateSelf(GameTime gameTime)
@@ -152,5 +174,67 @@ public partial class Player : GameObject
         UpdateMovement(gameTime);
         UpdateDialogue(gameTime);
         UpdateWeapons(gameTime);
+    }
+    
+    private void OnDeath()
+    {
+        // Only run on server
+        if (!GameState.Instance.SessionManager.IsHost && !GameState.Instance.SessionManager.IsSingleplayer) return;
+
+        Stats.Coins = Math.Max(0, Stats.Coins - 50);
+        
+        State = LifeState.Dead;
+        RespawnAtTick = GameState.Instance.ServerTick + (30 * 60);
+    }
+
+    private void UpdateRespawn()
+    {
+        // Only run on server
+        if (!GameState.Instance.SessionManager.IsHost && !GameState.Instance.SessionManager.IsSingleplayer) return;
+        
+        // Check if player is dead
+        if (State != LifeState.Dead) return;
+        
+        // Save scene
+        GameplayLevel level;
+        try
+        {
+            level = (GameplayLevel)GameState.Instance.CurrentScene;
+        }
+        catch (Exception e)
+        {
+            return;
+        }
+        
+        if (level.LevelManager.LevelFailed) return;
+
+        bool shouldRespawn = false;
+        foreach (var obj in level.GetAllPawns())
+        {
+            if (obj is not Player player) continue;
+            if (player.State != LifeState.Alive) continue;
+            
+            shouldRespawn = true;
+            break;
+        }
+
+        if (!shouldRespawn)
+        {
+            level.LevelManager.LevelFailed = true;
+            level.LevelManager.FailReason = LevelFailReason.AllDead;
+            return;
+        }
+
+        // Respawn player when enough ticks have passed
+        if (GameState.Instance.ServerTick >= RespawnAtTick)
+        {
+            State = LifeState.Alive;
+            this.GlobalPosition = level.SpawnPoint;
+            this.Velocity = 0f;
+
+            // Refill stats
+            Stats.CurrentHealth = Stats.MaxHealth;
+            Stats.CurrentStamina = Stats.MaxStamina;
+        }
     }
 }
