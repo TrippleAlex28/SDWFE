@@ -260,7 +260,7 @@
                         {
                          "name":"level",
                          "type":"int",
-                         "value":5
+                         "value":-1
                         }, 
                         {
                          "name":"wave",
@@ -283,7 +283,7 @@
                         {
                          "name":"level",
                          "type":"int",
-                         "value":1
+                         "value":0
                         }, 
                         {
                          "name":"wave",
