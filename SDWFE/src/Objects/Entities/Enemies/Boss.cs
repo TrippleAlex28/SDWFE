@@ -139,7 +139,7 @@ public class Boss : Enemy
                     AttackTimer = AttackCooldown * 0.2f;
                     AttackTypeC();
                 } 
-                else if (_spawnedEnemies.Count < 2)
+                else if (_spawnedEnemies.Count < 1)
                     AttackTypeD();
                 break; 
             default:
@@ -261,9 +261,9 @@ public class Boss : Enemy
         {
             float randomOffset = ExtendedGame.Random.NextSingle() * MathF.PI;
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 16; i++)
             {
-                float angle = i * (MathF.PI / 4) + randomOffset;
+                float angle = i * (MathF.PI / 8) + randomOffset;
                 Vector2 direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
                 Vector2 startPos = this.GlobalPosition + new Vector2(24, 0);
                 Orb newOrb = new Orb(
