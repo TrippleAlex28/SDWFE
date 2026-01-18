@@ -418,12 +418,10 @@ public class UIInventory : UIContainer
         }
         else
         {
-            Console.WriteLine("EMPTY FOCUS SLOT");
             // TODO: This is flawed, stacks could be partially duplicated, but idc 
             // Add hotbar index to inventory
             if (!_inventory.Hotbar[idx].IsEmpty())
             {
-                Console.WriteLine("NON-EMPTY HOTBAR SLOT");
                 var item = _inventory.Hotbar[idx].Item;
                 if (item != null && _inventory.AddItem(item))
                 {
