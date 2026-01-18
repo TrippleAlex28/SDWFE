@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Engine;
 using Engine.Hitbox;
+using Engine.Scene;
 using Microsoft.Xna.Framework;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Tilemap;
@@ -66,8 +67,12 @@ public class WaveManager : GameObject
     /// </summary>
     public event Action? OnAllWavesCompleted;
 
-    public WaveManager(List<PortalData> portals, List<DoorData> doors, List<EnemyData> enemies, HitboxManager hitboxManager)
+    private Scene _scene;
+    
+    public WaveManager(Scene scene, List<PortalData> portals, List<DoorData> doors, List<EnemyData> enemies, HitboxManager hitboxManager)
     {
+        _scene = scene;
+        
         _hitboxManager = hitboxManager;
         _waves = InitializeWaves(portals, doors, enemies);
     }
@@ -172,7 +177,8 @@ public class WaveManager : GameObject
             enemy.GlobalPosition = enemyData.Position;
             enemy.HitboxManager = _hitboxManager;
             _enemies.Add(enemy);
-            AddChild(enemy);
+            
+            _scene.AddObject(enemy);
         }
     }
     /// <summary>

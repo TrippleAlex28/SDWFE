@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Engine;
 using Engine.Input;
 using Engine.Network.Shared.Command;
@@ -9,6 +10,7 @@ using Engine.Scene;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SDWFE.Commands;
+using SDWFE.Managers;
 using SDWFE.Objects;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
@@ -16,14 +18,18 @@ using SDWFE.Objects.Inventory.Ability;
 using SDWFE.Objects.Inventory.Item;
 using SDWFE.Objects.Projectiles.Bullets;
 using SDWFE.Scenes;
+using SDWFE.Scenes.Levels;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace SDWFE;
 
 public class SDWFEGame : ExtendedGame
 {
+    public static SDWFEGame Instance;
+    
     public SDWFEGame()
     {
+        Instance = this;
         GAME_NAME = "Song Dynasty Warrior of the Fallen Empire";
         
         // --- NET OBJECTS SETUP ---
@@ -41,7 +47,12 @@ public class SDWFEGame : ExtendedGame
         
         // --- SCENES SETUP ---
         SceneRegistry.Register<MainMenuScene>(MainMenuScene.KEY);
-        SceneRegistry.Register<GameplayScene>(GameplayScene.KEY);
+        SceneRegistry.Register<HubLevel>(HubLevel.KEY);
+        SceneRegistry.Register<Level1>(Level1.KEY);
+        SceneRegistry.Register<Level2>(Level2.KEY);
+        SceneRegistry.Register<Level3>(Level3.KEY);
+        SceneRegistry.Register<Level4>(Level4.KEY);
+        SceneRegistry.Register<Level5>(Level5.KEY);
     }
 
     protected override void Initialize()
@@ -106,9 +117,6 @@ public class SDWFEGame : ExtendedGame
             
             FollowCamera.Follow(followPosition);
         }
-        
-        if (InputManager.Instance.GetInputState().CurrentKeyboard.IsKeyDown(Keys.P) && InputManager.Instance.GetInputState().PreviousKeyboard.IsKeyUp(Keys.P))
-            GameState.Instance.SwitchScene(GameplayScene.KEY);
     }
 
     private bool _createdWalkCommand = false;

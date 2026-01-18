@@ -11,6 +11,7 @@ using Engine.UI;
 using Engine.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SDWFE.Scenes.Levels;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector4 = Microsoft.Xna.Framework.Vector4;
 
@@ -51,7 +52,7 @@ public class MainMenuScene : Scene
         
         // Create singleplayer session
         _isLoading = true;
-        GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, GameplayScene.KEY);
+        GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, HubLevel.KEY);
         _isLoading = false;
     }
 
@@ -61,7 +62,7 @@ public class MainMenuScene : Scene
         
         // Create multiplayer host session
         _isLoading = true;
-        GameState.Instance.SwitchSessionAndScene(SessionType.MultiplayerHost, GameplayScene.KEY);
+        GameState.Instance.SwitchSessionAndScene(SessionType.MultiplayerHost, HubLevel.KEY);
         _isLoading = false;
     }
 
@@ -93,7 +94,7 @@ public class MainMenuScene : Scene
 
     private void OnQuitClicked()
     {
-        // SDWFE.Instance.Exit();
+        SDWFEGame.Instance.Exit();
     }
     
     #endregion 

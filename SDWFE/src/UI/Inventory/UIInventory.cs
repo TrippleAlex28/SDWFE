@@ -78,6 +78,11 @@ public class UIInventory : UIContainer
         SetMenuVisibility(false);
     }
 
+    protected override void EnterSelf()
+    {
+        HandleInventoryChange();
+    }
+
     private void CreateMenuComponents()
     {
         Vector2 menuSize = UIExtensionMethods.ScreenPercent(MENU_WIDTH_PERCENT, MENU_HEIGHT_PERCENT);
