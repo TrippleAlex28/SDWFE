@@ -22,28 +22,56 @@ public partial class Player : GameObject
         this.ReplicatesOverNetwork = true;
         
         RegisterProperty(
-            100,
+            0,
+            nameof(IsVisible),
+            () => IsVisible,
+            (v) => IsVisible = v
+        );
+        
+        RegisterProperty(
+            1,
+            nameof(GlobalPosition),
+            () => GlobalPosition,
+            (v) => GlobalPosition = v
+        );
+        
+        RegisterProperty(
+            2,
+            nameof(Direction),
+            () => Direction,
+            (v) => Direction = v
+        );
+        
+        RegisterProperty(
+            3,
+            nameof(Velocity),
+            () => Velocity,
+            (v) => Velocity = v
+        );
+        
+        RegisterProperty(
+            4,
             nameof(Stats.MaxHealth),
             () => Stats.MaxHealth,
             (v) => Stats.MaxHealth = v
         );
         
         RegisterProperty(
-            101,
+            5,
             nameof(Stats.CurrentHealth),
             () => Stats.CurrentHealth,
             (v) => Stats.CurrentHealth = v
         );
         
         RegisterProperty(
-            102,
+            6,
             nameof(Stats.MaxStamina),
             () => Stats.MaxStamina,
             (v) => Stats.MaxStamina = v
         );
         
         RegisterProperty(
-            103,
+            7,
             nameof(Stats.CurrentStamina),
             () => Stats.CurrentStamina,
             (v) => Stats.CurrentStamina = v

@@ -34,7 +34,7 @@ public abstract class GameplayLevel : Scene
         SpawnPoint = map.SpawnPoint;
         map.RegisterHitboxes(HitboxManager);
         
-        WaveManager waveManager = new WaveManager(map.Portals, map.Doors, map.Enemies, HitboxManager);
+        WaveManager waveManager = new WaveManager(this, map.Portals, map.Doors, map.Enemies, HitboxManager);
         this.AddObject(waveManager);
         
         this.LevelIndex = SceneData.levelIndex;

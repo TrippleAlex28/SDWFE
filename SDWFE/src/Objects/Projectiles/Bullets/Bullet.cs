@@ -1,6 +1,7 @@
 ﻿using System;
 using Engine;
 using Engine.Hitbox;
+using Engine.Network.Shared.Session;
 using Engine.Particle;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -38,6 +39,34 @@ public abstract class Bullet : Projectile
     {
         this.ReplicatesOverNetwork = false;
         
+        RegisterProperty(
+            0,
+            nameof(IsVisible),
+            () => IsVisible,
+            (v) => IsVisible = v
+        );
+        
+        RegisterProperty(
+            1,
+            nameof(GlobalPosition),
+            () => GlobalPosition,
+            (v) => GlobalPosition = v
+        );
+        
+        RegisterProperty(
+            2,
+            nameof(Direction),
+            () => Direction,
+            (v) => Direction = v
+        );
+        
+        RegisterProperty(
+            3,
+            nameof(Velocity),
+            () => Velocity,
+            (v) => Velocity = v
+        );
+        
         _range = range;
         _damage = damage;
 
@@ -56,6 +85,9 @@ public abstract class Bullet : Projectile
 
     public override void OnCollision(GameObject other)
     {
+        // Only apply damage when on the server
+        if (GameState.Instance.SessionManager.IsClient) return;
+        
         if (Collided) return;
         
         if (other is Enemy enemy)
@@ -65,7 +97,7 @@ public abstract class Bullet : Projectile
 
         if (other is Player player)
         {
-            player.Stats.CurrentHealth -= _damage;
+            // player.Stats.CurrentHealth -= _damage;
         }
         
         base.OnCollision(other);

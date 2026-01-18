@@ -58,27 +58,57 @@ public abstract class Enemy : GameObject
     )
     {
         this.ReplicatesOverNetwork = true;
-        _healthBarOffset = healthBarOffset ?? _healthBarOffset;
+        
         RegisterProperty(
-            100,
+            0,
+            nameof(IsVisible),
+            () => IsVisible,
+            (v) => IsVisible = v
+        );
+        
+        RegisterProperty(
+            1,
+            nameof(GlobalPosition),
+            () => GlobalPosition,
+            (v) => GlobalPosition = v
+        );
+        
+        RegisterProperty(
+            2,
+            nameof(Direction),
+            () => Direction,
+            (v) => Direction = v
+        );
+        
+        RegisterProperty(
+            3,
+            nameof(Velocity),
+            () => Velocity,
+            (v) => Velocity = v
+        );
+        
+        RegisterProperty(
+            4,
             nameof(_targetNetId),
             () => _targetNetId ?? -1,
             (v) => _targetNetId = v
         );
 
         RegisterProperty(
-            101,
+            5,
             nameof(MaxHealth),
             () => MaxHealth,
             (v) => MaxHealth = v
         );
         
         RegisterProperty(
-            102,
+            6,
             nameof(CurrentHealth),
             () => CurrentHealth,
             (v) => CurrentHealth = v
         );
+        
+        _healthBarOffset = healthBarOffset ?? _healthBarOffset;
         
         MaxHealth = maxHealth;
         CurrentHealth = MaxHealth;
@@ -220,6 +250,7 @@ public abstract class Enemy : GameObject
         State = EnemyState.Dead;
         Velocity = 0f;
         OnDeathEvent?.Invoke(this);
+        RemoveFromParent();
     }
     
     public void Heal(int amount)

@@ -69,7 +69,7 @@ namespace SDWFE.Objects.Tiles
         private void OnEnterPortal(TriggerHitbox hitbox, object other, TriggerSide side)
         {
             // Prevent multiplayer client from getting stuck in the portal & trying to change the scene
-            if (GameState.Instance.SessionManager.CurrentSession?.Type == SessionType.MultiplayerClient) return;
+            if (GameState.Instance.SessionManager.IsClient) return;
             
             // Prevent interaction when level is locked
             bool isUnlocked = SceneData.levelsUnlocked >= _portalData.LevelIndex;

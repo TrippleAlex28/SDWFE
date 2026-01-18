@@ -10,6 +10,7 @@ using Engine.Scene;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SDWFE.Commands;
+using SDWFE.Managers;
 using SDWFE.Objects;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
