@@ -1,4 +1,12 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"Level_3.tmj"
+        }
+    },
  "height":100,
  "infinite":false,
  "layers":[
@@ -465,7 +473,7 @@
                         {
                          "name":"wave",
                          "type":"int",
-                         "value":3
+                         "value":2
                         }],
                  "rotation":0,
                  "type":"",
@@ -488,13 +496,13 @@
                         {
                          "name":"wave",
                          "type":"int",
-                         "value":1
+                         "value":2
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":176,
+                 "x":192,
                  "y":864
                 }, 
                 {
@@ -580,13 +588,13 @@
                         {
                          "name":"wave",
                          "type":"int",
-                         "value":3
+                         "value":2
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":224,
+                 "x":240,
                  "y":1056
                 }, 
                 {
@@ -603,13 +611,13 @@
                         {
                          "name":"wave",
                          "type":"int",
-                         "value":3
+                         "value":2
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":304,
+                 "x":288,
                  "y":1056
                 }, 
                 {
@@ -626,7 +634,7 @@
                         {
                          "name":"wave",
                          "type":"int",
-                         "value":3
+                         "value":2
                         }],
                  "rotation":0,
                  "type":"",
@@ -649,7 +657,7 @@
                         {
                          "name":"wave",
                          "type":"int",
-                         "value":3
+                         "value":2
                         }],
                  "rotation":0,
                  "type":"",
