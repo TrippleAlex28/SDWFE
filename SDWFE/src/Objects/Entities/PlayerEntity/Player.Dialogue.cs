@@ -81,7 +81,7 @@ public partial class Player
             return;
             
         // Demo: Press T to show a test dialogue
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_DIALOGUE) && !IsInDialogue)
+        /*if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_DIALOGUE) && !IsInDialogue)
         {
             ShowDialogue(
                 "Welcome, adventurer! This is a test of the dialogue system.|p" +
@@ -90,7 +90,7 @@ public partial class Player
                 "When the text overflows the box, it automatically creates new pages. This is useful for long conversations with NPCs or for telling stories in your game.|p" +
                 "Press Escape or click after the last page to close this dialogue. Good luck on your adventure!"
             );
-        }
+        } */
     }
 
     private void UpdateNPC(GameTime gameTime)

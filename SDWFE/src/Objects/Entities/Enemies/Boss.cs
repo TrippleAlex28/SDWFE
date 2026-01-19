@@ -185,7 +185,7 @@ public class Boss : Enemy
             Orb newOrb = new Orb(
             startPos,
             Vector2.Normalize(Target.GlobalPosition + new Vector2(8, 28) - startPos),
-            300f,
+            100f,
             500f,
             Damage,
             this,
@@ -224,20 +224,20 @@ public class Boss : Enemy
     }
     private void UpdateAttackBPattern()
     {
-        if (currentAttackPatternIndex >= 16){
+        if (currentAttackPatternIndex >= 32){
             isAttacking = false;
             currentAttackPatternIndex = 0;
             attackPatternTimer = 0.2f;
             return;
         }
         if (attackPatternTimer <= 0f){
-            float angle = currentAttackPatternIndex * (MathF.PI / 8); // 45 degrees apart
+            float angle = currentAttackPatternIndex * (MathF.PI / 16); // 45 degrees apart
             Vector2 direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
             Vector2 startPos = this.GlobalPosition + new Vector2(24, 0);
             Orb newOrb = new Orb(
             startPos,
             direction,
-            200f,
+            100f,
             500f,
             Damage,
             this,
@@ -264,15 +264,15 @@ public class Boss : Enemy
         {
             float randomOffset = ExtendedGame.Random.NextSingle() * MathF.PI;
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 32; i++)
             {
-                float angle = i * (MathF.PI / 8) + randomOffset;
+                float angle = i * (MathF.PI / 16) + randomOffset;
                 Vector2 direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
                 Vector2 startPos = this.GlobalPosition + new Vector2(24, 0);
                 Orb newOrb = new Orb(
                 startPos,
                 direction,
-                400f,
+                100f,
                 500f,
                 Damage,
                 this,
