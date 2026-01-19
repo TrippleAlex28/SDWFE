@@ -43,11 +43,11 @@ public class UIInventory : UIContainer
     private bool _isMenuOpen = false;
 
     private const float MENU_WIDTH_PERCENT = 70f;
-    private const float MENU_HEIGHT_PERCENT = 75f;
-    private const float SCROLL_BOX_SPACING = 16f;
+    private const float MENU_HEIGHT_PERCENT = 60f;
+    private const float SCROLL_BOX_SPACING = 8f;
     private const float LABEL_HEIGHT = 24f;
-    private const float MENU_SLOT_SIZE = 40f;
-    private const float SLOT_SPACING = 6f;
+    private const float MENU_SLOT_SIZE = 32f;
+    private const float SLOT_SPACING = 4f;
     private const int GRID_COLUMNS = 3;
 
     public bool IsMenuOpen => _isMenuOpen;
@@ -91,7 +91,7 @@ public class UIInventory : UIContainer
         _menuBackground = UIVisual.FromColor(new Color(15, 15, 15, 230));
         _menuBackground.AlignmentPoint = Alignment.MiddleCenter;
         _menuBackground.DesiredSize = menuSize;
-        _menuBackground.Padding = new Vector4(16, 16, 16, 16);
+        _menuBackground.Padding = new Vector4(4);
         AddChild(_menuBackground);
 
         // Container for side-by-side scroll boxes
@@ -108,6 +108,19 @@ public class UIInventory : UIContainer
 
         // Right side - Vault
         CreateVaultSection();
+        
+        // Bottom labels
+        var labelContainer = new UIVBoxContainer()
+        {
+            AlignmentPoint = Alignment.BottomMiddle,
+            DesiredSize = new Vector2(0, 14 * 2),
+        };
+        _menuBackground.AddChild(labelContainer);
+        
+        var eLabel = UIVisual.FromText("E - Switch Inv & Inventory", Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 12), Color.White);
+        labelContainer.AddChild(eLabel);
+        var fLabel = UIVisual.FromText("F - Switch Hotbar & Weapon", Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 12), Color.White);
+        labelContainer.AddChild(fLabel);
     }
 
     private void CreateInventorySection()
@@ -117,14 +130,15 @@ public class UIInventory : UIContainer
             DesiredSize = Vector2.Zero,
             MinSize = new Vector2(0, 0),
             MaxSize = new Vector2(float.MaxValue, float.MaxValue),
-            Spacing = 4f
+            AlignmentPoint = Alignment.MiddleCenter,
+            Spacing = 2f
         };
         _scrollBoxContainer.AddChild(_inventorySection);
 
         // Inventory label
         _inventoryLabel = UIVisual.FromText("INVENTORY", Resources.TextFont, Color.White);
         _inventoryLabel.AlignmentPoint = Alignment.TopMiddle;
-        _inventoryLabel.DesiredSize = new Vector2(0, LABEL_HEIGHT);
+        _inventoryLabel.DesiredSize = new Vector2(0, 0);
         _inventorySection.AddChild(_inventoryLabel);
 
         // Inventory scroll container
@@ -134,7 +148,9 @@ public class UIInventory : UIContainer
             MinSize = new Vector2(0, 100),
             MaxSize = new Vector2(float.MaxValue, float.MaxValue),
             Margin = new Vector4(8, 4, 8, 4),
-            Spacing = SLOT_SPACING
+            Spacing = SLOT_SPACING,
+            AlignmentPoint = Alignment.MiddleCenter,
+            ChildAlignment = Alignment.TopMiddle,
         };
         _inventorySection.AddChild(_inventoryScroll);
 
@@ -148,14 +164,15 @@ public class UIInventory : UIContainer
             DesiredSize = Vector2.Zero,
             MinSize = new Vector2(0, 0),
             MaxSize = new Vector2(float.MaxValue, float.MaxValue),
-            Spacing = 4f
+            AlignmentPoint = Alignment.MiddleCenter,
+            Spacing = 2f
         };
         _scrollBoxContainer.AddChild(_vaultSection);
 
         // Vault label
         _vaultLabel = UIVisual.FromText("VAULT", Resources.TextFont, Color.White);
         _vaultLabel.AlignmentPoint = Alignment.TopMiddle;
-        _vaultLabel.DesiredSize = new Vector2(0, LABEL_HEIGHT);
+        _vaultLabel.DesiredSize = new Vector2(0, LABEL_HEIGHT / 2);
         _vaultSection.AddChild(_vaultLabel);
 
         // Vault scroll container
@@ -165,10 +182,12 @@ public class UIInventory : UIContainer
             MinSize = new Vector2(0, 100),
             MaxSize = new Vector2(float.MaxValue, float.MaxValue),
             Margin = new Vector4(8, 4, 8, 4),
-            Spacing = SLOT_SPACING
+            Spacing = SLOT_SPACING,
+            AlignmentPoint = Alignment.MiddleCenter,
+            ChildAlignment = Alignment.TopMiddle,
         };
         _vaultSection.AddChild(_vaultScroll);
-
+        
         // Vault placeholder
         _vaultPlaceholder = UIVisual.FromText(
             "Vault Not Accessible\n\nFind a vault terminal\nto access your storage",
@@ -207,7 +226,7 @@ public class UIInventory : UIContainer
                     MinSize = new Vector2(0, MENU_SLOT_SIZE),
                     MaxSize = new Vector2(float.MaxValue, MENU_SLOT_SIZE),
                     Spacing = SLOT_SPACING,
-                    AlignmentPoint = Alignment.TopLeft
+                    AlignmentPoint = Alignment.TopMiddle
                 };
                 _inventoryScroll.AddChild(currentRow);
                 _inventoryRows.Add(currentRow);
@@ -270,7 +289,7 @@ public class UIInventory : UIContainer
                     MinSize = new Vector2(0, MENU_SLOT_SIZE),
                     MaxSize = new Vector2(float.MaxValue, MENU_SLOT_SIZE),
                     Spacing = SLOT_SPACING,
-                    AlignmentPoint = Alignment.TopLeft
+                    AlignmentPoint = Alignment.TopMiddle
                 };
                 _vaultScroll.AddChild(currentRow);
                 _vaultRows.Add(currentRow);
