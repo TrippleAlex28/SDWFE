@@ -145,7 +145,6 @@ public partial class Player : GameObject
             StatsUI = new UIStats(this);
             StatsUI.UpdateStats(); // Initial update
             Stats.OnStatsChanged += OnStatsChanged;
-            Stats.OnDeath += OnDeath;
             
             GameState.Instance.CurrentScene?.UIRoot.AddChild(StatsUI);
             GameState.Instance.CurrentScene?.UIRoot.AddChild(ShopUI);
@@ -174,6 +173,8 @@ public partial class Player : GameObject
             
             #endregion
         }
+        
+        Stats.OnDeath += OnDeath;
     }
     
     protected override void UpdateSelf(GameTime gameTime)
@@ -197,7 +198,22 @@ public partial class Player : GameObject
         UpdateMovement(gameTime);
         UpdateDialogue(gameTime);
         UpdateWeapons(gameTime);
-        
+
+        // TODO: Show/hide certain menus
+        if (State == LifeState.Alive)
+        {
+            if (_deathContainer != null)
+            {
+                _deathContainer.IsVisible = false;
+            }
+        }
+        else
+        {
+            if (_deathContainer != null)
+            {
+                _deathContainer.IsVisible = true;
+            }
+        }
         UpdateRespawn(gameTime);
     }
     
@@ -214,9 +230,6 @@ public partial class Player : GameObject
         // Refill stats
         Stats.CurrentHealth = Stats.MaxHealth;
         Stats.CurrentStamina = Stats.MaxStamina;
-        
-        // TODO: Hide certain ui menus
-        _deathContainer.IsVisible = true;
     }
 
     private void UpdateRespawn(GameTime gameTime)
@@ -255,7 +268,6 @@ public partial class Player : GameObject
             level.LevelManager.LevelFailed = true;
             level.LevelManager.FailReason = LevelFailReason.AllDead;
             
-            // TODO: Add some kind of smooth transition
             GameState.Instance.SwitchScene(GameOverScene.KEY);
             
             return;
@@ -272,6 +284,5 @@ public partial class Player : GameObject
             this.Velocity = 0f;
         }
         _timeLeft.Text = $"Respawning in: {((int)RespawnTimer).ToString()}";
-        Console.WriteLine($"Update Respawn: {RespawnTimer}, {gameTime.DeltaSeconds()}");
     }
 }
