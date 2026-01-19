@@ -11,6 +11,8 @@ public enum LevelFailReason : byte
 
 public class GameplayLevelManager : GameObject
 {
+    public override uint TypeId => (uint)NetObjects.GameplayLevelManager;
+
     public bool LevelFailed { get; set; } = false;
     public LevelFailReason FailReason { get; set; } = LevelFailReason.None;
     

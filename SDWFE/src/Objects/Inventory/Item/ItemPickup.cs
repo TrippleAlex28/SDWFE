@@ -69,6 +69,7 @@ public class ItemPickup : GameObject
 
     protected override void ExitSelf()
     {
+        Console.WriteLine("Exit Pickup");
         _hitboxManager.RemoveTrigger(Hitbox);
         base.ExitSelf();
     }

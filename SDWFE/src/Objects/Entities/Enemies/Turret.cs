@@ -12,7 +12,7 @@ namespace SDWFE.Objects.Entities.Enemies;
 
 public class Turret : Enemy
 {
-    public override uint TypeId => (uint)NetObjects.Grunt;
+    public override uint TypeId => (uint)NetObjects.Turret;
 
     public AnimatedSprite Sprite { get; private set; } // TODO: Replace with Animated Sprite
     
