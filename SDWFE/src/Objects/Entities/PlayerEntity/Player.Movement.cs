@@ -11,7 +11,7 @@ namespace SDWFE.Objects.Entities.PlayerEntity;
 
 public partial class Player
 {
-    public const float WALK_VELOCITY = 300f;
+    public const float WALK_VELOCITY = 200f;
 
     public bool CanWalk => !_isLeaping;
 

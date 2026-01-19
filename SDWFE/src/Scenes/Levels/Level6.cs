@@ -17,6 +17,7 @@ public class Level6 : GameplayLevel
 
     public override void Enter()
     {
+        LevelIndex = 6;
         base.Enter();
 
         Boss boss = waveManager.bossEntity;

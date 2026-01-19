@@ -15,8 +15,15 @@ public class HubLevel : GameplayLevel
         
     }
 
+    public override void Enter()
+    {
+        LevelIndex = -1;
+        base.Enter();
+        
+    }
     public override void Update(GameTime gameTime)
     {
+        
         base.Update(gameTime);
         
         // Show player intro dialogue
