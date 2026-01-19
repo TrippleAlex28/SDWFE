@@ -32,6 +32,7 @@ public partial class Player : GameObject
     public float RespawnTimer;
 
     private UIContainer _deathContainer;
+    private UIVisual _timeLeft;
     
     public Player()
     {
@@ -166,10 +167,10 @@ public partial class Player : GameObject
             _deathContainer.AlignmentPoint = Alignment.MiddleCenter;
             GameState.Instance.CurrentScene?.UIRoot.AddChild(_deathContainer);
 
-            var timeLeft = UIVisual.FromText($"Respawning in: {((int)RespawnTimer).ToString()}", Resources.TextFont, Color.White);
-            timeLeft.Padding = new Vector4(10, 10, 10, 10);
-            timeLeft.AlignmentPoint = Alignment.TopMiddle;
-            _deathContainer.AddChild(timeLeft);
+            _timeLeft = UIVisual.FromText($"Respawning in: {((int)RespawnTimer).ToString()}", Resources.TextFont, Color.White);
+            _timeLeft.Padding = new Vector4(10, 10, 10, 10);
+            _timeLeft.AlignmentPoint = Alignment.TopMiddle;
+            _deathContainer.AddChild(_timeLeft);
             
             #endregion
         }
@@ -270,6 +271,7 @@ public partial class Player : GameObject
             this.GlobalPosition = level.SpawnPoint;
             this.Velocity = 0f;
         }
+        _timeLeft.Text = $"Respawning in: {((int)RespawnTimer).ToString()}";
         Console.WriteLine($"Update Respawn: {RespawnTimer}, {gameTime.DeltaSeconds()}");
     }
 }
