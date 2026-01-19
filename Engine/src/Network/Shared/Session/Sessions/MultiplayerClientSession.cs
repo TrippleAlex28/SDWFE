@@ -34,6 +34,8 @@ public class MultiplayerClientSession : GameSession
     
     public override void Reset()
     {
+        _ = DisconnectAsync("Client Left");
+        
         _netClient.Disconnected -= OnDisconnected;
         _netClient.PacketReceived -= OnPacketReceived;
         

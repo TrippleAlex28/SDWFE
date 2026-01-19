@@ -46,11 +46,8 @@ public class SessionManager
     private void SetSession(GameSession newSession)
     {
         // Cleanup previous session
-        if (CurrentSession != null)
-        {
-            CurrentSession.Reset();
-        }
-        
+        CurrentSession?.Reset();
+
         // Start new session
         CurrentSession = newSession;
         CurrentSession.Initialize();
