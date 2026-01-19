@@ -3,6 +3,7 @@ using Engine;
 using Engine.Hitbox;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
+using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Objects.Entities.Enemies;
 
@@ -275,7 +276,7 @@ public abstract class Enemy : GameObject
         foreach (var obj in GameState.Instance.CurrentScene!.SceneObjects)
         {
             // Only target Player objects
-            if (obj is not SDWFE.Objects.Entities.PlayerEntity.Player)
+            if (obj is not SDWFE.Objects.Entities.PlayerEntity.Player player || player.State == LifeState.Dead)
                 continue;
                 
             if (bestDistance > GetDistanceToTarget(obj))
