@@ -13,8 +13,8 @@ public class Level5 : GameplayLevel
     }
     public override void Enter()
     {
+        LevelIndex = 5;
         base.Enter();
-        
     }
     public override void Update(GameTime gameTime)
     {

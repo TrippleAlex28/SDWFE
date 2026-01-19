@@ -72,9 +72,7 @@ public class GameOverScene : Scene
     private void OnRestartClicked()
     {
         // Restart the game by switching to the main menu
-        SceneData.levelIndex = -1;
         GameState.Instance.SwitchScene(HubLevel.KEY);
-        // GameState.Instance.SwitchSessionAndScene(SessionType.Singleplayer, HubLevel.KEY);
     }
 
     private UIControl CreateButton(string text, Rectangle? sourceRect = null, Vector4? sliceRect = null, int fontSize = 24)

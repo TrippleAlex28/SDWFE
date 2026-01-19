@@ -372,7 +372,7 @@ public class GameObject : NetObject
         // When on stairs, bypass collision and move directly along stair direction
         if (IsOnStairs && StairDirection.LengthSquared() > 0f)
         {
-            this.GlobalPosition += displacement;
+            this.GlobalPosition += displacement * 0.7f;
             return;
         }
 

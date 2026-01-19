@@ -8,4 +8,9 @@ public class Level4 : GameplayLevel
     {
         
     }
+    public override void Enter()
+    {
+        LevelIndex = 4;
+        base.Enter();
+    }
 }

@@ -24,7 +24,7 @@ public abstract class GameplayLevel : Scene
     public GameplayLevel(string key, string levelSuffix) : base(key)
     {
         _levelSuffix = $"{levelSuffix}.tmj";
-        
+        BackgroundColor = new Color(22, 17, 11);
         SetDefaultPlayerClass<Player>(() => new Player());
         
         InputManager.Instance.SetActiveProfile(InputSetup.PROFILE_GAMEPLAY);
@@ -43,9 +43,7 @@ public abstract class GameplayLevel : Scene
         
         waveManager = new WaveManager(this, map.Portals, map.Doors, map.Enemies, HitboxManager);
         this.AddObject(waveManager);
-        
-        this.LevelIndex = SceneData.levelIndex;
-        
+                
         // Manage hub level special wave case
         if (LevelIndex is -1 or 0)
         {
