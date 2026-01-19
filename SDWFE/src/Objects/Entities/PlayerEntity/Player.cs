@@ -208,6 +208,11 @@ public partial class Player : GameObject
         State = LifeState.Dead;
         RespawnTimer = 30f;
         
+        // Refill stats
+        Stats.CurrentHealth = Stats.MaxHealth;
+        Stats.CurrentStamina = Stats.MaxStamina;
+        
+        // TODO: Hide certain ui menus
         _deathContainer.IsVisible = true;
     }
 
@@ -246,6 +251,10 @@ public partial class Player : GameObject
         {
             level.LevelManager.LevelFailed = true;
             level.LevelManager.FailReason = LevelFailReason.AllDead;
+            
+            // TODO: Add some kind of smooth transition
+            GameState.Instance.SwitchScene(GameOverScene.KEY);
+            
             return;
         }
 
@@ -258,10 +267,6 @@ public partial class Player : GameObject
             State = LifeState.Alive;
             this.GlobalPosition = level.SpawnPoint;
             this.Velocity = 0f;
-
-            // Refill stats
-            Stats.CurrentHealth = Stats.MaxHealth;
-            Stats.CurrentStamina = Stats.MaxStamina;
         }
         Console.WriteLine($"Update Respawn: {RespawnTimer}, {gameTime.DeltaSeconds()}");
     }
