@@ -193,6 +193,18 @@
 /processorParam:TextureFormat=Color
 /build:Entities/Player/32x16 Use-Sheet.png
 
+#begin Entities/Projectiles/16x16 Arrow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/Projectiles/16x16 Arrow.png
+
 #begin Entities/Projectiles/16x16 Wizard Projectile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -284,6 +296,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Items/16x16 Bronze Coin.png
+
+#begin Items/32x32 Bow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Items/32x32 Bow.png
 
 #begin Items/Adrenaline.png
 /importer:TextureImporter
