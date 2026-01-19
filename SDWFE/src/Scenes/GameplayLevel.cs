@@ -6,6 +6,7 @@ using Engine.Scene;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Managers;
+using SDWFE.Objects;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Tilemap;
 using SDWFE.Objects.Tiles;
@@ -15,6 +16,8 @@ namespace SDWFE.Scenes.Levels;
 public abstract class GameplayLevel : Scene
 {
     private string _levelSuffix;
+    public GameplayLevelManager LevelManager { get; set; }
+
     protected Tilemap map;
     protected WaveManager waveManager;
     
@@ -30,7 +33,10 @@ public abstract class GameplayLevel : Scene
     public override void Enter()
     {
         base.Enter();
+        
         ExtendedGame.LightShaderInstance.Enabled = true;
+        
+        #region Tilemap & Hitboxes Loading
         map = new Tilemap(_levelSuffix, HitboxManager);
         SpawnPoint = map.SpawnPoint;
         map.RegisterHitboxes(HitboxManager);
@@ -73,6 +79,14 @@ public abstract class GameplayLevel : Scene
         SetUpHitboxes();
         
         this.AddObject(map);
+        #endregion
+        
+        // Only run on server
+        if (GameState.Instance.SessionManager.IsHost || GameState.Instance.SessionManager.IsSingleplayer)
+        {
+            LevelManager = new GameplayLevelManager();
+            AddObject(LevelManager);
+        }
     }
 
     public override void Update(GameTime gameTime)
