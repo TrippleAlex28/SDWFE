@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using Engine;
 using Engine.Sprite;
+using Engine.UI;
+using Engine.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Inventory;
@@ -26,7 +29,9 @@ public partial class Player : GameObject
     private Texture2D _runSheet = ExtendedGame.AssetManager.LoadTexture("32x16 Run-Sheet", "Entities/Player/");
 
     public LifeState State = LifeState.Alive;
-    public uint RespawnAtTick;
+    public float RespawnTimer;
+
+    private UIContainer _deathContainer;
     
     public Player()
     {
@@ -97,9 +102,9 @@ public partial class Player : GameObject
         
         RegisterProperty(
             9,
-            nameof(RespawnAtTick),
-            () => RespawnAtTick,
-            (v) => RespawnAtTick = v
+            nameof(RespawnTimer),
+            () => RespawnTimer,
+            (v) => RespawnTimer = v
         );
         
         // Animated Sprite Setup
@@ -150,6 +155,21 @@ public partial class Player : GameObject
             
             if (_dialogueChoice != null)
                 GameState.Instance.CurrentScene?.UIRoot.AddChild(_dialogueChoice);
+
+            #region Death/Respawn UI
+
+            _deathContainer = new UIContainer();
+            _deathContainer.IsVisible = false;
+            _deathContainer.DesiredSize = UIExtensionMethods.GetScreenPercentage(100);
+            _deathContainer.MinSize = _deathContainer.DesiredSize;
+            _deathContainer.MaxSize = _deathContainer.DesiredSize;
+            _deathContainer.ChildAlignment = Alignment.MiddleCenter;
+            GameState.Instance.CurrentScene?.UIRoot.AddChild(_deathContainer);
+
+            var timeLeft = UIVisual.FromText($"Respawning in: {((int)RespawnTimer).ToString()}", Resources.TextFont, Color.White);
+            _deathContainer.AddChild(timeLeft);
+            
+            #endregion
         }
     }
     
@@ -174,6 +194,8 @@ public partial class Player : GameObject
         UpdateMovement(gameTime);
         UpdateDialogue(gameTime);
         UpdateWeapons(gameTime);
+        
+        UpdateRespawn(gameTime);
     }
     
     private void OnDeath()
@@ -184,10 +206,12 @@ public partial class Player : GameObject
         Stats.Coins = Math.Max(0, Stats.Coins - 50);
         
         State = LifeState.Dead;
-        RespawnAtTick = GameState.Instance.ServerTick + (30 * 60);
+        RespawnTimer = 30f;
+        
+        _deathContainer.IsVisible = true;
     }
 
-    private void UpdateRespawn()
+    private void UpdateRespawn(GameTime gameTime)
     {
         // Only run on server
         if (!GameState.Instance.SessionManager.IsHost && !GameState.Instance.SessionManager.IsSingleplayer) return;
@@ -226,8 +250,11 @@ public partial class Player : GameObject
         }
 
         // Respawn player when enough ticks have passed
-        if (GameState.Instance.ServerTick >= RespawnAtTick)
+        RespawnTimer -= gameTime.DeltaSeconds();
+        if (RespawnTimer <= 0f)
         {
+            _deathContainer.IsVisible = false;
+            
             State = LifeState.Alive;
             this.GlobalPosition = level.SpawnPoint;
             this.Velocity = 0f;
@@ -236,5 +263,6 @@ public partial class Player : GameObject
             Stats.CurrentHealth = Stats.MaxHealth;
             Stats.CurrentStamina = Stats.MaxStamina;
         }
+        Console.WriteLine($"Update Respawn: {RespawnTimer}, {gameTime.DeltaSeconds()}");
     }
 }

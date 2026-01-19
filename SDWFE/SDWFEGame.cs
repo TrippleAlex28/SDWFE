@@ -132,7 +132,7 @@ public class SDWFEGame : ExtendedGame
         var scene = GameState.Instance.CurrentScene!;
         var pawn = scene.GetPawn(GameState.Instance.SessionManager.CurrentSession!
             .LocalClientId);
-        if (pawn is Player player)
+        if (pawn is Player player && player.State == LifeState.Alive)
         {
             var lookDirection = (ScreenToWorld(InputManager.Instance.MousePosition.ToVector2()) -
                                  (player.GlobalPosition + player.CameraOffset));
