@@ -212,6 +212,7 @@ public partial class Player : GameObject
             if (_deathContainer != null)
             {
                 _deathContainer.IsVisible = true;
+                _timeLeft.Text = $"Respawning in: {((int)RespawnTimer).ToString()}";
             }
         }
         UpdateRespawn(gameTime);
@@ -283,6 +284,5 @@ public partial class Player : GameObject
             this.GlobalPosition = level.SpawnPoint;
             this.Velocity = 0f;
         }
-        _timeLeft.Text = $"Respawning in: {((int)RespawnTimer).ToString()}";
     }
 }
