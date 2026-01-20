@@ -93,7 +93,7 @@ public class UIInventorySlot : UIControl
         int stackSize = Slot.Item?.StackSize ?? 0;
         if (stackSize > 1)
         {
-            _stackText = UIVisual.FromText(stackSize.ToString(), Resources.TextFont, Color.White);
+            _stackText = UIVisual.FromText(stackSize.ToString(), Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 10), Color.White);
             _stackText.AlignmentPoint = Alignment.BottomRight;
             _stackText.Margin = new Vector4(0, 0, _slotSize * 0.15f, _slotSize * 0.1f);
             AddChild(_stackText);

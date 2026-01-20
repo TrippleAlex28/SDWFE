@@ -498,7 +498,6 @@ public class UIInventory : UIContainer
             ToggleMenu();
         }
         
-        // TODO: Handle swapping inputs
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_WEAPON_1)) SwapFocusToWeapon(0);
         if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_WEAPON_2)) SwapFocusToWeapon(1);
         

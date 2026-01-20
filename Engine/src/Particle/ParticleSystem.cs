@@ -50,4 +50,20 @@ public class ParticleSystem
     {
         _emitters.Clear();
     }
+
+    public void Stop()
+    {
+        foreach (var emitter in _emitters)
+        {
+            emitter.Stop();
+        }
+    }
+
+    public void Restart()
+    {
+        foreach (var emitter in _emitters)
+        {
+            emitter.Restart();
+        }
+    }
 }

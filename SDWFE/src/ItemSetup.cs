@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Engine;
+using Engine.Input;
 using Engine.Scene;
 using Microsoft.Xna.Framework;
+using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
 using SDWFE.Objects.Projectiles.Bullets;
@@ -13,46 +16,33 @@ namespace SDWFE;
 
 public static class ItemSetup
 {
-    public const string WOOD = "Wood";
-    public const string IRON = "Iron";
     public const string BANDAGE = "Bandage";
     public const string MEDKIT = "Medkit";
 
+    public const string ADRENALINE = "Adrenaline";
+    public const string FREEZE = "Freeze";
+    public const string RAGE = "Rage";
+    public const string SLAM = "Slam";
+    
     public const string BOW = "Bow";
     public const string PISTOL = "Pistol";
     public const string ASSAULT_RIFLE = "Assault Rifle";
     public const string SHOTGUN = "Shotgun";
     public const string FIREWORK_LAUNCHER = "Firework Launcher";
 
-    public const string ACTION_HEAL = "Heal";
-    public const string ACTION_HEAL_SUPERIOR = "HealSuperior";
     public const string ACTION_SHOOT = "Shoot";
+    
     
     public static readonly Dictionary<string, ItemData> ItemDataMap = new()
     {
-        {
-            WOOD, new ItemData
-            {
-                Name = WOOD,
-                MaxStackSize = 64,
-                IconPath = "Heal",
-            }
-        },
-        {
-            IRON, new ItemData
-            {
-                Name = IRON,
-                MaxStackSize = 16,
-                IconPath = "Heal",
-            }
-        },
         {
             BANDAGE, new ItemData
             {
                 Name = BANDAGE,
                 MaxStackSize = 8,
                 IconPath = "Heal",
-                UseActionId = ACTION_HEAL,
+                UseActionId = BANDAGE,
+                Price = 10,
             }
         },
         {
@@ -60,8 +50,49 @@ public static class ItemSetup
             {
                 Name = MEDKIT,
                 MaxStackSize = 4,
-                IconPath = "Heal",
-                UseActionId = ACTION_HEAL_SUPERIOR,
+                IconPath = "Medkit",
+                UseActionId = MEDKIT,
+                Price = 20,
+            }
+        },
+        {
+            ADRENALINE, new ItemData
+            {
+                Name = ADRENALINE,
+                MaxStackSize = 2,
+                IconPath = "Adrenaline",
+                UseActionId = ADRENALINE,
+                Price = 20,
+            }
+        },
+        {
+            FREEZE, new ItemData
+            {
+                Name = FREEZE,
+                MaxStackSize = 2,
+                IconPath = "Freeze",
+                UseActionId = FREEZE,
+                Price = 25,
+            }
+        },
+        {
+            RAGE, new ItemData
+            {
+                Name = RAGE,
+                MaxStackSize = 2,
+                IconPath = "Rage",
+                UseActionId = RAGE,
+                Price = 25,
+            }
+        },
+        {
+            SLAM, new ItemData
+            {
+                Name = SLAM,
+                MaxStackSize = 2,
+                IconPath = "Slam",
+                UseActionId = SLAM,
+                Price = 50,
             }
         },
         {
@@ -75,6 +106,7 @@ public static class ItemSetup
                 IconPath = "32x32 Bow",
                 UseActionId = ACTION_SHOOT,
                 BulletType = BulletType.Arrow,
+                Price = 10,
             }
         },
         {
@@ -87,6 +119,7 @@ public static class ItemSetup
                 Velocity = 350f,
                 IconPath = "Pistol",
                 UseActionId = ACTION_SHOOT,
+                Price = 20,
             }
         },
         {
@@ -99,6 +132,7 @@ public static class ItemSetup
                 Velocity = 550f,
                 IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
+                Price = 50,
             }
         },
         {
@@ -112,6 +146,7 @@ public static class ItemSetup
                 BulletType = BulletType.Shotgun,
                 IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
+                Price = 50,
             }
         },
         {
@@ -125,19 +160,79 @@ public static class ItemSetup
                 BulletType = BulletType.FireworkRocket,
                 IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
+                Price = 100,
             }
         },
     };
 
     public static void Initialize()
     {
-        ItemActionRegistry.RegisterUse(ACTION_HEAL, (player, data, direction) =>
+        ItemActionRegistry.RegisterUse(BANDAGE, (player, data, direction) =>
         {
             player.Stats.CurrentHealth += 100;
         });
-        ItemActionRegistry.RegisterUse(ACTION_HEAL_SUPERIOR, (player, data, direction) =>
+        ItemActionRegistry.RegisterUse(MEDKIT, (player, data, direction) =>
         {
             player.Stats.CurrentHealth += 250;
+        });
+        ItemActionRegistry.RegisterUse(ADRENALINE, (player, data, direction) =>
+        {
+            player.ApplyMovementMultiplier(.75f, 2f);
+        });
+        ItemActionRegistry.RegisterUse(FREEZE, (player, data, direction) =>
+        {
+            const float duration = 3f;
+            
+            Scene? scene = GameState.Instance.CurrentScene;
+            if (scene == null) return;
+
+            // Get enemy closest to the pointer position
+            var enemies = scene.GetAllTypes<Enemy>();
+            if (enemies.Count <= 0) return;
+
+            Vector2 mouse = ExtendedGame.ScreenToWorld(InputManager.Instance.MousePosition.ToVector2());
+            Enemy? best = null;
+            float bestDistance = 9999f;
+            foreach (var enemy in enemies)
+            {
+                if (best == null)
+                {
+                    best = enemy;
+                    break;
+                }
+
+                if (Vector2.Distance(mouse, best.GlobalPosition) < bestDistance)
+                    best = enemy;
+            }
+            
+            best!.Freeze(duration);
+        });
+        ItemActionRegistry.RegisterUse(RAGE, (player, data, direction) =>
+        {
+            player.ApplyDamageMultiplier(.5f, 2f);
+        });
+        ItemActionRegistry.RegisterUse(SLAM, (player, data, direction) =>
+        {
+            const float range = 250f;
+            const int damage = 50;
+            
+            Scene? scene = GameState.Instance.CurrentScene;
+            if (scene == null) return;
+
+            // Create the player slam particle effect
+            player.StartSlamEffect();
+            
+            // Get enemy closest to the pointer position
+            var enemies = scene.GetAllTypes<Enemy>();
+            if (enemies.Count <= 0) return;
+
+            foreach (var enemy in enemies)
+            {
+                if (Vector2.Distance(player.GlobalPosition, enemy.GlobalPosition) <= range)
+                {
+                    enemy.TakeDamage(damage);
+                }
+            }
         });
         ItemActionRegistry.RegisterUse(ACTION_SHOOT, (player, data, direction) =>
         {
@@ -153,7 +248,7 @@ public static class ItemSetup
             switch (weaponData!.BulletType)
             {
                 case BulletType.Generic:
-                    scene.AddObject(new GenericBullet(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
+                    scene.AddObject(new GenericBullet(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage * player.DamageMultiplier, player, scene.HitboxManager));
                     break;
                 case BulletType.Shotgun:
                     const int pelletCount = 12;
@@ -173,17 +268,17 @@ public static class ItemSetup
                             pelletDirection, 
                             weaponData.Velocity, 
                             weaponData.Range, 
-                            weaponData.Damage, 
+                            weaponData.Damage * player.DamageMultiplier, 
                             player,
                             scene.HitboxManager
                         ));
                     }
                     break;
                 case BulletType.FireworkRocket:
-                    scene.AddObject(new FireworkRocket(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
+                    scene.AddObject(new FireworkRocket(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage * player.DamageMultiplier, player, scene.HitboxManager));
                     break;
                 case BulletType.Arrow:
-                    scene.AddObject(new Arrow(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
+                    scene.AddObject(new Arrow(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage * player.DamageMultiplier, player, scene.HitboxManager));
                     break;
                 default:
                     break;

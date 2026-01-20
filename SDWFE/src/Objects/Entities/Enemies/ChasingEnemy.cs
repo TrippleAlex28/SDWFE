@@ -51,7 +51,7 @@ public abstract class ChasingEnemy : Enemy
     {
         base.UpdateSelf(gameTime);
 
-        if (!IsAlive || HitboxManager == null || _pathfinder == null)
+        if (!IsAlive || HitboxManager == null || _pathfinder == null || _isFrozen)
         {
             Velocity = 0f;
             return;

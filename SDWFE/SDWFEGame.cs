@@ -14,7 +14,6 @@ using SDWFE.Managers;
 using SDWFE.Objects;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
-using SDWFE.Objects.Inventory.Ability;
 using SDWFE.Objects.Inventory.Item;
 using SDWFE.Objects.Projectiles.Bullets;
 using SDWFE.Scenes;
@@ -94,9 +93,6 @@ public class SDWFEGame : ExtendedGame
         // Load items
         ItemSetup.Initialize();
         ItemDatabase.Instance.LoadDatabase();
-        
-        // Load abilities
-        AbilityRegistry.Initialize();
     }
 
     protected override void Update(GameTime gameTime)

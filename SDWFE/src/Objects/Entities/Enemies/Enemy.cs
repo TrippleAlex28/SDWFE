@@ -1,8 +1,10 @@
 ﻿using System;
 using Engine;
 using Engine.Hitbox;
+using Engine.Particle;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Objects.Entities.Enemies;
@@ -49,6 +51,13 @@ public abstract class Enemy : GameObject
     private Sprite _healthFilling;
     private Vector2 _healthBarOffset = new Vector2(16, 0);
 
+    // Freeze 
+    protected bool _isFrozen;
+    private float _freezeTimer;
+    private ParticleSystem _freezePS = new();
+    private ParticleEmitter _freezeShardEmitter;
+    private ParticleEmitter _freezeMistEmitter;
+    
     public Enemy(
         int maxHealth, 
         float attackRange, 
@@ -109,6 +118,8 @@ public abstract class Enemy : GameObject
             (v) => CurrentHealth = v
         );
         
+        this.CameraOffset = new Vector2(8, 16);
+        
         _healthBarOffset = healthBarOffset ?? _healthBarOffset;
         
         MaxHealth = maxHealth;
@@ -128,12 +139,21 @@ public abstract class Enemy : GameObject
         _healthFilling = new Sprite(EngineResources.BlankSquare);
         AddChild(_healthBackground);
         AddChild(_healthFilling);
+
+        _freezeShardEmitter = ParticlePresets.CreateFreeze();
+        _freezeMistEmitter = ParticlePresets.CreateFreezeMist();
+        _freezePS.AddEmitter(_freezeShardEmitter);
+        _freezePS.AddEmitter(_freezeMistEmitter);
+        _freezePS.Stop();
     }
 
     protected override void UpdateSelf(GameTime gameTime)
     {
         base.UpdateSelf(gameTime);
 
+        _freezeShardEmitter.Position = this.GlobalPosition + this.CameraOffset;
+        _freezeMistEmitter.Position = this.GlobalPosition + this.CameraOffset;
+        
         if (!IsAlive)
         {
             State = EnemyState.Dead;
@@ -168,7 +188,6 @@ public abstract class Enemy : GameObject
         Vector2 healthBarPos = GlobalPosition + _healthBarOffset;
         float healthPercent = (float)CurrentHealth / MaxHealth;
         
-
         // Health (green)
         _healthFilling.GlobalPosition = healthBarPos;
         _healthFilling.Scale = new Vector2(16 * healthPercent, 4);
@@ -181,9 +200,33 @@ public abstract class Enemy : GameObject
         _healthBackground.Color = Color.Red;
         _healthBackground.BaseDrawLayer = 0.94f;
 
+        if (_isFrozen)
+            _freezeTimer -= gameTime.DeltaSeconds();
+        if (_freezeTimer <= 0f && _isFrozen)
+        {
+            Console.WriteLine("STOP FREEZE");
+            _isFrozen = false;
+            _freezePS.Stop();
+        }
+        
+        _freezePS.Update(gameTime.DeltaSeconds());
     }
 
+    protected override void DrawSelf(SpriteBatch spriteBatch)
+    {
+        _freezePS.Draw(spriteBatch);
+        
+        base.DrawSelf(spriteBatch);
+    }
 
+    public void Freeze(float duration)
+    {
+        Console.WriteLine("START FREEZE");
+        _isFrozen = true;
+        _freezeTimer = duration;
+        _freezePS.Restart();
+    }
+    
     /// <summary>
     /// Separate this enemy from any overlapping enemies to prevent them from getting stuck.
     /// </summary>
@@ -295,7 +338,7 @@ public abstract class Enemy : GameObject
 
     protected virtual bool TryAttack()
     {
-        if (!HasAuthority() || !(AttackTimer <= 0f) || !IsTargetInRange(Target, AttackRange)) return false;
+        if (!HasAuthority() || !(AttackTimer <= 0f) || !IsTargetInRange(Target, AttackRange) || _isFrozen) return false;
         
         Attack();
         AttackTimer = AttackCooldown;

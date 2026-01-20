@@ -33,7 +33,7 @@ public class FireworkRocket : Bullet
         ExtendedGame.AssetManager.LoadTexture("GenericBullet", "Entities/Projectiles/"), 
         owner, 
         ParticlePresets.CreateRocketTrail(), 
-        ParticlePresets.CreateRocketImpact,
+        ParticlePresets.CreateRocketImpact(),
         hitboxManager: hitboxManager
     )
     {

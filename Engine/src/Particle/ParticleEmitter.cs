@@ -62,10 +62,10 @@ public class ParticleEmitter
             }
         }
 
-        if (!isEmitting && !anyActive)
-        {
-            IsActive = false;
-        }
+        // if (!isEmitting && !anyActive)
+        // {
+        //     IsActive = false;
+        // }
     }
 
     private void EmitParticle()
@@ -176,6 +176,7 @@ public class ParticleEmitter
 
     public void Restart()
     {
+        Console.WriteLine("RESTART");
         isEmitting = true;
         age = 0f;
         IsActive = true;

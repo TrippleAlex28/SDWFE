@@ -122,6 +122,13 @@ public partial class Player : GameObject
         InitializeAnimations();
         ConstructInventory();
         // Note: ConstructDialogue is called in EnterSelf for locally owned players only
+
+        _rageEmitter = ParticlePresets.CreateRageBubbles();
+        _ragePS.AddEmitter(_rageEmitter);
+        _ragePS.Stop();
+        _slamEmitter = ParticlePresets.CreateSlam();
+        _slamPS.AddEmitter(_slamEmitter);
+        _slamPS.Stop();
     }
 
     protected override void EnterSelf()
@@ -136,7 +143,6 @@ public partial class Player : GameObject
             ConstructDialogue();
             
             ConstructShopUI();
-            ConstructAbilities();
             ConstructStats(); // Must be after ConstructAbilities (needs Inventory)
             
             // Add inventory UI
@@ -193,7 +199,6 @@ public partial class Player : GameObject
         
         UpdateNPC(gameTime);
         UpdateInventory();
-        UpdateAbilities(gameTime);
         UpdateShop();
         UpdateMovement(gameTime);
         UpdateDialogue(gameTime);
@@ -217,7 +222,14 @@ public partial class Player : GameObject
         }
         UpdateRespawn(gameTime);
     }
-    
+
+    protected override void DrawSelf(SpriteBatch spriteBatch)
+    {
+        DrawWeapons(spriteBatch);
+        
+        base.DrawSelf(spriteBatch);
+    }
+
     private void OnDeath()
     {
         // Only run on server

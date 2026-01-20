@@ -187,6 +187,15 @@ public abstract class Scene
           return GetAllPawnsRecursive(SceneRoot);
      }
 
+     public List<T> GetAllTypes<T>() where T : GameObject
+     {
+          var list = new List<T>();
+
+          GetAllTypesRecursive<T>(list, SceneRoot);
+          
+          return list;
+     }
+     
      /// <summary>
      /// Get GameObject with a specific network ID
      /// </summary>
@@ -244,6 +253,17 @@ public abstract class Scene
           return pawns;
      }
 
+     private void GetAllTypesRecursive<T>(List<T> list, GameObject node) where T : GameObject
+     {
+          if (node.GetType().IsSubclassOf(typeof(T)))
+               list.Add((T)node);
+
+          foreach (var c in node.Children)
+          {
+               GetAllTypesRecursive<T>(list, c);
+          }
+     }
+     
      private List<GameObject> GetClientObjectsRecursive(GameObject node, int clientId, bool skipNode = false)
      {
           List<GameObject> objects = [];
@@ -293,7 +313,7 @@ public abstract class Scene
           foreach (GameObject child in node.Children)
                child.ClearDirty();
      }
-
+     
      private void MapSceneRecursive(GameObject node, List<GameObject> result)
      {
           result.Add(node);
