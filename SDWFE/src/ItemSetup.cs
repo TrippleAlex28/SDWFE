@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Engine;
+using Engine.Hitbox;
 using Engine.Input;
 using Engine.Scene;
+using Engine.Sprite;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
@@ -29,6 +32,7 @@ public static class ItemSetup
     public const string ASSAULT_RIFLE = "Assault Rifle";
     public const string SHOTGUN = "Shotgun";
     public const string FIREWORK_LAUNCHER = "Firework Launcher";
+    public const string MELEE = "Melee";
 
     public const string ACTION_SHOOT = "Shoot";
     
@@ -163,6 +167,19 @@ public static class ItemSetup
                 Price = 100,
             }
         },
+        {
+            MELEE, new WeaponData
+            {
+                Name = MELEE,
+                Damage = 75f,
+                AttackSpeed = 1.5f,
+                Range = 50f,
+                Velocity = 0f,
+                IconPath = "32x32 Sword",
+                UseActionId = ACTION_SHOOT,
+                Price = 25,
+            }
+        },
     };
 
     public static void Initialize()
@@ -245,6 +262,87 @@ public static class ItemSetup
             Scene? scene = GameState.Instance.CurrentScene;
             if (scene == null) return;
             
+            if (weaponData!.Name == MELEE)
+            {
+                // Melee attack
+                const float meleeRange = 80f;
+                const float meleeArc = MathF.PI / 3f; // 60 degrees
+
+                Texture2D? meleeAttackTexture = ExtendedGame.AssetManager.LoadTexture("64x48 Sword Swing-Sheet", "Items/");
+                AnimationData meleeAttackAnimData = new AnimationData(meleeAttackTexture, 0, 100f, false);
+                AnimatedSprite? attackAnim = new AnimatedSprite(meleeAttackTexture, 64, 48);
+                attackAnim.PlayOneShot(meleeAttackAnimData);
+                attackAnim.AnimationCompleted += () => player.RemoveChild(attackAnim);
+                float rotation = MathF.Atan2(direction.Y, direction.X) + MathF.PI * 2.5f;
+
+                if (!direction.IsApproximatelyZero())
+                {
+                    attackAnim.AngleRadians = rotation;
+                }
+                attackAnim.OriginType = OriginType.Center;
+                player.AddChild(attackAnim);
+
+                Vector2 middlePlayerPos = player.GlobalPosition + new Vector2(8, 16);
+                attackAnim.GlobalPosition = player.GlobalPosition + new Vector2(8, 20) + direction * (meleeRange / 2f);
+                attackAnim.BaseDrawLayer = 1f;
+                float xRect = direction.X >= 0 ? attackAnim.GlobalPosition.X : attackAnim.GlobalPosition.X - meleeRange;
+                float yRect = direction.Y >= 0 ? attackAnim.GlobalPosition.Y - meleeRange : attackAnim.GlobalPosition.Y + meleeRange;
+                FloatRect collisionBox = new FloatRect(
+                    xRect,
+                    yRect,
+                    meleeRange,
+                    meleeRange);
+
+                
+                rotation = rotation - MathF.PI * 1.5f;
+                if (rotation >= MathF.PI * 1.75f || rotation <= MathF.PI * 0.25f)
+                {
+                    // left side
+                    collisionBox = new FloatRect(
+                        middlePlayerPos.X - meleeRange,
+                        (middlePlayerPos.Y - (meleeRange / 2f)),
+                        (meleeRange),
+                        (meleeRange));
+                }
+                else if (rotation > MathF.PI * 0.25f && rotation < MathF.PI * 0.75f)
+                {
+                    // top side
+                    collisionBox = new FloatRect(
+                        middlePlayerPos.X - meleeRange / 2f,
+                        middlePlayerPos.Y - meleeRange,
+                        meleeRange,
+                        meleeRange);
+                }
+                else if (rotation >= MathF.PI * 0.75f && rotation < MathF.PI * 1.25f)
+                {
+                    collisionBox = new FloatRect(
+                        middlePlayerPos.X,
+                        middlePlayerPos.Y - meleeRange / 2f,
+                        meleeRange,
+                        meleeRange);
+                } else
+                {
+                    // bottom side
+                    collisionBox = new FloatRect(
+                        middlePlayerPos.X - meleeRange / 2f,
+                        middlePlayerPos.Y,
+                        meleeRange,
+                        meleeRange);
+                }
+
+                List<StaticHitbox> hitboxes = player.HitboxManager!.GetStaticCollisions(collisionBox, HitboxLayer.Enemy, player);
+                
+                foreach (var hitbox in hitboxes)
+                {
+                    if (hitbox.Owner is Enemy enemy)
+                    {
+                        enemy.TakeDamage((int)(weaponData.Damage * player.DamageMultiplier));
+                    }
+                }
+                // Set cooldown
+                player.SetShootCooldownFromAttackSpeed(weaponData.AttackSpeed);
+                return;
+            }
             switch (weaponData!.BulletType)
             {
                 case BulletType.Generic:
@@ -289,6 +387,7 @@ public static class ItemSetup
         });
     }
 }
+
 
 public static class ItemActionRegistry
 {
