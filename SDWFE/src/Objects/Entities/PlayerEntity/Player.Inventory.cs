@@ -18,6 +18,11 @@ public partial class Player
         
         // Setup vault access conditions
         Inventory.Vault.AddAccessCondition(() => true);
+
+        Inventory.AddItemByName(ItemSetup.ADRENALINE, 2);
+        Inventory.AddItemByName(ItemSetup.FREEZE, 2);
+        Inventory.AddItemByName(ItemSetup.RAGE, 2);
+        Inventory.AddItemByName(ItemSetup.SLAM, 2);
     }
 
     private void UpdateInventory()
