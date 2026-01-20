@@ -155,6 +155,7 @@ public enum VisualType
         {
             if (DesiredSize != Vector2.Zero)
                     return;
+            
             switch (VisualType)
             {
                 

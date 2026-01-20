@@ -15,7 +15,6 @@ public class UIInventoryItemSlot : UIInventorySlot, IUIFocusableSlot
 
     public bool IsFocused { get; private set; }
     private UIContainer? _focusOverlay;
-    private UIVisual? _focusPopup;
     public event Action<bool>? OnFocusChange;
     
     public event Action<IUIFocusableSlot>? Clicked;
@@ -119,33 +118,6 @@ public class UIInventoryItemSlot : UIInventorySlot, IUIFocusableSlot
             bottomEdge.DesiredSize = new Vector2(_slotSize, 4);
             _focusOverlay.AddChild(bottomEdge);
         }
-
-        // Create popup with instructions
-        if (_focusPopup == null)
-        {
-            var popupContainer = new UIContainer()
-            {
-                AlignmentPoint = Alignment.BottomMiddle,
-                DesiredSize = new Vector2(150, 40),
-                Margin = new Vector4(0, 0, 0, _slotSize + 10)
-            };
-
-            var popupBg = UIVisual.FromColor(new Color(20, 20, 20, 240));
-            popupBg.AlignmentPoint = Alignment.MiddleCenter;
-            popupBg.Padding = new Vector4(6, 4, 6, 4);
-            popupContainer.AddChild(popupBg);
-
-            var popupText = UIVisual.FromText(
-                "Press 1-2 for weapon\nPress 3-7 for hotbar",
-                Resources.TextFont,
-                new Color(200, 200, 200, 255)
-            );
-            popupText.AlignmentPoint = Alignment.MiddleCenter;
-            popupBg.AddChild(popupText);
-
-            _focusPopup = popupBg;
-            AddChild(popupContainer);
-        }
     }
 
     private void RemoveFocusVisuals()
@@ -154,17 +126,6 @@ public class UIInventoryItemSlot : UIInventorySlot, IUIFocusableSlot
         {
             RemoveChild(_focusOverlay);
             _focusOverlay = null;
-        }
-
-        if (_focusPopup != null)
-        {
-            // The popup is inside a container, we need to remove the parent
-            var parent = _focusPopup.Parent;
-            if (parent != null && parent != this)
-            {
-                RemoveChild((UIElement)parent);
-            }
-            _focusPopup = null;
         }
     }
 }
