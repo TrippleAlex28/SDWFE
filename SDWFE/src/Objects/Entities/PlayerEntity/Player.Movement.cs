@@ -106,11 +106,14 @@ public partial class Player
 
     private void UpdateMovement(GameTime gameTime)
     {
-        if (_movementMultiplier > 1f)
+        if (_movementMultiplierTimer > 0f)
             _movementMultiplierTimer -= gameTime.DeltaSeconds();
-        
+
         if (_movementMultiplierTimer <= 0f && !_movementMultiplier.IsApproximatelyEqual(1f))
+        {
             _movementMultiplier = 1f;
+            _movementMultiplierTimer = 0f;
+        }
         
         if (CanWalk)
             this.Velocity = WALK_VELOCITY * _movementMultiplier;

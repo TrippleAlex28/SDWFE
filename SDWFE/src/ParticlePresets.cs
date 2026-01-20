@@ -108,7 +108,7 @@ public static class ParticlePresets
         .WithLifetime(1f, 2f)
         .WithVelocity(new Vector2(-80f), new Vector2(80f))
         .WithSpawnRadius(6f)
-        .WithColorRange(new Color(), new Color())
+        .WithColorRange(new Color(150, 220, 255), new Color(200, 240, 255))
         .WithRotationVelocity(-3f, 3f)
         .WithScaleCurve(c => c
             .AddKey(0f, .2f)
@@ -130,7 +130,7 @@ public static class ParticlePresets
         .WithLifetime(1.5f, 2.5f)
         .WithVelocity(new Vector2(-30), new Vector2(30))
         .WithSpawnRadius(8f)
-        .WithColorRange(new Color(), new Color())
+        .WithColorRange(new Color(180, 230, 255, 100), new Color(220, 245, 255, 50))
         .WithRotationVelocity(-1f, 1f)
         .WithScaleCurve(c => c
             .AddKey(0f, .5f)
@@ -143,5 +143,21 @@ public static class ParticlePresets
             .AddKey(1f, 0f))
         .Additive()
         .Build();
-    
+
+    public static ParticleEmitter CreateRageBubbles() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
+        .WithMaxParticles(384)
+        .WithEmissionRate(96f)
+        .Continuous()
+        .WithLifetime(.5f, 1.2f)
+        .WithVelocity(new Vector2(-100, -180), new Vector2(100, -80))
+        .WithSpawnRadius(8f)
+        .WithColorRange(new Color(140, 30, 180), new Color(200, 60, 220))
+        .WithRotationVelocity(-5f, 5f)
+        .WithScaleCurve(c => c
+            .AddKey(0f, .2f)    
+            .AddKey(.3f, .6f)    
+            .AddKey(1f, .05f))
+        .WithFadeOut(.7f)
+        .AlphaBlend()
+        .Build();
 }

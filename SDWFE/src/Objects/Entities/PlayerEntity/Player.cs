@@ -122,6 +122,8 @@ public partial class Player : GameObject
         InitializeAnimations();
         ConstructInventory();
         // Note: ConstructDialogue is called in EnterSelf for locally owned players only
+        
+        _ragePS.Pause();
     }
 
     protected override void EnterSelf()
@@ -217,7 +219,14 @@ public partial class Player : GameObject
         }
         UpdateRespawn(gameTime);
     }
-    
+
+    protected override void DrawSelf(SpriteBatch spriteBatch)
+    {
+        DrawWeapons(spriteBatch);
+        
+        base.DrawSelf(spriteBatch);
+    }
+
     private void OnDeath()
     {
         // Only run on server

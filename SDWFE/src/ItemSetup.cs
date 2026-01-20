@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Engine;
 using Engine.Input;
 using Engine.Scene;
@@ -165,10 +166,12 @@ public static class ItemSetup
         });
         ItemActionRegistry.RegisterUse(ADRENALINE, (player, data, direction) =>
         {
-            player.ApplyMovementMultiplier(.75f, 2);
+            player.ApplyMovementMultiplier(.75f, 2f);
         });
         ItemActionRegistry.RegisterUse(FREEZE, (player, data, direction) =>
         {
+            const float duration = 3f;
+            
             Scene? scene = GameState.Instance.CurrentScene;
             if (scene == null) return;
 
@@ -191,15 +194,31 @@ public static class ItemSetup
                     best = enemy;
             }
             
-            best!.Freeze(3f);
+            best!.Freeze(duration);
         });
         ItemActionRegistry.RegisterUse(RAGE, (player, data, direction) =>
         {
-            
+            player.ApplyDamageMultiplier(.5f, 2f);
         });
         ItemActionRegistry.RegisterUse(SLAM, (player, data, direction) =>
         {
+            const float range = 250f;
+            const int damage = 50;
             
+            Scene? scene = GameState.Instance.CurrentScene;
+            if (scene == null) return;
+
+            // Get enemy closest to the pointer position
+            var enemies = scene.GetAllTypes<Enemy>();
+            if (enemies.Count <= 0) return;
+
+            foreach (var enemy in enemies)
+            {
+                if (Vector2.Distance(player.GlobalPosition, enemy.GlobalPosition) <= range)
+                {
+                    enemy.TakeDamage(damage);
+                }
+            }
         });
         ItemActionRegistry.RegisterUse(ACTION_SHOOT, (player, data, direction) =>
         {
@@ -215,7 +234,7 @@ public static class ItemSetup
             switch (weaponData!.BulletType)
             {
                 case BulletType.Generic:
-                    scene.AddObject(new GenericBullet(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
+                    scene.AddObject(new GenericBullet(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage * player.DamageMultiplier, player, scene.HitboxManager));
                     break;
                 case BulletType.Shotgun:
                     const int pelletCount = 12;
@@ -235,17 +254,17 @@ public static class ItemSetup
                             pelletDirection, 
                             weaponData.Velocity, 
                             weaponData.Range, 
-                            weaponData.Damage, 
+                            weaponData.Damage * player.DamageMultiplier, 
                             player,
                             scene.HitboxManager
                         ));
                     }
                     break;
                 case BulletType.FireworkRocket:
-                    scene.AddObject(new FireworkRocket(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
+                    scene.AddObject(new FireworkRocket(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage * player.DamageMultiplier, player, scene.HitboxManager));
                     break;
                 case BulletType.Arrow:
-                    scene.AddObject(new Arrow(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage, player, scene.HitboxManager));
+                    scene.AddObject(new Arrow(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage * player.DamageMultiplier, player, scene.HitboxManager));
                     break;
                 default:
                     break;
