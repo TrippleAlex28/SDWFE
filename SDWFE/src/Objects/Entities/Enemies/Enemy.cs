@@ -52,7 +52,7 @@ public abstract class Enemy : GameObject
     private Vector2 _healthBarOffset = new Vector2(16, 0);
 
     // Freeze 
-    private bool _isFrozen;
+    protected bool _isFrozen;
     private float _freezeTimer;
     private ParticleSystem _freezePS = new();
     private ParticleEmitter _freezeShardEmitter;
@@ -338,7 +338,7 @@ public abstract class Enemy : GameObject
 
     protected virtual bool TryAttack()
     {
-        if (!HasAuthority() || !(AttackTimer <= 0f) || !IsTargetInRange(Target, AttackRange)) return false;
+        if (!HasAuthority() || !(AttackTimer <= 0f) || !IsTargetInRange(Target, AttackRange) || _isFrozen) return false;
         
         Attack();
         AttackTimer = AttackCooldown;
