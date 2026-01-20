@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using Engine.UI.Elements;
 using SDWFE.Objects.Entities.PlayerEntity;
-using SDWFE.Objects.Inventory.Ability;
 using System.IO;
+using SDWFE.Objects.Inventory.Item;
 
 #nullable enable
 
@@ -37,28 +37,26 @@ public sealed class UIShop: UIElement
     
     // Coins and purchase tracking
     public int _coins = 550;
-    private bool[] _itemsPurchased = new bool[5];
     
     private SpriteFont? _font24;
     private SpriteFont? _font;
     private Texture2D? _shopTexture;
     private Texture2D? _buyButtonTexture;
 
+    private static readonly string[] _shopItemList =
+    [
+        ItemSetup.BANDAGE,
+        ItemSetup.ADRENALINE,
+        ItemSetup.FREEZE,
+        ItemSetup.RAGE,
+        ItemSetup.SLAM
+    ];
+    
     public UIShop(Player player) : base()
     {
         _owner = player;
         _coins = _owner.Stats.Coins;
         _owner.Stats.OnStatsChanged += (StatType type, bool decreased) => OnCoinsChanged(_owner.Stats.Coins);
-        
-        // Check for already unlocked abilities
-        foreach (var abilityName in _owner.GetUnlockedAbilities())
-        {
-            int index = Array.IndexOf(AbilityRegistry.ShopAbilities, abilityName);
-            if (index >= 0 && index < _itemsPurchased.Length)
-            {
-                _itemsPurchased[index] = true;
-            }
-        }
         
         _rootElement = new UIRoot();
         Rectangle screenRect = new Rectangle(0, 0, 480, 270);
@@ -96,9 +94,9 @@ public sealed class UIShop: UIElement
         // Add background to window
         _windowBackground.AddChild(shopWindow);
 
-
         _shopHeader = new UIHBoxContainer();
         _shopHeader.DesiredSize = new Vector2(300,32);
+        
         // Create title
         UIVisual titleText = UIVisual.FromText("SHOP", _font24!, Color.Black);
         titleText.DesiredSize = new Vector2(268, 16);
@@ -115,28 +113,18 @@ public sealed class UIShop: UIElement
         _itemsContainer.Spacing = 5f;
 
         // Build 5 shop items from abilities
-        for (int i = 0; i < 5 && i < AbilityRegistry.ShopAbilities.Length; i++)
+        for (int i = 0; i < _shopItemList.Length; i++)
         {
-            string abilityName = AbilityRegistry.ShopAbilities[i];
-            var abilityData = AbilityRegistry.GetAbility(abilityName);
-            int price = abilityData?.Price ?? 100;
+            var itemData = ItemDatabase.Instance.GetItemData(_shopItemList[i]);
+            int price = itemData.Price;
             
-            _shopItems[i] = CreateShopItem(abilityName, price, i);
+            _shopItems[i] = CreateShopItem(itemData.Name, price, i);
             
             // Set ability icon
-            if (abilityData != null && _shopItems[i].Icon != null)
-            {
-                _shopItems[i].Icon!.source = abilityData.Icon;
-                _shopItems[i].Icon!.SourceRect = null;
-            }
+            _shopItems[i].Icon!.source = ExtendedGame.AssetManager.LoadTexture(itemData.IconPath, "Items/");
+            _shopItems[i].Icon!.SourceRect = null;
             
             _itemsContainer.AddChild(_shopItems[i].Container!);
-            
-            // Hide button if already purchased
-            if (_itemsPurchased[i] && _shopItems[i].BuyButton != null)
-            {
-                _shopItems[i].BuyButton!.IsVisible = false;
-            }
         }
 
 
@@ -348,47 +336,36 @@ public sealed class UIShop: UIElement
         {   
             if (_shopItems[i].BuyButtonBg == null) continue;
 
-            if (_itemsPurchased[i] || _owner!.HasAbility(_shopItems[i].ItemName)){
-                _shopItems[i].BuyButton!.IsVisible = false;
-                _shopItems[i].SoldText!.IsVisible = true;
+            _shopItems[i].BuyButton!.IsVisible = true;
+            _shopItems[i].SoldText!.IsVisible = false;
+            if (_coins >= _shopItems[i].Price)
+            {
+                _shopItems[i].BuyButtonBg!.SourceRect = new Rectangle(0, 0, 30, 22);
+                _shopItems[i].BuyButtonBg!.Tint = Color.LightGreen;
             }
             else
             {
-                _shopItems[i].BuyButton!.IsVisible = true;
-                _shopItems[i].SoldText!.IsVisible = false;
-                if (_coins >= _shopItems[i].Price)
-                {
-                    _shopItems[i].BuyButtonBg!.SourceRect = new Rectangle(0, 0, 30, 22);
-                    _shopItems[i].BuyButtonBg!.Tint = Color.LightGreen;
-                }
-                else
-                {
-                    _shopItems[i].BuyButtonBg!.SourceRect = new Rectangle(64, 0, 30, 22);
-                    _shopItems[i].BuyButtonBg!.Tint = Color.White;
-                }
-            } 
+                _shopItems[i].BuyButtonBg!.SourceRect = new Rectangle(64, 0, 30, 22);
+                _shopItems[i].BuyButtonBg!.Tint = Color.White;
+            }
+            
         }
     }
 
     private void OnPurchased(int itemIndex, string itemName, int price, UIControl buyButton)
     {
-        if (_coins >= price && !_itemsPurchased[itemIndex])
+        if (_coins >= price)
         {
-            _itemsPurchased[itemIndex] = true;
-
             // Use the actual item name from the shop item, not the parameter
             string actualItemName = _shopItems[itemIndex].ItemName;
             OnItemPurchased?.Invoke(actualItemName, price);
 
-            // Hide the buy button
-            buyButton.IsVisible = false;
-            
             // Update all other button states based on new coin amount
             UpdateAllButtonStates();
             
-            _owner?.UnlockAbility(actualItemName);
-            _owner?.Inventory.SaveToFile(GetDefaultSavePath(ExtendedGame.GAME_NAME));
             // TODO: Give item to player
+            _owner?.Inventory.SaveToFile(GetDefaultSavePath(ExtendedGame.GAME_NAME));
+            
             System.Console.WriteLine($"Purchased: {actualItemName} for ${price}. Remaining coins: {_coins}");
         }
     }
@@ -422,63 +399,6 @@ public sealed class UIShop: UIElement
     {
         _coins = coins;
         UpdateAllButtonStates();
-    }
-    /// <summary>
-    /// Updates a shop item's details
-    /// </summary>
-    public void SetItemDetails(int index, string name, int price, Texture2D? icon = null, Rectangle? iconRect = null)
-    {
-        if (index < 0 || index >= _shopItems.Length) return;
-
-        var item = _shopItems[index];
-        item.ItemName = name;
-        item.Price = price;
-
-        // Update name text
-        if (item.NameText != null)
-        {
-            item.NameText.Text = name;
-        }
-
-        // Update price text
-        if (item.PriceText != null)
-        {
-            item.PriceText.Text = $"${price}";
-        }
-
-        // Update icon if provided
-        if (icon != null && item.Icon != null)
-        {
-            item.Icon.source = icon;
-            item.Icon.SourceRect = iconRect;
-        }
-        
-        // Update button state based on affordability
-        if (item.BuyButtonBg != null && !_itemsPurchased[index])
-        {
-            if (_coins >= price)
-            {
-                item.BuyButtonBg.SourceRect = new Rectangle(0, 0, 30, 22);
-                item.BuyButtonBg.Tint = Color.LightGreen;
-            }
-            else
-            {
-                item.BuyButtonBg.SourceRect = new Rectangle(64, 0, 30, 22);
-                item.BuyButtonBg.Tint = Color.White;
-            }
-        }
-    }
-
-    public void OnUnlockedAbilitiesChanged(HashSet<string> unlockedAbilities)
-    {
-        for (int i = 0; i < _shopItems.Length; i++)
-        {
-            if (unlockedAbilities.Contains(_shopItems[i].ItemName) && _itemsPurchased[i] == false)
-            {
-                _itemsPurchased[i] = true;
-                UpdateAllButtonStates();
-            }
-        }
     }
     #endregion
 

@@ -42,6 +42,7 @@ public static class ItemSetup
                 MaxStackSize = 8,
                 IconPath = "Heal",
                 UseActionId = BANDAGE,
+                Price = 10,
             }
         },
         {
@@ -51,6 +52,7 @@ public static class ItemSetup
                 MaxStackSize = 4,
                 IconPath = "Medkit",
                 UseActionId = MEDKIT,
+                Price = 20,
             }
         },
         {
@@ -60,6 +62,7 @@ public static class ItemSetup
                 MaxStackSize = 2,
                 IconPath = "Adrenaline",
                 UseActionId = ADRENALINE,
+                Price = 20,
             }
         },
         {
@@ -69,6 +72,7 @@ public static class ItemSetup
                 MaxStackSize = 2,
                 IconPath = "Freeze",
                 UseActionId = FREEZE,
+                Price = 25,
             }
         },
         {
@@ -78,6 +82,7 @@ public static class ItemSetup
                 MaxStackSize = 2,
                 IconPath = "Rage",
                 UseActionId = RAGE,
+                Price = 25,
             }
         },
         {
@@ -87,6 +92,7 @@ public static class ItemSetup
                 MaxStackSize = 2,
                 IconPath = "Slam",
                 UseActionId = SLAM,
+                Price = 50,
             }
         },
         {
@@ -100,6 +106,7 @@ public static class ItemSetup
                 IconPath = "32x32 Bow",
                 UseActionId = ACTION_SHOOT,
                 BulletType = BulletType.Arrow,
+                Price = 10,
             }
         },
         {
@@ -112,6 +119,7 @@ public static class ItemSetup
                 Velocity = 350f,
                 IconPath = "Pistol",
                 UseActionId = ACTION_SHOOT,
+                Price = 20,
             }
         },
         {
@@ -124,6 +132,7 @@ public static class ItemSetup
                 Velocity = 550f,
                 IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
+                Price = 50,
             }
         },
         {
@@ -137,6 +146,7 @@ public static class ItemSetup
                 BulletType = BulletType.Shotgun,
                 IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
+                Price = 50,
             }
         },
         {
@@ -150,6 +160,7 @@ public static class ItemSetup
                 BulletType = BulletType.FireworkRocket,
                 IconPath = "Medkit",
                 UseActionId = ACTION_SHOOT,
+                Price = 100,
             }
         },
     };

@@ -143,7 +143,6 @@ public partial class Player : GameObject
             ConstructDialogue();
             
             ConstructShopUI();
-            ConstructAbilities();
             ConstructStats(); // Must be after ConstructAbilities (needs Inventory)
             
             // Add inventory UI
@@ -200,7 +199,6 @@ public partial class Player : GameObject
         
         UpdateNPC(gameTime);
         UpdateInventory();
-        UpdateAbilities(gameTime);
         UpdateShop();
         UpdateMovement(gameTime);
         UpdateDialogue(gameTime);

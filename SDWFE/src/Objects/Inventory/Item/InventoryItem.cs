@@ -26,7 +26,9 @@ public class ItemData
     
     public int MaxStackSize { get; set; } = 16;
     public string IconPath { get; set; } = "Medkit";
-    
+
+    public int Price { get; set; } = 25;
+
     public string? UseActionId { get; set; }
 }
 
