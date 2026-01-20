@@ -1,8 +1,10 @@
 ﻿using System;
 using Engine;
 using Engine.Hitbox;
+using Engine.Particle;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Objects.Entities.Enemies;
@@ -49,6 +51,11 @@ public abstract class Enemy : GameObject
     private Sprite _healthFilling;
     private Vector2 _healthBarOffset = new Vector2(16, 0);
 
+    // Freeze 
+    private bool _isFrozen;
+    private float _freezeTimer;
+    private ParticleSystem _freezePS = new();
+    
     public Enemy(
         int maxHealth, 
         float attackRange, 
@@ -128,6 +135,10 @@ public abstract class Enemy : GameObject
         _healthFilling = new Sprite(EngineResources.BlankSquare);
         AddChild(_healthBackground);
         AddChild(_healthFilling);
+
+        _freezePS.AddEmitter(ParticlePresets.CreateFreezeMist());
+        _freezePS.AddEmitter(ParticlePresets.CreateFreeze());
+        _freezePS.Pause();
     }
 
     protected override void UpdateSelf(GameTime gameTime)
@@ -168,7 +179,6 @@ public abstract class Enemy : GameObject
         Vector2 healthBarPos = GlobalPosition + _healthBarOffset;
         float healthPercent = (float)CurrentHealth / MaxHealth;
         
-
         // Health (green)
         _healthFilling.GlobalPosition = healthBarPos;
         _healthFilling.Scale = new Vector2(16 * healthPercent, 4);
@@ -181,9 +191,31 @@ public abstract class Enemy : GameObject
         _healthBackground.Color = Color.Red;
         _healthBackground.BaseDrawLayer = 0.94f;
 
+        if (_isFrozen)
+            _freezeTimer -= gameTime.DeltaSeconds();
+        if (_freezeTimer <= 0f)
+        {
+            _isFrozen = false;
+            _freezePS.UnPause();
+        }
+        
+        _freezePS.Update(gameTime.DeltaSeconds());
     }
 
+    protected override void DrawSelf(SpriteBatch spriteBatch)
+    {
+        _freezePS.Draw(spriteBatch);
+        
+        base.DrawSelf(spriteBatch);
+    }
 
+    public void Freeze(float duration)
+    {
+        _isFrozen = true;
+        _freezeTimer = duration;
+        _freezePS.UnPause();
+    }
+    
     /// <summary>
     /// Separate this enemy from any overlapping enemies to prevent them from getting stuck.
     /// </summary>

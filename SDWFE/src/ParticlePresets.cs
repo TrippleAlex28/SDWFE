@@ -83,6 +83,7 @@ public static class ParticlePresets
         .WithFadeInOut(0.05f, 0.5f)
         .AlphaBlend()
         .Build();
+    
     public static ParticleEmitter CreateOrbTrail() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
         .WithMaxParticles(512)
         .WithEmissionRate(32f)
@@ -99,4 +100,48 @@ public static class ParticlePresets
         .WithFadeInOut(0.05f, 0.55f)
         .Additive()
         .Build();
+
+    public static ParticleEmitter CreateFreeze() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
+        .WithMaxParticles(512)
+        .WithEmissionRate(64f)
+        .Continuous()
+        .WithLifetime(1f, 2f)
+        .WithVelocity(new Vector2(-80f), new Vector2(80f))
+        .WithSpawnRadius(6f)
+        .WithColorRange(new Color(), new Color())
+        .WithRotationVelocity(-3f, 3f)
+        .WithScaleCurve(c => c
+            .AddKey(0f, .2f)
+            .AddKey(.2f, .8f)
+            .AddKey(.8f, 1.2f)
+            .AddKey(1f, .3f))
+        .WithAlphaCurve(c => c
+            .AddKey(0f, 0f)
+            .AddKey(.2f, 1f)
+            .AddKey(.7f, .8f)
+            .AddKey(1f, 0f))
+        .Additive()
+        .Build();
+
+    public static ParticleEmitter CreateFreezeMist() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
+        .WithMaxParticles(128)
+        .WithEmissionRate(32f)
+        .Continuous()
+        .WithLifetime(1.5f, 2.5f)
+        .WithVelocity(new Vector2(-30), new Vector2(30))
+        .WithSpawnRadius(8f)
+        .WithColorRange(new Color(), new Color())
+        .WithRotationVelocity(-1f, 1f)
+        .WithScaleCurve(c => c
+            .AddKey(0f, .5f)
+            .AddKey(.4f, 1.5f)
+            .AddKey(1f, 2.5f))
+        .WithAlphaCurve(c => c
+            .AddKey(0f, 0f)
+            .AddKey(.2f, .6f)
+            .AddKey(.6f, .4f)
+            .AddKey(1f, 0f))
+        .Additive()
+        .Build();
+    
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Engine;
+using Engine.Input;
 using Engine.Scene;
 using Microsoft.Xna.Framework;
+using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
 using SDWFE.Objects.Inventory.Item;
 using SDWFE.Objects.Projectiles.Bullets;
@@ -13,20 +15,22 @@ namespace SDWFE;
 
 public static class ItemSetup
 {
-    public const string WOOD = "Wood";
-    public const string IRON = "Iron";
     public const string BANDAGE = "Bandage";
     public const string MEDKIT = "Medkit";
 
+    public const string ADRENALINE = "Adrenaline";
+    public const string FREEZE = "Freeze";
+    public const string RAGE = "Rage";
+    public const string SLAM = "Slam";
+    
     public const string BOW = "Bow";
     public const string PISTOL = "Pistol";
     public const string ASSAULT_RIFLE = "Assault Rifle";
     public const string SHOTGUN = "Shotgun";
     public const string FIREWORK_LAUNCHER = "Firework Launcher";
 
-    public const string ACTION_HEAL = "Heal";
-    public const string ACTION_HEAL_SUPERIOR = "HealSuperior";
     public const string ACTION_SHOOT = "Shoot";
+    
     
     public static readonly Dictionary<string, ItemData> ItemDataMap = new()
     {
@@ -36,7 +40,7 @@ public static class ItemSetup
                 Name = BANDAGE,
                 MaxStackSize = 8,
                 IconPath = "Heal",
-                UseActionId = ACTION_HEAL,
+                UseActionId = BANDAGE,
             }
         },
         {
@@ -44,8 +48,44 @@ public static class ItemSetup
             {
                 Name = MEDKIT,
                 MaxStackSize = 4,
-                IconPath = "Heal",
-                UseActionId = ACTION_HEAL_SUPERIOR,
+                IconPath = "Medkit",
+                UseActionId = MEDKIT,
+            }
+        },
+        {
+            ADRENALINE, new ItemData
+            {
+                Name = ADRENALINE,
+                MaxStackSize = 2,
+                IconPath = "Adrenaline",
+                UseActionId = ADRENALINE,
+            }
+        },
+        {
+            FREEZE, new ItemData
+            {
+                Name = FREEZE,
+                MaxStackSize = 2,
+                IconPath = "Freeze",
+                UseActionId = FREEZE,
+            }
+        },
+        {
+            RAGE, new ItemData
+            {
+                Name = RAGE,
+                MaxStackSize = 2,
+                IconPath = "Rage",
+                UseActionId = RAGE,
+            }
+        },
+        {
+            SLAM, new ItemData
+            {
+                Name = SLAM,
+                MaxStackSize = 2,
+                IconPath = "Slam",
+                UseActionId = SLAM,
             }
         },
         {
@@ -115,13 +155,51 @@ public static class ItemSetup
 
     public static void Initialize()
     {
-        ItemActionRegistry.RegisterUse(ACTION_HEAL, (player, data, direction) =>
+        ItemActionRegistry.RegisterUse(BANDAGE, (player, data, direction) =>
         {
             player.Stats.CurrentHealth += 100;
         });
-        ItemActionRegistry.RegisterUse(ACTION_HEAL_SUPERIOR, (player, data, direction) =>
+        ItemActionRegistry.RegisterUse(MEDKIT, (player, data, direction) =>
         {
             player.Stats.CurrentHealth += 250;
+        });
+        ItemActionRegistry.RegisterUse(ADRENALINE, (player, data, direction) =>
+        {
+            player.ApplyMovementMultiplier(.75f, 2);
+        });
+        ItemActionRegistry.RegisterUse(FREEZE, (player, data, direction) =>
+        {
+            Scene? scene = GameState.Instance.CurrentScene;
+            if (scene == null) return;
+
+            // Get enemy closest to the pointer position
+            var enemies = scene.GetAllTypes<Enemy>();
+            if (enemies.Count <= 0) return;
+
+            Vector2 mouse = ExtendedGame.ScreenToWorld(InputManager.Instance.MousePosition.ToVector2());
+            Enemy? best = null;
+            float bestDistance = float.MaxValue;
+            foreach (var enemy in enemies)
+            {
+                if (best == null)
+                {
+                    best = enemy;
+                    return;
+                }
+
+                if (Vector2.Distance(mouse, best.GlobalPosition) < bestDistance)
+                    best = enemy;
+            }
+            
+            best!.Freeze(3f);
+        });
+        ItemActionRegistry.RegisterUse(RAGE, (player, data, direction) =>
+        {
+            
+        });
+        ItemActionRegistry.RegisterUse(SLAM, (player, data, direction) =>
+        {
+            
         });
         ItemActionRegistry.RegisterUse(ACTION_SHOOT, (player, data, direction) =>
         {

@@ -15,6 +15,10 @@ public partial class Player
 
     public bool CanWalk => !_isLeaping;
 
+    // Movement multiplier
+    private float _movementMultiplier = 1f;
+    private float _movementMultiplierTimer = 0f;
+    
     // Leap Properties
     public const float LEAP_VELOCITY = 800;
     public const float LEAP_DURATION = 0.1f;
@@ -74,6 +78,13 @@ public partial class Player
         PlayOneShotAnimation(PlayerAnimationState.Leaping);
     }
 
+    // TODO: allows bugs but whatever
+    public void ApplyMovementMultiplier(float multiplier, float time)
+    {
+        _movementMultiplierTimer += time;
+        _movementMultiplier += multiplier;
+    }
+    
     private void UpdateLeap(GameTime gameTime)
     {
         float dt = gameTime.DeltaSeconds();
@@ -95,11 +106,17 @@ public partial class Player
 
     private void UpdateMovement(GameTime gameTime)
     {
+        if (_movementMultiplier > 1f)
+            _movementMultiplierTimer -= gameTime.DeltaSeconds();
+        
+        if (_movementMultiplierTimer <= 0f && !_movementMultiplier.IsApproximatelyEqual(1f))
+            _movementMultiplier = 1f;
+        
         if (CanWalk)
-            this.Velocity = WALK_VELOCITY;
+            this.Velocity = WALK_VELOCITY * _movementMultiplier;
         else
             this.Velocity = 0;
-
+        
         UpdateLeap(gameTime);
         UpdateAnimationState();
     }

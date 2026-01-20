@@ -6,6 +6,7 @@ namespace Engine.Particle;
 public class ParticleSystem
 {
     private readonly List<ParticleEmitter> _emitters = [];
+    private bool _isPaused = false;
 
     public ParticleEmitter CreateEmitter(Texture2D texture, ParticleEmitterConfig config, Vector2 position)
     {
@@ -49,5 +50,29 @@ public class ParticleSystem
     public void Clear()
     {
         _emitters.Clear();
+    }
+
+    public void Pause()
+    {
+        if (!_isPaused)
+        {
+            _isPaused = true;
+            foreach (var emitter in _emitters)
+            {
+                emitter.Stop();
+            }
+        }
+    }
+
+    public void UnPause()
+    {
+        if (_isPaused)
+        {
+            _isPaused = false;
+            foreach (var emitter in _emitters)
+            {
+                emitter.Restart();
+            }
+        }
     }
 }
