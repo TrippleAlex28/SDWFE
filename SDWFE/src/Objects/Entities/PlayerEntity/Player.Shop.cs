@@ -63,11 +63,21 @@ public partial class Player
     private void OnWindowClosed()
     {
         if (StatsUI != null) StatsUI.IsVisible = true; 
+        if (InventoryUI != null)
+        {
+            InventoryUI.IsVisible = true;
+            InventoryUI.OpenMenu();
+            InventoryUI.CloseMenu();
+        }
     }
 
     private void OnWindowOpen()
     {
-        if (InventoryUI.IsMenuOpen) InventoryUI.CloseMenu();
+        if (InventoryUI != null)
+        {
+            InventoryUI.IsVisible = false;
+            InventoryUI.CloseMenu();
+        }
         if (StatsUI != null) StatsUI.IsVisible = false;
     }
     /// <summary>

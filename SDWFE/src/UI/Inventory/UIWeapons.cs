@@ -39,7 +39,7 @@ public class UIWeapons : UIContainer
         Margin = new Vector4(10, 0, 0, 10);
 
         // Create background
-        _background = UIVisual.FromColor(new Color(20, 20, 20, 100));
+        _background = UIVisual.FromColor(new Color(20, 20, 20, 0));
         _background.AlignmentPoint = Alignment.BottomLeft;
         float width = (SLOT_SIZE * _inventory.WeaponSlots.Length) + (SPACING * Math.Max(0, _inventory.WeaponSlots.Length - 1)) + BACKGROUND_PADDING_X * 2f;
         float height = SLOT_SIZE + BACKGROUND_PADDING_Y * 2f;

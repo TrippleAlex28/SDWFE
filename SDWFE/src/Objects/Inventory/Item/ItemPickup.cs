@@ -27,6 +27,7 @@ public class ItemPickup : GameObject
             OriginType = OriginType.Center,
             Scale = new Vector2(16f / _item.Icon.Width, 16f / _item.Icon.Height)
         };
+        _sprite.BaseDrawLayer = ExtendedGame.GetYSort(GlobalPosition, new Vector2(0, 16));
         AddChild(_sprite);
         
         // SETUP COLLISION

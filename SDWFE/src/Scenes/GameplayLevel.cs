@@ -54,11 +54,7 @@ public abstract class GameplayLevel : Scene
                 this.AddObject(portal);
             }
 
-            Vector2 shopkeeperPosition = new Vector2(50, 100);
-            Texture2D shopkeeperTexture = ExtendedGame.AssetManager.LoadTexture("32x16 Idle-Sheet", "Entities/NPC/");
-            ShopKeeper shopkeeper = new ShopKeeper(new Rectangle((int)shopkeeperPosition.X - 12, (int)shopkeeperPosition.Y - 12, 56, 56), shopkeeperTexture, HitboxManager);
-            shopkeeper.GlobalPosition = shopkeeperPosition;
-            this.AddObject(shopkeeper);
+            
         }
         else
         {

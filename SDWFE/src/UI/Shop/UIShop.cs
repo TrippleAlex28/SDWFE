@@ -327,7 +327,7 @@ public sealed class UIShop: UIElement
     private void OnExitButtonClicked(UIControl control)
     {
         // Hide the shop
-        Hide();
+        _owner?.CloseShop();
     }
 
     public void UpdateAllButtonStates()
@@ -364,7 +364,10 @@ public sealed class UIShop: UIElement
             UpdateAllButtonStates();
             
             // TODO: Give item to player
-            _owner?.Inventory.SaveToFile(GetDefaultSavePath(ExtendedGame.GAME_NAME));
+            _owner?.Inventory.AddItemByName(actualItemName);
+
+            if (_owner != null)
+                _owner.Stats.Coins -= price;
             
             System.Console.WriteLine($"Purchased: {actualItemName} for ${price}. Remaining coins: {_coins}");
         }

@@ -42,7 +42,7 @@ public static class ItemSetup
                 MaxStackSize = 8,
                 IconPath = "Heal",
                 UseActionId = BANDAGE,
-                Price = 10,
+                Price = 30,
             }
         },
         {
@@ -62,7 +62,7 @@ public static class ItemSetup
                 MaxStackSize = 2,
                 IconPath = "Adrenaline",
                 UseActionId = ADRENALINE,
-                Price = 20,
+                Price = 40,
             }
         },
         {
@@ -72,7 +72,7 @@ public static class ItemSetup
                 MaxStackSize = 2,
                 IconPath = "Freeze",
                 UseActionId = FREEZE,
-                Price = 25,
+                Price = 75,
             }
         },
         {
@@ -82,7 +82,7 @@ public static class ItemSetup
                 MaxStackSize = 2,
                 IconPath = "Rage",
                 UseActionId = RAGE,
-                Price = 25,
+                Price = 100,
             }
         },
         {
@@ -92,7 +92,7 @@ public static class ItemSetup
                 MaxStackSize = 2,
                 IconPath = "Slam",
                 UseActionId = SLAM,
-                Price = 50,
+                Price = 150,
             }
         },
         {

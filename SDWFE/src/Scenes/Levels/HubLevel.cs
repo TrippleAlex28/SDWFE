@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Scenes.Levels;
@@ -19,6 +20,12 @@ public class HubLevel : GameplayLevel
     {
         LevelIndex = -1;
         base.Enter();
+
+        Vector2 shopkeeperPosition = new Vector2(30, 608 - 32);
+        Texture2D shopkeeperTexture = ExtendedGame.AssetManager.LoadTexture("32x16 Idle-Sheet", "Entities/NPC/");
+        ShopKeeper shopkeeper = new ShopKeeper(new Rectangle((int)shopkeeperPosition.X - 12, (int)shopkeeperPosition.Y - 12, 56, 56), shopkeeperTexture, HitboxManager);
+        shopkeeper.GlobalPosition = shopkeeperPosition;
+        this.AddObject(shopkeeper);
         
     }
     public override void Update(GameTime gameTime)

@@ -199,6 +199,37 @@ public class PlayerInventory : GameObject
     
     #region Inventory Management
 
+    public bool IsWeaponsEmpty()
+    {
+        foreach (var slot in WeaponSlots)
+        {
+            if (slot.SlotData != null)
+                return false;
+        }
+        return true;
+    }
+    public bool IsHotbarEmpty()
+    {
+        foreach (var slot in Hotbar)
+        {
+            if (slot.SlotData != null)
+                return false;
+        }
+        return true;
+    }
+    public bool IsInventoryEmpty()
+    {
+        foreach (var slot in Inventory)
+        {
+            if (slot.SlotData != null)
+                return false;
+        }
+        return true;
+    }
+    public bool IsCompletelyEmpty()
+    {
+        return IsWeaponsEmpty() && IsHotbarEmpty() && IsInventoryEmpty();
+    }
     /// <summary>
     /// Adds an item to the inventory. Returns true if successful, false if inventory full
     /// </summary>

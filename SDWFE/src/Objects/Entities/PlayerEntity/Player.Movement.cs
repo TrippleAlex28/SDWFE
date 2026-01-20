@@ -20,8 +20,8 @@ public partial class Player
     private float _movementMultiplierTimer = 0f;
     
     // Leap Properties
-    public const float LEAP_VELOCITY = 800;
-    public const float LEAP_DURATION = 0.1f;
+    public const float LEAP_VELOCITY = 400f;
+    public const float LEAP_DURATION = 0.2f;
     public const float LEAP_COOLDOWN = 2.0f;
     
     // Leap Management
