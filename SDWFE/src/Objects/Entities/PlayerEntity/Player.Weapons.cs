@@ -23,6 +23,7 @@ public partial class Player
     {
         DamageMultiplier += multiplier;
         _damageMultiplierTimer += duration;
+        
         _ragePS.Restart();
     }
     
@@ -37,8 +38,8 @@ public partial class Player
     
     private void UpdateWeapons(GameTime gameTime)
     {
-        _rageEmitter.Position = this.GlobalPosition;
-        _slamEmitter.Position = this.GlobalPosition;
+        _rageEmitter.Position = this.GlobalPosition + this.CameraOffset;
+        _slamEmitter.Position = this.GlobalPosition + this.CameraOffset;
         
         shootCooldown -= gameTime.DeltaSeconds();
 
@@ -53,10 +54,12 @@ public partial class Player
         }
         
         _ragePS.Update(gameTime.DeltaSeconds());
+        _slamPS.Update(gameTime.DeltaSeconds());
     }
 
     private void DrawWeapons(SpriteBatch spriteBatch)
     {
         _ragePS.Draw(spriteBatch);
+        _slamPS.Draw(spriteBatch);
     }
 }

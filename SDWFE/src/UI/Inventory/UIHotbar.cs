@@ -22,7 +22,7 @@ public class UIHotbar : UIContainer
 
     private const float BACKGROUND_PADDING_X = 8f;
     private const float BACKGROUND_PADDING_Y = 4f;
-    private const float SLOT_SIZE = 16f;
+    private const float SLOT_SIZE = 32f;
     private const float SPACING = 4f;
 
     public UIHotbar(PlayerInventory inventory)

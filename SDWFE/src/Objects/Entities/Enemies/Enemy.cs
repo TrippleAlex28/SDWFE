@@ -118,6 +118,8 @@ public abstract class Enemy : GameObject
             (v) => CurrentHealth = v
         );
         
+        this.CameraOffset = new Vector2(8, 16);
+        
         _healthBarOffset = healthBarOffset ?? _healthBarOffset;
         
         MaxHealth = maxHealth;
@@ -149,8 +151,8 @@ public abstract class Enemy : GameObject
     {
         base.UpdateSelf(gameTime);
 
-        _freezeShardEmitter.Position = this.GlobalPosition;
-        _freezeMistEmitter.Position = this.GlobalPosition;
+        _freezeShardEmitter.Position = this.GlobalPosition + this.CameraOffset;
+        _freezeMistEmitter.Position = this.GlobalPosition + this.CameraOffset;
         
         if (!IsAlive)
         {
@@ -200,10 +202,11 @@ public abstract class Enemy : GameObject
 
         if (_isFrozen)
             _freezeTimer -= gameTime.DeltaSeconds();
-        if (_freezeTimer <= 0f)
+        if (_freezeTimer <= 0f && _isFrozen)
         {
+            Console.WriteLine("STOP FREEZE");
             _isFrozen = false;
-            _freezePS.Restart();
+            _freezePS.Stop();
         }
         
         _freezePS.Update(gameTime.DeltaSeconds());
@@ -218,6 +221,7 @@ public abstract class Enemy : GameObject
 
     public void Freeze(float duration)
     {
+        Console.WriteLine("START FREEZE");
         _isFrozen = true;
         _freezeTimer = duration;
         _freezePS.Restart();

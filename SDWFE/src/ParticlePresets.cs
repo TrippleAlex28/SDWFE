@@ -62,7 +62,7 @@ public static class ParticlePresets
             .AlphaBlend()
             .Build();   
     
-    public static ParticleEmitter CreateRocketImpact => new ParticleEmitterBuilder(EngineResources.BlankCircle)
+    public static ParticleEmitter CreateRocketImpact() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
         .WithMaxParticles(200)
         .WithEmissionRate(400f)
         .WithDuration(0.15f)                 // Burst explosion
@@ -86,7 +86,7 @@ public static class ParticlePresets
     
     public static ParticleEmitter CreateOrbTrail() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
         .WithMaxParticles(512)
-        .WithEmissionRate(32f)
+        .WithEmissionRate(24f)
         .Continuous()
         .WithSpawnRadius(1.5f)
         .WithLifetime(0.05f, 0.1f)
@@ -103,11 +103,11 @@ public static class ParticlePresets
 
     public static ParticleEmitter CreateFreeze() => new ParticleEmitterBuilder(EngineResources.BlankSquare)
         .WithMaxParticles(512)
-        .WithEmissionRate(64f)
+        .WithEmissionRate(16f)
         .Continuous()
-        .WithLifetime(1f, 2f)
-        .WithVelocity(new Vector2(-80f), new Vector2(80f))
-        .WithSpawnRadius(6f)
+        .WithLifetime(.5f, 1f)
+        .WithVelocity(new Vector2(-24f), new Vector2(24f))
+        .WithSpawnRadius(8f)
         .WithColorRange(new Color(150, 220, 255), new Color(200, 240, 255))
         .WithRotationVelocity(-3f, 3f)
         .WithScaleCurve(c => c
@@ -125,17 +125,17 @@ public static class ParticlePresets
 
     public static ParticleEmitter CreateFreezeMist() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
         .WithMaxParticles(128)
-        .WithEmissionRate(32f)
+        .WithEmissionRate(8f)
         .Continuous()
-        .WithLifetime(1.5f, 2.5f)
-        .WithVelocity(new Vector2(-30), new Vector2(30))
-        .WithSpawnRadius(8f)
-        .WithColorRange(new Color(180, 230, 255, 100), new Color(220, 245, 255, 50))
+        .WithLifetime(1f, 1.5f)
+        .WithVelocity(new Vector2(-16f), new Vector2(16f))
+        .WithSpawnRadius(16f)
+        .WithColorRange(new Color(180, 230, 255, 64), new Color(220, 245, 255, 32))
         .WithRotationVelocity(-1f, 1f)
         .WithScaleCurve(c => c
-            .AddKey(0f, .1f)
-            .AddKey(.4f, .3f)
-            .AddKey(1f, .5f))
+            .AddKey(0f, .2f)
+            .AddKey(.4f, .5f)
+            .AddKey(1f, .8f))
         .WithAlphaCurve(c => c
             .AddKey(0f, 0f)
             .AddKey(.2f, .6f)
@@ -145,11 +145,11 @@ public static class ParticlePresets
         .Build();
 
     public static ParticleEmitter CreateRageBubbles() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
-        .WithMaxParticles(384)
-        .WithEmissionRate(96f)
+        .WithMaxParticles(128)
+        .WithEmissionRate(32f)
         .Continuous()
         .WithLifetime(.5f, 1.2f)
-        .WithVelocity(new Vector2(-100, -180), new Vector2(100, -80))
+        .WithVelocity(new Vector2(-8f, -16f), new Vector2(16f, -8f))
         .WithSpawnRadius(8f)
         .WithColorRange(new Color(140, 30, 180), new Color(200, 60, 220))
         .WithRotationVelocity(-5f, 5f)
@@ -157,27 +157,26 @@ public static class ParticlePresets
             .AddKey(0f, .1f)    
             .AddKey(.3f, .3f)    
             .AddKey(1f, .05f))
-        .WithFadeOut(.7f)
+        .WithFadeOut(.5f)
         .AlphaBlend()
         .Build();
 
     public static ParticleEmitter CreateSlam() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
-        .WithMaxParticles(512)
-        .WithEmissionRate(1024f)
-        .WithLifetime(.1f)
-        .WithLifetime(.6f, 1f)
-        .WithVelocity(Vector2.Zero)
-        .WithSpawnRadius(2f)
+        .WithMaxParticles(64)
+        .WithEmissionRate(5000f)
+        .WithDuration(.05f)
+        .WithLifetime(.75f, 1f)
+        .WithVelocity(new Vector2(-96, -64), new Vector2(96, -96))
+        .WithGravity(0, 512)
+        .WithSpawnRadius(32f)
         .WithColorRange(new Color(200, 180, 140), new Color(160, 140, 100))
+        .WithRotationVelocity(-5f, 5f)
         .WithScaleCurve(c => c
-            .AddKey(0f, .1f)
-            .AddKey(.1f, .2f)
-            .AddKey(.4f, .6f)
-            .AddKey(1f, 1f))
-        .WithAlphaCurve(c => c
-            .AddKey(0f, .8f)
-            .AddKey(.3f, .6f)
-            .AddKey(.6f, .2f)
-            .AddKey(1f, 0f))
+            .AddKey(0f, .05f)
+            .AddKey(.1f, .1f)
+            .AddKey(.4f, .15f)
+            .AddKey(1f, .05f))
+        .WithFadeOut(.3f)
+        .AlphaBlend()
         .Build();
 }

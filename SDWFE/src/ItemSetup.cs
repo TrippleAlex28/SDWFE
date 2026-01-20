@@ -181,13 +181,13 @@ public static class ItemSetup
 
             Vector2 mouse = ExtendedGame.ScreenToWorld(InputManager.Instance.MousePosition.ToVector2());
             Enemy? best = null;
-            float bestDistance = float.MaxValue;
+            float bestDistance = 9999f;
             foreach (var enemy in enemies)
             {
                 if (best == null)
                 {
                     best = enemy;
-                    return;
+                    break;
                 }
 
                 if (Vector2.Distance(mouse, best.GlobalPosition) < bestDistance)

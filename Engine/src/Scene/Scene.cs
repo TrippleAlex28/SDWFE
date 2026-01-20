@@ -255,7 +255,7 @@ public abstract class Scene
 
      private void GetAllTypesRecursive<T>(List<T> list, GameObject node) where T : GameObject
      {
-          if (node.GetType() == typeof(T))
+          if (node.GetType().IsSubclassOf(typeof(T)))
                list.Add((T)node);
 
           foreach (var c in node.Children)
