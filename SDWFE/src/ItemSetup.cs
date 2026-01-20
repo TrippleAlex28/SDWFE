@@ -31,22 +31,6 @@ public static class ItemSetup
     public static readonly Dictionary<string, ItemData> ItemDataMap = new()
     {
         {
-            WOOD, new ItemData
-            {
-                Name = WOOD,
-                MaxStackSize = 64,
-                IconPath = "Heal",
-            }
-        },
-        {
-            IRON, new ItemData
-            {
-                Name = IRON,
-                MaxStackSize = 16,
-                IconPath = "Heal",
-            }
-        },
-        {
             BANDAGE, new ItemData
             {
                 Name = BANDAGE,

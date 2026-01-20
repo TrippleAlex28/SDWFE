@@ -18,23 +18,6 @@ public partial class Player
         
         // Setup vault access conditions
         Inventory.Vault.AddAccessCondition(() => true);
-
-        // Inventory.AddWeaponByName(ItemSetup.SHOTGUN);
-        // Inventory.AddItemByName(ItemSetup.PISTOL);
-        // Inventory.AddItemByName(ItemSetup.ASSAULT_RIFLE);
-        // Inventory.AddItemByName(ItemSetup.SHOTGUN);
-        // Inventory.AddItemByName(ItemSetup.FIREWORK_LAUNCHER);
-        // Inventory.AddItemByName(ItemSetup.BANDAGE,
-        //     ItemSetup.ItemDataMap.TryGetValue(ItemSetup.BANDAGE, out var data1) ? data1.MaxStackSize : 1);
-        // Inventory.AddItemByName(ItemSetup.MEDKIT,
-        //     ItemSetup.ItemDataMap.TryGetValue(ItemSetup.MEDKIT, out var data2) ? data2.MaxStackSize : 1);
-        // Inventory.AddItemByName(ItemSetup.WOOD,
-        //     ItemSetup.ItemDataMap.TryGetValue(ItemSetup.MEDKIT, out var data3) ? data3.MaxStackSize : 1);
-        // Inventory.AddItemByName(ItemSetup.IRON,
-        //     ItemSetup.ItemDataMap.TryGetValue(ItemSetup.MEDKIT, out var data4) ? data4.MaxStackSize : 1);
-
-        Inventory.AddItemByName(ItemSetup.BOW);
-
     }
 
     private void UpdateInventory()
