@@ -160,4 +160,24 @@ public static class ParticlePresets
         .WithFadeOut(.7f)
         .AlphaBlend()
         .Build();
+
+    public static ParticleEmitter CreateSlam() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
+        .WithMaxParticles(512)
+        .WithEmissionRate(1024f)
+        .WithLifetime(.1f)
+        .WithLifetime(.6f, 1f)
+        .WithVelocity(Vector2.Zero)
+        .WithSpawnRadius(2f)
+        .WithColorRange(new Color(200, 180, 140), new Color(160, 140, 100))
+        .WithScaleCurve(c => c
+            .AddKey(0f, .5f)
+            .AddKey(.1f, 2f)
+            .AddKey(.4f, 6f)
+            .AddKey(1f, 10f))
+        .WithAlphaCurve(c => c
+            .AddKey(0f, .8f)
+            .AddKey(.3f, .6f)
+            .AddKey(.6f, .2f)
+            .AddKey(1f, 0f))
+        .Build();
 }

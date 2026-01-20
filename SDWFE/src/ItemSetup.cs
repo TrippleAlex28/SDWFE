@@ -208,6 +208,9 @@ public static class ItemSetup
             Scene? scene = GameState.Instance.CurrentScene;
             if (scene == null) return;
 
+            // Create the player slam particle effect
+            player.StartSlamEffect();
+            
             // Get enemy closest to the pointer position
             var enemies = scene.GetAllTypes<Enemy>();
             if (enemies.Count <= 0) return;

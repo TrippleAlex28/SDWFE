@@ -138,7 +138,7 @@ public abstract class Enemy : GameObject
 
         _freezePS.AddEmitter(ParticlePresets.CreateFreezeMist());
         _freezePS.AddEmitter(ParticlePresets.CreateFreeze());
-        _freezePS.Pause();
+        _freezePS.Stop();
     }
 
     protected override void UpdateSelf(GameTime gameTime)
@@ -196,7 +196,7 @@ public abstract class Enemy : GameObject
         if (_freezeTimer <= 0f)
         {
             _isFrozen = false;
-            _freezePS.UnPause();
+            _freezePS.Restart();
         }
         
         _freezePS.Update(gameTime.DeltaSeconds());
@@ -213,7 +213,7 @@ public abstract class Enemy : GameObject
     {
         _isFrozen = true;
         _freezeTimer = duration;
-        _freezePS.UnPause();
+        _freezePS.Restart();
     }
     
     /// <summary>

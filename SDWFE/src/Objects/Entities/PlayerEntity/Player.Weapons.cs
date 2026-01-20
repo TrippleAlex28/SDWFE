@@ -15,16 +15,23 @@ public partial class Player
     private float _damageMultiplierTimer = 0f;
     private ParticleSystem _ragePS = new();
 
+    private ParticleSystem _slamPS = new();
+    
     public void ApplyDamageMultiplier(float multiplier, float duration)
     {
         DamageMultiplier += multiplier;
         _damageMultiplierTimer += duration;
-        _ragePS.UnPause();
+        _ragePS.Restart();
     }
     
     public void SetShootCooldown(float cd) => shootCooldown = cd;
     public void SetShootCooldownFromAttackSpeed(float attackSpeed) => shootCooldown = 1f / attackSpeed;
     private void ResetShootCooldown() => shootCooldown = 0f;
+
+    public void StartSlamEffect()
+    {
+        _slamPS.Restart();
+    }
     
     private void UpdateWeapons(GameTime gameTime)
     {
@@ -37,7 +44,7 @@ public partial class Player
         {
             DamageMultiplier = 1f;
             _damageMultiplierTimer = 0f;
-            _ragePS.Pause();
+            _ragePS.Stop();
         }
         
         _ragePS.Update(gameTime.DeltaSeconds());
