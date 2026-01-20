@@ -21,7 +21,9 @@ public partial class Player
         Inventory.Vault.AddAccessCondition(() => true);
         if (Inventory.IsCompletelyEmpty())
         {
+            Inventory.AddWeaponByName(ItemSetup.MELEE);
             Inventory.AddWeaponByName(ItemSetup.BOW);
+            
         }
 
         // Inventory.AddItemByName(ItemSetup.ADRENALINE, 2);
