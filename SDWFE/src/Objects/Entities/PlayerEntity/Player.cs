@@ -122,10 +122,12 @@ public partial class Player : GameObject
         InitializeAnimations();
         ConstructInventory();
         // Note: ConstructDialogue is called in EnterSelf for locally owned players only
-        
-        _ragePS.AddEmitter(ParticlePresets.CreateRageBubbles());
+
+        _rageEmitter = ParticlePresets.CreateRageBubbles();
+        _ragePS.AddEmitter(_rageEmitter);
         _ragePS.Stop();
-        _slamPS.AddEmitter(ParticlePresets.CreateSlam());
+        _slamEmitter = ParticlePresets.CreateSlam();
+        _slamPS.AddEmitter(_slamEmitter);
         _slamPS.Stop();
     }
 

@@ -101,7 +101,7 @@ public static class ParticlePresets
         .Additive()
         .Build();
 
-    public static ParticleEmitter CreateFreeze() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
+    public static ParticleEmitter CreateFreeze() => new ParticleEmitterBuilder(EngineResources.BlankSquare)
         .WithMaxParticles(512)
         .WithEmissionRate(64f)
         .Continuous()
@@ -111,10 +111,10 @@ public static class ParticlePresets
         .WithColorRange(new Color(150, 220, 255), new Color(200, 240, 255))
         .WithRotationVelocity(-3f, 3f)
         .WithScaleCurve(c => c
-            .AddKey(0f, .2f)
-            .AddKey(.2f, .8f)
-            .AddKey(.8f, 1.2f)
-            .AddKey(1f, .3f))
+            .AddKey(0f, 1f)
+            .AddKey(.2f, 4f)
+            .AddKey(.8f, 6f)
+            .AddKey(1f, 3f))
         .WithAlphaCurve(c => c
             .AddKey(0f, 0f)
             .AddKey(.2f, 1f)
@@ -133,9 +133,9 @@ public static class ParticlePresets
         .WithColorRange(new Color(180, 230, 255, 100), new Color(220, 245, 255, 50))
         .WithRotationVelocity(-1f, 1f)
         .WithScaleCurve(c => c
-            .AddKey(0f, .5f)
-            .AddKey(.4f, 1.5f)
-            .AddKey(1f, 2.5f))
+            .AddKey(0f, .1f)
+            .AddKey(.4f, .3f)
+            .AddKey(1f, .5f))
         .WithAlphaCurve(c => c
             .AddKey(0f, 0f)
             .AddKey(.2f, .6f)
@@ -154,8 +154,8 @@ public static class ParticlePresets
         .WithColorRange(new Color(140, 30, 180), new Color(200, 60, 220))
         .WithRotationVelocity(-5f, 5f)
         .WithScaleCurve(c => c
-            .AddKey(0f, .2f)    
-            .AddKey(.3f, .6f)    
+            .AddKey(0f, .1f)    
+            .AddKey(.3f, .3f)    
             .AddKey(1f, .05f))
         .WithFadeOut(.7f)
         .AlphaBlend()
@@ -170,10 +170,10 @@ public static class ParticlePresets
         .WithSpawnRadius(2f)
         .WithColorRange(new Color(200, 180, 140), new Color(160, 140, 100))
         .WithScaleCurve(c => c
-            .AddKey(0f, .5f)
-            .AddKey(.1f, 2f)
-            .AddKey(.4f, 6f)
-            .AddKey(1f, 10f))
+            .AddKey(0f, .1f)
+            .AddKey(.1f, .2f)
+            .AddKey(.4f, .6f)
+            .AddKey(1f, 1f))
         .WithAlphaCurve(c => c
             .AddKey(0f, .8f)
             .AddKey(.3f, .6f)

@@ -55,6 +55,8 @@ public abstract class Enemy : GameObject
     private bool _isFrozen;
     private float _freezeTimer;
     private ParticleSystem _freezePS = new();
+    private ParticleEmitter _freezeShardEmitter;
+    private ParticleEmitter _freezeMistEmitter;
     
     public Enemy(
         int maxHealth, 
@@ -136,8 +138,10 @@ public abstract class Enemy : GameObject
         AddChild(_healthBackground);
         AddChild(_healthFilling);
 
-        _freezePS.AddEmitter(ParticlePresets.CreateFreezeMist());
-        _freezePS.AddEmitter(ParticlePresets.CreateFreeze());
+        _freezeShardEmitter = ParticlePresets.CreateFreeze();
+        _freezeMistEmitter = ParticlePresets.CreateFreezeMist();
+        _freezePS.AddEmitter(_freezeShardEmitter);
+        _freezePS.AddEmitter(_freezeMistEmitter);
         _freezePS.Stop();
     }
 
@@ -145,6 +149,9 @@ public abstract class Enemy : GameObject
     {
         base.UpdateSelf(gameTime);
 
+        _freezeShardEmitter.Position = this.GlobalPosition;
+        _freezeMistEmitter.Position = this.GlobalPosition;
+        
         if (!IsAlive)
         {
             State = EnemyState.Dead;

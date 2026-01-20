@@ -14,8 +14,10 @@ public partial class Player
     public float DamageMultiplier { get; private set; } = 1f;
     private float _damageMultiplierTimer = 0f;
     private ParticleSystem _ragePS = new();
-
+    private ParticleEmitter _rageEmitter;
+    
     private ParticleSystem _slamPS = new();
+    private ParticleEmitter _slamEmitter;
     
     public void ApplyDamageMultiplier(float multiplier, float duration)
     {
@@ -35,6 +37,9 @@ public partial class Player
     
     private void UpdateWeapons(GameTime gameTime)
     {
+        _rageEmitter.Position = this.GlobalPosition;
+        _slamEmitter.Position = this.GlobalPosition;
+        
         shootCooldown -= gameTime.DeltaSeconds();
 
         if (_damageMultiplierTimer > 0f)
