@@ -21,7 +21,7 @@ public class Boss : Enemy
     
     public StaticHitbox? Hitbox { get; private set; }
 
-    public bool IsImmortal = false;
+    public bool IsImmortal = true;
     private bool _hitboxadded = false;
 
     protected BossStage currentStage { get; set; } = BossStage.Stage3;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Engine;
 using Engine.Hitbox;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,7 @@ public abstract class ChasingEnemy : Enemy
     public float MoveSpeed { get; }
 
     public const float PATH_RECALCULATE_INTERVAL = 0.5f;
-    public float WaypointReachedDistance { get; set; } = 8f;
+    public float WaypointReachedDistance { get; set; } = 4f;
     public int MaxPathfindingDistance { get; set; }= 512;
     public const int PATHFINDING_GRID_SIZE = 16;
 
@@ -20,7 +21,9 @@ public abstract class ChasingEnemy : Enemy
     private int _currentWaypointIndex = 0;
     private float _pathRecalculateTimer = 0f;
     private Pathfinder? _pathfinder;
-    
+
+    public Vector2 currentFeetPosition => GlobalPosition + new Vector2(24, 28);
+    public Vector2 targetFeetPosition => Target != null ? Target.GlobalPosition + new Vector2(8, 28) : Vector2.Zero;
     public ChasingEnemy(
         int maxHealth,
         float moveSpeed,
@@ -111,7 +114,7 @@ public abstract class ChasingEnemy : Enemy
         if (_currentPath.Count > 0 && _currentWaypointIndex < _currentPath.Count)
         {
             Vector2 targetWaypoint = _currentPath[_currentWaypointIndex];
-            Vector2 directionToWaypoint = targetWaypoint - GlobalPosition;
+            Vector2 directionToWaypoint = targetWaypoint - currentFeetPosition;
             float distanceToWaypoint = directionToWaypoint.Length();
 
             if (distanceToWaypoint <= WaypointReachedDistance)
@@ -135,7 +138,7 @@ public abstract class ChasingEnemy : Enemy
         else
         {
             // No valid path, try moving directly towards target
-            Vector2 directionToTarget = Target.GlobalPosition - GlobalPosition;
+            Vector2 directionToTarget = targetFeetPosition - currentFeetPosition;
             Direction = directionToTarget;
             Velocity = MoveSpeed * 0.5f; // Move slower when no path
         }
@@ -145,8 +148,8 @@ public abstract class ChasingEnemy : Enemy
     {
         if (Target == null || _pathfinder == null) return;
 
-        Vector2 start = GlobalPosition;
-        Vector2 end = Target.GlobalPosition;
+        Vector2 start = currentFeetPosition;
+        Vector2 end = targetFeetPosition;
 
         // Check if we need to pathfind or can go directly
         if (CanMoveDirectly(start, end))
@@ -190,7 +193,6 @@ public abstract class ChasingEnemy : Enemy
                 return false;
             }
         }
-
         return true;
     }
 
@@ -198,6 +200,7 @@ public abstract class ChasingEnemy : Enemy
     {
         base.DrawSelf(spriteBatch);
 
+        //PathVisualizer.DrawPath(spriteBatch, _currentPath, EngineResources.BlankSquare, Color.Blue, 2f);
         // Draw path for debugging
         #if DEBUG
         if (_currentPath.Count > 0)

@@ -43,8 +43,8 @@ namespace SDWFE.Objects.Entities.Items
             this.Hitbox = new TriggerHitbox(new Rectangle(
                 (int)(dropPosition.X - CollisionSize.X / 2),
                 (int)(dropPosition.Y - CollisionSize.Y / 2),
-                (int)CollisionSize.X,
-                (int)CollisionSize.Y))
+                (int)CollisionSize.X * 10,
+                (int)CollisionSize.Y* 10))
             {
                 DetectsLayers = HitboxLayer.Player
             };
@@ -88,10 +88,10 @@ namespace SDWFE.Objects.Entities.Items
 
                 // Update hitbox position
                 Hitbox.Bounds = new Rectangle(
-                    (int)(GlobalPosition.X - CollisionSize.X / 2),
-                    (int)(GlobalPosition.Y - CollisionSize.Y / 2),
-                    (int)CollisionSize.X,
-                    (int)CollisionSize.Y
+                    (int)(GlobalPosition.X - (CollisionSize.X * 3) / 2),
+                    (int)(GlobalPosition.Y - (CollisionSize.Y * 3) / 2),
+                    (int)CollisionSize.X * 3,
+                    (int)CollisionSize.Y * 3
                 );
             }
             

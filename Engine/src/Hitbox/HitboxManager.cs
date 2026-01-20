@@ -153,8 +153,7 @@ public class HitboxManager
         hitX = false;
         hitY = false;
 
-        Vector2 nextPos = currentBounds.Location.ToVector2() + velocity;
-        Vector2 newPos = new Vector2(currentBounds.X, currentBounds.Y);
+        Vector2 newPos = currentBounds.Location.ToVector2();
 
         // Try X movement
         if (velocity.X != 0)
@@ -168,7 +167,7 @@ public class HitboxManager
 
             if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
-                newPos.X += (int)(velocity.X / MathF.Sqrt(2));
+                newPos.X += velocity.X;
             }
             else
             {
@@ -190,7 +189,7 @@ public class HitboxManager
 
             if (!CheckStaticCollision(testRect, layer, ignoreOwner))
             {
-                newPos.Y += (int)(velocity.Y / MathF.Sqrt(2));
+                newPos.Y += velocity.Y;
             }
             else
             {
