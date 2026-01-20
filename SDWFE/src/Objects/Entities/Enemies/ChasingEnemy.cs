@@ -200,7 +200,7 @@ public abstract class ChasingEnemy : Enemy
     {
         base.DrawSelf(spriteBatch);
 
-        //PathVisualizer.DrawPath(spriteBatch, _currentPath, EngineResources.BlankSquare, Color.Blue, 2f);
+        // PathVisualizer.DrawPath(spriteBatch, _currentPath, EngineResources.BlankSquare, Color.Blue, 2f);
         // Draw path for debugging
         #if DEBUG
         if (_currentPath.Count > 0)

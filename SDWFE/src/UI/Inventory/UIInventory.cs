@@ -34,7 +34,7 @@ public class UIInventory : UIContainer
     private List<UIHBoxContainer> _vaultRows = new();
     private List<UIInventoryItemSlot> _vaultSlots = new();
 
-    private UIInventoryItemSlot? _focusedSlot = null;
+    private IUIFocusableSlot? _focusedSlot = null;
     
     private Texture2D _slotSheet;
     private Rectangle _slotSheetRect;
@@ -67,9 +67,39 @@ public class UIInventory : UIContainer
         // Create always-visible components
         _hotbar = new UIHotbar(_inventory);
         AddChild(_hotbar);
+        foreach (var s1 in _hotbar.Slots)
+        {
+            s1.Clicked += HandleSlotClicked;
+            s1.OnFocusChange += (focused) =>
+            {
+                if (!focused)
+                {
+                    if (_focusedSlot == s1) 
+                        UnfocusSlot();
+                    return;
+                }
+                
+                UnfocusSlot();
+                FocusSlot(s1);
+            };
+        }
 
         _weapons = new UIWeapons(_inventory);
         AddChild(_weapons);
+        foreach (var s2 in _weapons.Slots)
+        {
+            s2.Clicked += HandleSlotClicked;
+            s2.OnFocusChange += (focused) =>
+            {
+                if (!focused)
+                {
+                    if (_focusedSlot == s2) UnfocusSlot();
+                    return;
+                }
+                UnfocusSlot();
+                FocusSlot(s2);
+            };
+        }
 
         // Create menu components
         CreateMenuComponents();
@@ -113,14 +143,13 @@ public class UIInventory : UIContainer
         var labelContainer = new UIVBoxContainer()
         {
             AlignmentPoint = Alignment.BottomMiddle,
-            DesiredSize = new Vector2(0, 14 * 2),
+            DesiredSize = new Vector2(0, 16),
+            Margin = new Vector4(4, 0, 0, 0)
         };
         _menuBackground.AddChild(labelContainer);
         
         var eLabel = UIVisual.FromText("E - Switch Inv & Inventory", Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 12), Color.White);
         labelContainer.AddChild(eLabel);
-        var fLabel = UIVisual.FromText("F - Switch Hotbar & Weapon", Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 12), Color.White);
-        labelContainer.AddChild(fLabel);
     }
 
     private void CreateInventorySection()
@@ -242,13 +271,17 @@ public class UIInventory : UIContainer
                 _inventory,
                 isVault: false
             );
+            slot.Clicked += HandleSlotClicked;
             slot.OnFocusChange += (focused) =>
             {
-                UnfocusSlot();
-                if (focused)
+                if (!focused)
                 {
-                    FocusSlot(slot);
+                    if (_focusedSlot == slot) UnfocusSlot();
+                    return;
                 }
+
+                UnfocusSlot();
+                FocusSlot(slot);
             };
             _inventorySlots.Add(slot);
             currentRow!.AddChild(slot);
@@ -305,6 +338,19 @@ public class UIInventory : UIContainer
                 _inventory,
                 isVault: true
             );
+            slot.Clicked += HandleSlotClicked;
+            slot.OnFocusChange += (focused) =>
+            {
+                if (!focused)
+                {
+                    if (_focusedSlot == slot)
+                        UnfocusSlot();
+                    return;
+                }
+
+                UnfocusSlot();
+                FocusSlot(slot);
+            };
             _vaultSlots.Add(slot);
             currentRow!.AddChild(slot);
 
@@ -387,94 +433,81 @@ public class UIInventory : UIContainer
         }
     }
 
+    private void HandleSlotClicked(IUIFocusableSlot clicked)
+    {
+        if (_focusedSlot == clicked)
+        {
+            UnfocusSlot();
+            return;
+        }
+
+        if (_focusedSlot != null)
+        {
+            _inventory.SwapSlots(ResolveSlot(_focusedSlot), ResolveSlot(clicked));
+
+            UnfocusSlot();
+            return;
+        }
+
+        if (ResolveSlot(clicked).IsEmpty())
+            return;
+
+        UnfocusSlot();
+        clicked.SetFocused(true);
+    }
+    
     private void UnfocusSlot()
     {
         _focusedSlot?.Unfocus();
         _focusedSlot = null;
     }
 
-    private void FocusSlot(UIInventoryItemSlot slot)
+    private void FocusSlot(IUIFocusableSlot slot)
     {
         _focusedSlot = slot;
     }
 
     private void SwapFocusToWeapon(int idx)
     {
-        if (_focusedSlot != null && !_focusedSlot.Slot.IsEmpty())
-        {
-            _inventory.SwapSlots(
-                _focusedSlot.IsVault
-                    ? _inventory.Vault.Slots[_focusedSlot.Index]
-                    : _inventory.Inventory[_focusedSlot.Index], 
-                _inventory.WeaponSlots[idx]
-            );
-        }
-        else
-        {
-            // Swap weapon slots
-            _inventory.SwapSlots(_inventory.WeaponSlots[0], _inventory.WeaponSlots[1]);
-        }
+        if (_focusedSlot == null || _focusedSlot.Slot.IsEmpty())
+            return;
+
+        _inventory.SwapSlots(ResolveSlot(_focusedSlot), _inventory.WeaponSlots[idx]);
         
         UnfocusSlot();
     }
 
     private void SwapFocusToHotbar(int idx)
     {
-        if (_focusedSlot != null && !_focusedSlot.Slot.IsEmpty())
-        {
-            if (_focusedSlot.IsVault)
-            {
-                var vaultItem = _focusedSlot.Slot.Item;
-                if (vaultItem != null)
-                {
-                    _inventory.SwapSlots(_inventory.Vault.Slots[_focusedSlot.Index], _inventory.Hotbar[idx]);
-                }
-            }
-            else
-            {
-                _inventory.SwapSlots(_inventory.Inventory[_focusedSlot.Index], _inventory.Hotbar[idx]);
-            }
-        }
-        else
-        {
-            // TODO: This is flawed, stacks could be partially duplicated, but idc 
-            // Add hotbar index to inventory
-            if (!_inventory.Hotbar[idx].IsEmpty())
-            {
-                var item = _inventory.Hotbar[idx].Item;
-                if (item != null && _inventory.AddItem(item))
-                {
-                    _inventory.Hotbar[idx].Clear();
-                    _inventory.ForceRefresh();
-                }
-            }
-        }
+        if (_focusedSlot == null || _focusedSlot.Slot.IsEmpty())
+            return;
+        
+        _inventory.SwapSlots(ResolveSlot(_focusedSlot), _inventory.Hotbar[idx]);
         
         UnfocusSlot();
-    }
-
-    /// <summary>
-    /// Swap selected hotbar slot with selected weapon slot
-    /// </summary>
-    private void HWSwap()
-    {
-        _inventory.SwapSlots(_inventory.Hotbar[_inventory.SelectedHotbarIndex], _inventory.WeaponSlots[_inventory.SelectedWeaponIndex]);
     }
 
     /// <summary>
     /// Transfer to/from vault from/to inventory
     /// </summary>
     private void IVSwap()
-    {    if (_focusedSlot != null && !_focusedSlot.Slot.IsEmpty())
+    {    
+        if (_focusedSlot == null || _focusedSlot.Slot.IsEmpty())
+            return;
+
+        if (_focusedSlot.Group == UISlotGroup.Vault)
         {
-            if (_focusedSlot.IsVault)
-            {
-                _inventory.TransferFromVault(_focusedSlot.Slot.Item.Name, _focusedSlot.Slot.Item.StackSize);
-            }
-            else
-            {
-                _inventory.TransferToVault(_focusedSlot.Slot.Item.Name, _focusedSlot.Slot.Item.StackSize);
-            }
+            _inventory.TransferFromVault(_focusedSlot.Slot.Item!.Name, _focusedSlot.Slot.Item.StackSize);
+            UnfocusSlot();
+        }
+        else if (_focusedSlot.Group == UISlotGroup.Inventory)
+        {
+            if (!_inventory.Vault.IsAccessible)
+                return;
+
+            _inventory.TransferToVault(_focusedSlot.Slot.Item!.Name, _focusedSlot.Slot.Item.StackSize);
+            
+            UnfocusSlot();
         }
     }
     
@@ -497,17 +530,31 @@ public class UIInventory : UIContainer
         {
             ToggleMenu();
         }
-        
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_WEAPON_1)) SwapFocusToWeapon(0);
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_WEAPON_2)) SwapFocusToWeapon(1);
-        
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_1)) SwapFocusToHotbar(0);
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_2)) SwapFocusToHotbar(1);
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_3)) SwapFocusToHotbar(2);
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_4)) SwapFocusToHotbar(3);
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_5)) SwapFocusToHotbar(4);
 
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HWSWAP)) HWSwap();
-        if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_IVSWAP)) IVSwap();
+        if (_isMenuOpen)
+        {
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_WEAPON_1)) SwapFocusToWeapon(0);
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_WEAPON_2)) SwapFocusToWeapon(1);
+        
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_1)) SwapFocusToHotbar(0);
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_2)) SwapFocusToHotbar(1);
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_3)) SwapFocusToHotbar(2);
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_4)) SwapFocusToHotbar(3);
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_HOTBAR_5)) SwapFocusToHotbar(4);
+            
+            if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_UI_IVSWAP)) IVSwap();
+        }
+    }
+    
+    private InventorySlot ResolveSlot(IUIFocusableSlot slot)
+    {
+        return slot.Group switch
+        {
+            UISlotGroup.Inventory => _inventory.Inventory[slot.Index],
+            UISlotGroup.Vault     => _inventory.Vault.Slots[slot.Index],
+            UISlotGroup.Hotbar    => _inventory.Hotbar[slot.Index],
+            UISlotGroup.Weapon    => _inventory.WeaponSlots[slot.Index],
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 }

@@ -57,7 +57,6 @@ public static class InputSetup
     public const string ACTION_UI_HOTBAR_4 = "UIHotbar4";
     public const string ACTION_UI_HOTBAR_5 = "UIHotbar5";
 
-    public const string ACTION_UI_HWSWAP = "UIHWSwap";
     public const string ACTION_UI_IVSWAP = "UIIVSwap";
     
     #endregion
@@ -240,9 +239,6 @@ public static class InputSetup
             .AddBinding(new KeyboardBinding(Keys.D6));
         var hotbar5 = new InputAction(ACTION_UI_HOTBAR_5)
             .AddBinding(new KeyboardBinding(Keys.D7));
-
-        var hwSwap = new InputAction(ACTION_UI_HWSWAP)
-            .AddBinding(new KeyboardBinding(Keys.F));
         
         var ivSwap = new InputAction(ACTION_UI_IVSWAP)
             .AddBinding(new KeyboardBinding(Keys.E));
@@ -269,7 +265,6 @@ public static class InputSetup
         uiProfile.RegisterAction(hotbar4);
         uiProfile.RegisterAction(hotbar5);
         
-        uiProfile.RegisterAction(hwSwap);
         uiProfile.RegisterAction(ivSwap);
         
         InputManager.Instance.RegisterProfile(uiProfile);

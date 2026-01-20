@@ -14,7 +14,9 @@ public class UIHotbar : UIContainer
     private PlayerInventory _inventory;
     private UIVisual _background;
     private UIHBoxContainer _slotRow;
+    
     private List<UIHotbarSlot> _slots = new();
+    public IReadOnlyList<UIHotbarSlot> Slots => _slots;
 
     private Texture2D _slotSheet;
     private Rectangle _slotSheetRect;
