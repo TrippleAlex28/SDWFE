@@ -162,7 +162,7 @@ public static class ItemSetup
             MELEE, new WeaponData
             {
                 Name = MELEE,
-                Damage = 75f,
+                Damage = 40f,
                 AttackSpeed = 1.5f,
                 Range = 50f,
                 Velocity = 0f,
@@ -256,7 +256,7 @@ public static class ItemSetup
                 SoundEffect meleeSound = ExtendedGame.AssetManager.LoadSoundEffect("SwordSlash", "SFX/");
                 meleeSound.Play(volume: 0.2f, pitch: 0.5f, pan: 0.8f);
                 // Melee attack
-                const float meleeRange = 80f;
+                const float meleeRange = 48f;
                 const float meleeArc = MathF.PI / 3f; // 60 degrees
 
                 Texture2D? meleeAttackTexture = ExtendedGame.AssetManager.LoadTexture("64x48 Sword Swing-Sheet", "Items/");
@@ -291,9 +291,9 @@ public static class ItemSetup
                     // left side
                     collisionBox = new FloatRect(
                         middlePlayerPos.X - meleeRange,
-                        (middlePlayerPos.Y - (meleeRange / 2f)),
-                        (meleeRange),
-                        (meleeRange));
+                        middlePlayerPos.Y - (meleeRange / 2f),
+                        meleeRange,
+                        meleeRange * 1.5f);
                 }
                 else if (rotation > MathF.PI * 0.25f && rotation < MathF.PI * 0.75f)
                 {
@@ -301,7 +301,7 @@ public static class ItemSetup
                     collisionBox = new FloatRect(
                         middlePlayerPos.X - meleeRange / 2f,
                         middlePlayerPos.Y - meleeRange,
-                        meleeRange,
+                        meleeRange * 1.5f,
                         meleeRange);
                 }
                 else if (rotation >= MathF.PI * 0.75f && rotation < MathF.PI * 1.25f)
@@ -310,14 +310,14 @@ public static class ItemSetup
                         middlePlayerPos.X,
                         middlePlayerPos.Y - meleeRange / 2f,
                         meleeRange,
-                        meleeRange);
+                        meleeRange * 1.5f);
                 } else
                 {
                     // bottom side
                     collisionBox = new FloatRect(
                         middlePlayerPos.X - meleeRange / 2f,
                         middlePlayerPos.Y,
-                        meleeRange,
+                        meleeRange * 1.5f,
                         meleeRange);
                 }
 

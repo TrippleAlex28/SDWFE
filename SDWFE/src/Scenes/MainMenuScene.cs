@@ -180,11 +180,11 @@ public class MainMenuScene : Scene
         mainHBox.AddChild(bottomContainer);
 
         // Settings Button (left)
-        var settingsButton = CreateButton("SETTINGS", new Rectangle(256, 72, 64, 16), new Vector4(7, 7, 7, 7), fontSize: 12);
-        settingsButton.AlignmentPoint = Alignment.MiddleLeft;
-        settingsButton.MaxSize = UIExtensionMethods.ScreenPercent(25, 100);
-        settingsButton.Released += (control) => OnSettingsClicked();
-        bottomContainer.AddChild(settingsButton);
+        // var settingsButton = CreateButton("SETTINGS", new Rectangle(256, 72, 64, 16), new Vector4(7, 7, 7, 7), fontSize: 12);
+        // settingsButton.AlignmentPoint = Alignment.MiddleLeft;
+        // settingsButton.MaxSize = UIExtensionMethods.ScreenPercent(25, 100);
+        // settingsButton.Released += (control) => OnSettingsClicked();
+        // bottomContainer.AddChild(settingsButton);
 
         // filling
         var filler = new UIElement();

@@ -7,16 +7,18 @@ namespace Engine.UI.Elements;
 public class UIScrollContainer : UIContainer
 {
     private float _scrollOffset = 0f;
-    private float _speed = 10f;
+    private float _speed = 75f;
     private bool _isInside = false;
     private bool _isHorizontal = false;
     
     // Total size of content (height for vertical, width for horizontal)
     private float _contentSize = 0f;
+    private bool _isAutomatic = false;
 
-    public UIScrollContainer(bool isHorizontal = false) : base()
+    public UIScrollContainer(bool isHorizontal = false, bool isAutomatic = false) : base()
     {
         _isHorizontal = isHorizontal;
+        _isAutomatic = isAutomatic;
     }
 
     protected override void UpdateSelf(GameTime gameTime)
@@ -29,8 +31,14 @@ public class UIScrollContainer : UIContainer
         Vector2 size = new Vector2(slot.Width, slot.Height);
         _isInside = IsMouseInside(GlobalPosition, size);
 
-
-        if (_isInside)
+        if (_isAutomatic)
+        {
+            // Auto scroll down
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _scrollOffset -= _speed * dt;
+            MarkLayoutDirty();
+        }
+        if (_isInside && !_isAutomatic)
         {
             // bool scrollForward = _isHorizontal 
             //     ? (InputManager.Instance.IsActionDown("UIScrollUp") || InputManager.Instance.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right))
@@ -43,6 +51,9 @@ public class UIScrollContainer : UIContainer
             bool scrollForward = InputManager.Instance.IsActionDown("UIScrollUp");
             bool scrollBackward = InputManager.Instance.IsActionDown("UIScrollDown");
             
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // For vertical scrolling we treat negative offset as "scrolled up" (content moved up).
             if (scrollForward)
             {
                 _scrollOffset += _speed;
@@ -87,7 +98,7 @@ public class UIScrollContainer : UIContainer
     private void SetVerticalLayout(UIElement[] children, Rectangle actualSlot)
     {
         float visibleWidth = actualSlot.Width - Margin.X - Margin.Z;
-        float currentY = Margin.Y + _scrollOffset;
+        float currentY = actualSlot.Y + Margin.Y + _scrollOffset;
         float totalHeight = 0f;
 
         foreach (UIElement child in children)
@@ -97,7 +108,7 @@ public class UIScrollContainer : UIContainer
             if (childHeight > child.MaxSize.Y) childHeight = child.MaxSize.Y;
             
             child.layoutSlot = new Rectangle(
-                (int)Margin.X,
+                actualSlot.X + (int)Margin.X,
                 (int)currentY,
                 (int)visibleWidth,
                 (int)childHeight
@@ -105,7 +116,7 @@ public class UIScrollContainer : UIContainer
             child.MarkLayoutDirty();
             
             // Hide children that are out of bounds
-            child.IsVisible = !IsChildOutOfBounds(child.layoutSlot, actualSlot);
+            //child.IsVisible = !IsChildOutOfBounds(child.layoutSlot, actualSlot);
 
             currentY += childHeight + Spacing;
             totalHeight += childHeight + Spacing;
@@ -120,7 +131,7 @@ public class UIScrollContainer : UIContainer
     private void SetHorizontalLayout(UIElement[] children, Rectangle actualSlot)
     {
         float visibleHeight = actualSlot.Height - Margin.Y - Margin.W;
-        float currentX = Margin.X + _scrollOffset;
+        float currentX = actualSlot.X + Margin.X + _scrollOffset;
         float totalWidth = 0f;
 
         foreach (UIElement child in children)
@@ -131,14 +142,14 @@ public class UIScrollContainer : UIContainer
             
             child.layoutSlot = new Rectangle(
                 (int)currentX,
-                (int)Margin.Y,
+                actualSlot.Y + (int)Margin.Y,
                 (int)childWidth,
                 (int)visibleHeight
             );
             child.MarkLayoutDirty();
             
             // Hide children that are out of bounds
-            child.IsVisible = !IsChildOutOfBounds(child.layoutSlot, actualSlot);
+            //child.IsVisible = !IsChildOutOfBounds(child.layoutSlot, actualSlot);
 
             currentX += childWidth + Spacing;
             totalWidth += childWidth + Spacing;
@@ -191,12 +202,11 @@ public class UIScrollContainer : UIContainer
     {
         base.DrawSelf(spriteBatch);
 
-        if (false)
-        {
-            // Debug drawing
-            Rectangle r = CalculateActualSlot();
-            Color c = _isInside ? new Color(0, 255, 0, 100) : new Color(255, 0, 0, 100);
-            spriteBatch.Draw(EngineResources.BlankSquare, r, c);
-        }
+       
+            // // Debug drawing
+            // Rectangle r = CalculateActualSlot();
+            // Color c = _isInside ? new Color(0, 255, 0, 100) : new Color(255, 0, 0, 100);
+            // spriteBatch.Draw(EngineResources.BlankSquare, r, c);
+        
     }
 }

@@ -57,7 +57,7 @@ namespace SDWFE.Objects.Tiles
             int height = Sprite._spriteHeight;
             int width = Sprite._spriteWidth;
 
-            this.Hitbox = new TriggerHitbox(new Rectangle((int)data.Position.X, (int)data.Position.Y, width, height + 10));
+            this.Hitbox = new TriggerHitbox(new Rectangle((int)data.Position.X, (int)data.Position.Y, width, height + 2));
             Hitbox.DetectsLayers = HitboxLayer.Player;
             _hitboxManager.AddTrigger(Hitbox);
 
@@ -100,6 +100,10 @@ namespace SDWFE.Objects.Tiles
             if (_portalData.LevelIndex == -1 || _portalData.LevelIndex == 0)
             {
                 GameState.Instance.SwitchScene(HubLevel.KEY);
+            }
+            else if (_portalData.LevelIndex == -2)
+            {
+                GameState.Instance.SwitchScene(WinScene.KEY);
             }
             else
             {

@@ -10,6 +10,7 @@ public static class Resources
     public static SpriteFont TextFont { get; private set; }
     public static string UPHEAVEL_FONTNAME { get; private set; } = "Upheavel";
     public static string VISITOR_FONTNAME { get; private set; } = "Visitor";
+    public static string INTRIGORA_FONTNAME { get; private set; } = "Intrigora";
 
     
     public static void LoadContent()

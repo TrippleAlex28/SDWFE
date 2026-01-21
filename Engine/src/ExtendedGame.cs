@@ -22,7 +22,7 @@ public class ExtendedGame : Game
     public readonly GraphicsDeviceManager GraphicsDeviceManager;
     public SpriteBatch SpriteBatch { get; private set; } = null!;
     public RenderTarget2D RenderTarget { get; private set; } = null!;
-    public static readonly Point DrawResolution = new(480, 270);
+    public static Point DrawResolution { get; private set; } = new(480, 270);
     private static Point _cachedBackBufferSize;
 
     public static LightShader LightShaderInstance { get; private set; } = null!;
@@ -30,6 +30,11 @@ public class ExtendedGame : Game
     public static string ContentRootDirectory
     {
         get { return "Content"; }
+    }
+
+    public static void SetDrawResolution(int width, int height)
+    {
+        DrawResolution = new Point(width, height);
     }
     
     public ExtendedGame()

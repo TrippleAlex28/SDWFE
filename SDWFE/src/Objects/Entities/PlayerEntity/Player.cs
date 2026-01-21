@@ -135,7 +135,10 @@ public partial class Player : GameObject
     {
         base.EnterSelf();
         
-        Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Blue : Color.Red;
+        if (GameState.Instance.SessionManager.IsMultiplayer)
+        {
+            Sprite.Color = GameState.Instance.SessionManager.CurrentSession?.LocalClientId == this.OwningClientId ? Color.Blue : Color.Red;
+        }
         
         // Only create UI for the locally owned player
         if (IsLocallyOwned())

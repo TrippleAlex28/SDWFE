@@ -88,8 +88,8 @@ public enum VisualType
 
         public static UIVisual FromText(string text, SpriteFont font, Color color)
         {
-            if (string.IsNullOrEmpty(text))
-                throw new ArgumentException("Text cannot be null or empty.", nameof(text));
+            // if (string.IsNullOrEmpty(text))
+            //     throw new ArgumentException("Text cannot be null or empty.", nameof(text));
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
             

@@ -53,7 +53,8 @@ public static class LevelNames
         { 3, "Level4" },
         { 4, "Level5" },
         { 5, "Level6" },
-        { 6, "BossLevel"}
+        { 6, "BossLevel"},
+        
     };
 
     /// <summary>

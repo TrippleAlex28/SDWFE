@@ -229,6 +229,41 @@
 /processorParam:TextureFormat=Color
 /build:Entities/Projectiles/GenericBullet.png
 
+#begin Fonts/Intrigora.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Intrigora.spritefont
+
+#begin Fonts/Intrigora12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Intrigora12.spritefont
+
+#begin Fonts/Intrigora16.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Intrigora16.spritefont
+
+#begin Fonts/Intrigora20.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Intrigora20.spritefont
+
+#begin Fonts/Intrigora24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Intrigora24.spritefont
+
 #begin Fonts/Upheavel.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

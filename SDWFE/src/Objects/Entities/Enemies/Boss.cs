@@ -33,6 +33,7 @@ public class Boss : Enemy
 
     private float attackSpeed;
     private float standardAttackTimer = 5f;
+    private float timerBeforeNewSpawnable = 10f;
 
     public bool IsIdle = true;
 
@@ -116,6 +117,7 @@ public class Boss : Enemy
         if (!IsAlive) return;
         if (AttackTimer > 0f)
         {
+            timerBeforeNewSpawnable -= gameTime.DeltaSeconds();
             AttackTimer -= gameTime.DeltaSeconds();
             return;
         }
@@ -135,15 +137,22 @@ public class Boss : Enemy
                 break;
             case BossStage.Stage3:
                 AttackTimer = AttackCooldown * 0.6f;
-                int randomChoiceStage3 = ExtendedGame.Random.Next(0, 3);
+                int randomChoiceStage3 = ExtendedGame.Random.Next(0, 1);
+                if (timerBeforeNewSpawnable <= 0f){
+                    randomChoiceStage3 = ExtendedGame.Random.Next(0, 2);
+                }
                 if (randomChoiceStage3 == 0)
                     AttackTypeB();
                 else if (randomChoiceStage3 == 1){
                     AttackTimer = AttackCooldown * 0.2f;
                     AttackTypeC();
                 } 
-                else if (_spawnedEnemies.Count < 1)
+                else if (_spawnedEnemies.Count == 0)
+                {
+                    timerBeforeNewSpawnable = 15f;
                     AttackTypeD();
+                }
+
                 break; 
             default:
                 AttackTypeA();
@@ -290,13 +299,13 @@ public class Boss : Enemy
             for (int i = 0; i < 4; i++)
             {
                 Vector2 spawnPos = this.GlobalPosition + SpawnPoints[i];
-                Grunt grunt = new Grunt();
-                grunt.GlobalPosition = spawnPos;
-                grunt.HitboxManager = HitboxManager;
-                grunt.OnDeathEvent += deleteSpawnedEnemy;
+                Enemy newEnemy = ExtendedGame.Random.Next(0, 2) == 0 ? new Turret() : new Grunt();
+                newEnemy.GlobalPosition = spawnPos;
+                newEnemy.HitboxManager = HitboxManager;
+                newEnemy.OnDeathEvent += deleteSpawnedEnemy;
 
-                GameState.Instance.CurrentScene?.AddObject(grunt);
-                _spawnedEnemies.Add(grunt);
+                GameState.Instance.CurrentScene?.AddObject(newEnemy);
+                _spawnedEnemies.Add(newEnemy);
             }
         }
     }

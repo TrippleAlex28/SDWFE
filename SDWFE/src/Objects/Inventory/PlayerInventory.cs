@@ -23,7 +23,7 @@ public class PlayerInventoryData
     public float MaxHealth { get; set; } = 500f;
     public float CurrentStamina { get; set; } = 100f;
     public float MaxStamina { get; set; } = 100f;
-    public int Coins { get; set; } = 1000;
+    public int Coins { get; set; } = 0;
 }
 
 public class PlayerInventory : GameObject
