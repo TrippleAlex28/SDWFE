@@ -35,6 +35,8 @@ public class Boss : Enemy
     private float standardAttackTimer = 5f;
     private float timerBeforeNewSpawnable = 10f;
 
+    private int amountOfOrbsPerAttack = 16;
+
     public bool IsIdle = true;
 
     private List<Vector2> SpawnPoints = new List<Vector2>()
@@ -92,11 +94,11 @@ public class Boss : Enemy
         IsImmortal = _spawnedEnemies.Count > 0;
         // figure out the stage of the boss based on health
         float healthPercentage = (float)CurrentHealth / MaxHealth;
-        if (healthPercentage > 0.66f)
+        if (healthPercentage > 0.8f)
         {
             currentStage = BossStage.Stage1;
         }
-        else if (healthPercentage > 0.33f)
+        else if (healthPercentage > 0.5f)
         {
             currentStage = BossStage.Stage2;
         }
@@ -137,17 +139,21 @@ public class Boss : Enemy
                 break;
             case BossStage.Stage3:
                 AttackTimer = AttackCooldown * 0.6f;
-                int randomChoiceStage3 = ExtendedGame.Random.Next(0, 1);
-                if (timerBeforeNewSpawnable <= 0f){
-                    randomChoiceStage3 = ExtendedGame.Random.Next(0, 2);
+                Console.WriteLine(timerBeforeNewSpawnable);
+                int randomChoiceStage3 = ExtendedGame.Random.Next(0, 2);
+                if (timerBeforeNewSpawnable <= 0f && _spawnedEnemies.Count < 1){
+                    randomChoiceStage3 = 2;
                 }
+
                 if (randomChoiceStage3 == 0)
+                {
+                    AttackTimer = 0.2f * amountOfOrbsPerAttack * 2;
                     AttackTypeB();
+                } 
                 else if (randomChoiceStage3 == 1){
-                    AttackTimer = AttackCooldown * 0.2f;
                     AttackTypeC();
                 } 
-                else if (_spawnedEnemies.Count == 0)
+                else
                 {
                     timerBeforeNewSpawnable = 15f;
                     AttackTypeD();
@@ -233,14 +239,15 @@ public class Boss : Enemy
     }
     private void UpdateAttackBPattern()
     {
-        if (currentAttackPatternIndex >= 32){
+        if (currentAttackPatternIndex >= amountOfOrbsPerAttack){
             isAttacking = false;
             currentAttackPatternIndex = 0;
             attackPatternTimer = 0.2f;
             return;
         }
         if (attackPatternTimer <= 0f){
-            float angle = currentAttackPatternIndex * (MathF.PI / 16); // 45 degrees apart
+            Console.WriteLine("Spawning orb " + currentAttackPatternIndex);
+            float angle = currentAttackPatternIndex * (MathF.PI / (amountOfOrbsPerAttack / 2)); // 45 degrees apart
             Vector2 direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
             Vector2 startPos = this.GlobalPosition + new Vector2(24, 0);
             Orb newOrb = new Orb(
@@ -273,9 +280,9 @@ public class Boss : Enemy
         {
             float randomOffset = ExtendedGame.Random.NextSingle() * MathF.PI;
 
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < amountOfOrbsPerAttack; i++)
             {
-                float angle = i * (MathF.PI / 16) + randomOffset;
+                float angle = i * (MathF.PI / (amountOfOrbsPerAttack / 2)) + randomOffset;
                 Vector2 direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
                 Vector2 startPos = this.GlobalPosition + new Vector2(24, 0);
                 Orb newOrb = new Orb(
@@ -295,7 +302,7 @@ public class Boss : Enemy
     {
         if (Target is Player player)
         {
-            AttackTimer = AttackCooldown * 2f;
+            AttackTimer = AttackCooldown;
             for (int i = 0; i < 4; i++)
             {
                 Vector2 spawnPos = this.GlobalPosition + SpawnPoints[i];
