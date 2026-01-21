@@ -163,10 +163,6 @@ public class WinScene : Scene
             "",
             "",
         };
-        var titleText = UIVisual.FromText("You Win!", Resources.GetFont(Resources.UPHEAVEL_FONTNAME, 24), Color.White);
-        titleText.AlignmentPoint = Alignment.MiddleCenter;
-        titleText.DesiredSize = UIExtensionMethods.ScreenPercent(80, 20);
-        scrollContainer.AddChild(titleText);
 
         foreach (var line in textLines)
         {

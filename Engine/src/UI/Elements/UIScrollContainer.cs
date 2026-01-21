@@ -7,7 +7,7 @@ namespace Engine.UI.Elements;
 public class UIScrollContainer : UIContainer
 {
     private float _scrollOffset = 0f;
-    private float _speed = 75f;
+    private float _speed = 25f;
     private bool _isInside = false;
     private bool _isHorizontal = false;
     
