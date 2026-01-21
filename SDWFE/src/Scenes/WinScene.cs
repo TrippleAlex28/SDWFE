@@ -44,7 +44,7 @@ public class WinScene : Scene
         // Title text
         
 
-        UIScrollContainer scrollContainer = new UIScrollContainer(false, true);
+        UIScrollContainer scrollContainer = new UIScrollContainer(false, true, false, 25);
         scrollContainer.AlignmentPoint = Alignment.MiddleCenter;
         scrollContainer.DesiredSize = UIExtensionMethods.ScreenPercent(100, 100);
         UIRoot.AddChild(scrollContainer);

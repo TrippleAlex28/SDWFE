@@ -622,52 +622,6 @@
                 }, 
                 {
                  "height":0,
-                 "id":6,
-                 "name":"Enemy",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":336,
-                 "y":1184
-                }, 
-                {
-                 "height":0,
-                 "id":7,
-                 "name":"Enemy",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"wave",
-                         "type":"int",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":192,
-                 "y":1152
-                }, 
-                {
-                 "height":0,
                  "id":8,
                  "name":"RoomDoor",
                  "point":true,

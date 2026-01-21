@@ -14,11 +14,14 @@ public class UIScrollContainer : UIContainer
     // Total size of content (height for vertical, width for horizontal)
     private float _contentSize = 0f;
     private bool _isAutomatic = false;
+    private bool _hideOutOfBound = false;
 
-    public UIScrollContainer(bool isHorizontal = false, bool isAutomatic = false) : base()
+    public UIScrollContainer(bool isHorizontal = false, bool isAutomatic = false, bool hideOutOfBound = true, int speed = 25) : base()
     {
         _isHorizontal = isHorizontal;
         _isAutomatic = isAutomatic;
+        _hideOutOfBound = hideOutOfBound;
+        _speed = speed;
     }
 
     protected override void UpdateSelf(GameTime gameTime)
@@ -98,7 +101,7 @@ public class UIScrollContainer : UIContainer
     private void SetVerticalLayout(UIElement[] children, Rectangle actualSlot)
     {
         float visibleWidth = actualSlot.Width - Margin.X - Margin.Z;
-        float currentY = actualSlot.Y + Margin.Y + _scrollOffset;
+        float currentY = Margin.Y + _scrollOffset;
         float totalHeight = 0f;
 
         foreach (UIElement child in children)
@@ -108,16 +111,18 @@ public class UIScrollContainer : UIContainer
             if (childHeight > child.MaxSize.Y) childHeight = child.MaxSize.Y;
             
             child.layoutSlot = new Rectangle(
-                actualSlot.X + (int)Margin.X,
+                (int)Margin.X,
                 (int)currentY,
                 (int)visibleWidth,
                 (int)childHeight
             );
             child.MarkLayoutDirty();
             
-            // Hide children that are out of bounds
-            //child.IsVisible = !IsChildOutOfBounds(child.layoutSlot, actualSlot);
-
+            if (_hideOutOfBound)
+            {
+                // Hide children that are out of bounds
+                child.IsVisible = !IsChildOutOfBounds(child.layoutSlot, actualSlot);
+            }
             currentY += childHeight + Spacing;
             totalHeight += childHeight + Spacing;
         }
@@ -131,7 +136,7 @@ public class UIScrollContainer : UIContainer
     private void SetHorizontalLayout(UIElement[] children, Rectangle actualSlot)
     {
         float visibleHeight = actualSlot.Height - Margin.Y - Margin.W;
-        float currentX = actualSlot.X + Margin.X + _scrollOffset;
+        float currentX = Margin.X + _scrollOffset;
         float totalWidth = 0f;
 
         foreach (UIElement child in children)
@@ -142,14 +147,17 @@ public class UIScrollContainer : UIContainer
             
             child.layoutSlot = new Rectangle(
                 (int)currentX,
-                actualSlot.Y + (int)Margin.Y,
+                (int)Margin.Y,
                 (int)childWidth,
                 (int)visibleHeight
             );
             child.MarkLayoutDirty();
             
-            // Hide children that are out of bounds
-            //child.IsVisible = !IsChildOutOfBounds(child.layoutSlot, actualSlot);
+            if (_hideOutOfBound)
+            {
+                // Hide children that are out of bounds
+                child.IsVisible = !IsChildOutOfBounds(child.layoutSlot, actualSlot);
+            }
 
             currentX += childWidth + Spacing;
             totalWidth += childWidth + Spacing;

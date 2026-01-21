@@ -135,7 +135,7 @@ public class Turret : Enemy
         // Spawn coins
         for (int i = 0; i < 5; i++)
         {
-            Coins.CreateRandomDrop(GlobalPosition, HitboxManager!);
+            Coins.CreateRandomDrop(GlobalPosition + new Vector2(24, 20), HitboxManager!);
         }
         
         // Drop items
