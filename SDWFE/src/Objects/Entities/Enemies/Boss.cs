@@ -139,7 +139,6 @@ public class Boss : Enemy
                 break;
             case BossStage.Stage3:
                 AttackTimer = AttackCooldown * 0.6f;
-                Console.WriteLine(timerBeforeNewSpawnable);
                 int randomChoiceStage3 = ExtendedGame.Random.Next(0, 2);
                 if (timerBeforeNewSpawnable <= 0f && _spawnedEnemies.Count < 1){
                     randomChoiceStage3 = 2;
@@ -246,7 +245,6 @@ public class Boss : Enemy
             return;
         }
         if (attackPatternTimer <= 0f){
-            Console.WriteLine("Spawning orb " + currentAttackPatternIndex);
             float angle = currentAttackPatternIndex * (MathF.PI / (amountOfOrbsPerAttack / 2)); // 45 degrees apart
             Vector2 direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
             Vector2 startPos = this.GlobalPosition + new Vector2(24, 0);
