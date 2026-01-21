@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Engine;
 using Engine.Hitbox;
 using Engine.Input;
@@ -46,6 +47,7 @@ public abstract class GameplayLevel : Scene
         map.RegisterHitboxes(HitboxManager);
         
         waveManager = new WaveManager(this, map.Portals, map.Doors, map.Enemies, HitboxManager);
+        waveManager.OnAllWavesCompleted += OnAllWavesCompleted;
         this.AddObject(waveManager);
                 
         // Manage hub level special wave case
@@ -57,8 +59,6 @@ public abstract class GameplayLevel : Scene
                 
                 this.AddObject(portal);
             }
-
-            
         }
         else
         {
@@ -127,6 +127,11 @@ public abstract class GameplayLevel : Scene
     {
         base.DrawScene(spriteBatch);
         HitboxManager.DrawDebug(spriteBatch);
+    }
+
+    protected virtual void OnAllWavesCompleted()
+    {
+        
     }
 
     #region Helpers

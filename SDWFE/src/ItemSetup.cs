@@ -125,7 +125,7 @@ public static class ItemSetup
                 AttackSpeed = 5f,
                 Range = 500f,
                 Velocity = 550f,
-                IconPath = "Medkit",
+                IconPath = "AssaultRifle",
                 UseActionId = ACTION_SHOOT,
                 Price = 50,
             }
@@ -139,7 +139,7 @@ public static class ItemSetup
                 Range = 80f,
                 Velocity = 450f,
                 BulletType = BulletType.Shotgun,
-                IconPath = "Medkit",
+                IconPath = "Shotgun",
                 UseActionId = ACTION_SHOOT,
                 Price = 50,
             }
@@ -153,7 +153,7 @@ public static class ItemSetup
                 Range = 1000f,
                 Velocity = 200f,
                 BulletType = BulletType.FireworkRocket,
-                IconPath = "Medkit",
+                IconPath = "rpg",
                 UseActionId = ACTION_SHOOT,
                 Price = 100,
             }

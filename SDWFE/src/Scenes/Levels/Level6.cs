@@ -61,6 +61,4 @@ public class Level6 : GameplayLevel
             }
         }
     }
-
-
 }

@@ -26,13 +26,7 @@ public partial class Player
         {
             Inventory.AddWeaponByName(ItemSetup.MELEE);
             Inventory.AddWeaponByName(ItemSetup.BOW);
-            
         }
-
-        // Inventory.AddItemByName(ItemSetup.ADRENALINE, 2);
-        // Inventory.AddItemByName(ItemSetup.FREEZE, 2);
-        // Inventory.AddItemByName(ItemSetup.RAGE, 2);
-        // Inventory.AddItemByName(ItemSetup.SLAM, 2);
     }
 
     private void UpdateInventory()

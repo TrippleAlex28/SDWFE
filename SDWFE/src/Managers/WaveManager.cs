@@ -237,6 +237,12 @@ public class WaveManager : GameObject
 
     private void CompleteCurrentWave()
     {
+        if (_currentWaveIndex >= _waves.Count - 1)
+        {
+            Console.WriteLine("[WaveManager] All waves completed!");
+            OnAllWavesCompleted?.Invoke();
+        }
+        
         if (_currentWaveIndex < 0 || _currentWaveIndex >= _waves.Count)
             return;
 
