@@ -49,7 +49,7 @@ public class UIDialogueChoice : UIControl
 
     public UIDialogueChoice(Texture2D? profileSprite = null)
     {
-        DialogueRegistry.Load("../../../src/Objects/Entities/NPC/Dialogue.json");
+        DialogueRegistry.Load(ExtendedGame.AssetManager.GetContentDirectory() + "/Levels/Dialogue.json");
 
         _profileSprite = profileSprite;
         _spriteSheetTexture = ExtendedGame.AssetManager.LoadTexture("UI_Dialogue", "UI/");

@@ -17,6 +17,11 @@ public sealed class AssetManager
         this._contentManager = contentManager;
     }
 
+    public string GetContentDirectory()
+    {
+        return _contentManager.RootDirectory;
+    }
+
     public Texture2D LoadTexture(string spriteName, string basePath = "")
     {
         return this._contentManager.Load<Texture2D>(basePath + spriteName);

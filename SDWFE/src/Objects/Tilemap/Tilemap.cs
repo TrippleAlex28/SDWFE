@@ -18,6 +18,7 @@ public class Tilemap : GameObject
     #region Constants
     
     private const string LEVELS_PATH = "../../../src/Objects/Tilemap/levels/";
+    
     private const int TILE_SIZE = 16;
     
     #endregion
@@ -115,7 +116,9 @@ public class Tilemap : GameObject
         _hitboxManager = hitboxManager;
 
         _roomDoorSheet = ExtendedGame.AssetManager.LoadTexture("TM_Door_Anim", "Tilemap/");
-        var map = JsonManager.Load<TiledMap>(LEVELS_PATH + levelFile);
+        
+        var map = JsonManager.Load<TiledMap>(ExtendedGame.AssetManager.GetContentDirectory() + "/Levels/" + levelFile);
+        
         _tilesetRefs = map.tilesets?.OrderByDescending(t => t.firstgid).ToList() ?? new();
 
         var objectsById = GetObjectLookup(map);
