@@ -78,7 +78,15 @@ public class UIInventorySlot : UIControl
         }
 
         if (Slot.IsEmpty())
+        {
+            // Ensure selected overlay is on top even when empty
+            if (_isSelected)
+            {
+                RemoveChild(_selected);
+                AddChild(_selected);
+            }
             return;
+        }
 
         // Add icon
         if (Slot.Item?.Icon != null)

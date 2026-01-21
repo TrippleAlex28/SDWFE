@@ -17,7 +17,6 @@ public class PlayerInventoryData
     public InventorySlot[] Inventory { get; set; } = Array.Empty<InventorySlot>();
     public InventorySlot[] WeaponSlots { get; set; } = Array.Empty<InventorySlot>();
     public InventorySlot[] Vault { get; set; } = Array.Empty<InventorySlot>();
-    public string[] UnlockedAbilities { get; set; } = Array.Empty<string>();
     
     // Player stats
     public float CurrentHealth { get; set; } = 500f;
@@ -43,11 +42,6 @@ public class PlayerInventory : GameObject
     public int SelectedWeaponIndex { get; private set; } = 0;
     
     /// <summary>
-    /// Unlocked abilities to be saved/loaded
-    /// </summary>
-    public string[] UnlockedAbilities { get; set; } = Array.Empty<string>();
-    
-    /// <summary>
     /// Player stats to be saved/loaded
     /// </summary>
     public float SavedCurrentHealth { get; set; } = 500f;
@@ -55,11 +49,6 @@ public class PlayerInventory : GameObject
     public float SavedCurrentStamina { get; set; } = 100f;
     public float SavedMaxStamina { get; set; } = 100f;
     public int SavedCoins { get; set; } = 1000;
-    
-    /// <summary>
-    /// Event fired when abilities are loaded from file
-    /// </summary>
-    public event Action<string[]>? OnAbilitiesLoaded;
     
     /// <summary>
     /// Event fired when stats are loaded from file
@@ -428,7 +417,6 @@ public class PlayerInventory : GameObject
                 Inventory = Inventory,
                 WeaponSlots = WeaponSlots,
                 Vault = Vault.Slots,
-                UnlockedAbilities = UnlockedAbilities,
                 CurrentHealth = SavedCurrentHealth,
                 MaxHealth = SavedMaxHealth,
                 CurrentStamina = SavedCurrentStamina,
@@ -501,13 +489,6 @@ public class PlayerInventory : GameObject
                 CopySlots(WeaponSlots, saveData.WeaponSlots);
             if (saveData.Vault.Length == 30)
                 Vault.Slots = saveData.Vault;
-
-            // Load unlocked abilities
-            if (saveData.UnlockedAbilities != null && saveData.UnlockedAbilities.Length > 0)
-            {
-                UnlockedAbilities = saveData.UnlockedAbilities;
-                OnAbilitiesLoaded?.Invoke(saveData.UnlockedAbilities);
-            }
 
             // Load player stats
             SavedCurrentHealth = saveData.CurrentHealth;

@@ -14,7 +14,9 @@ public class UIWeapons : UIContainer
     private PlayerInventory _inventory;
     private UIVisual _background;
     private UIHBoxContainer _slotRow;
+    
     private List<UIWeaponSlot> _slots = new();
+    public IReadOnlyList<UIWeaponSlot> Slots => _slots;
 
     private Texture2D _slotSheet;
     private Rectangle _slotSheetRect;

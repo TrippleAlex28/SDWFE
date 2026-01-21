@@ -7,15 +7,17 @@ using SDWFE.Objects.Inventory;
 
 namespace SDWFE.UI.Inventory2;
 
-public class UIInventoryItemSlot : UIInventorySlot
+public class UIInventoryItemSlot : UIInventorySlot, IUIFocusableSlot
 {
     private PlayerInventory _inventory;
     public bool IsVault { get; private set; }
+    public UISlotGroup Group => IsVault ? UISlotGroup.Vault : UISlotGroup.Inventory;
 
     public bool IsFocused { get; private set; }
     private UIContainer? _focusOverlay;
-    private UIVisual? _focusPopup;
     public event Action<bool>? OnFocusChange;
+    
+    public event Action<IUIFocusableSlot>? Clicked;
     
     private Color _focusTint = new Color(255, 255, 155, 255);
     private Color _hoverTint = new Color(255, 255, 255, 180);
@@ -43,7 +45,6 @@ public class UIInventoryItemSlot : UIInventorySlot
 
     private void OnHoverEnter(UIControl control)
     {
-        // TODO: HOVER INTERACTION
         if (!Slot.IsEmpty() && !IsFocused)
         {
             _background.Tint = _hoverTint;
@@ -52,36 +53,12 @@ public class UIInventoryItemSlot : UIInventorySlot
 
     private void OnHoverExit(UIControl control)
     {
-        // TODO: STOP HOVER INTERACTION
-        if (IsFocused)
-        {
-            SetFocused(false);
-        }
         _background.Tint = _normalTint;
     }
 
     private void OnClick(UIControl control)
     {
-        if (Slot.IsEmpty())
-            return;
-
-        // TODO: INVENTORY SLOT INTERACTION, currently switches between vault and inventory
-        SetFocused(!IsFocused);
-        
-        // // Transfer item between inventory and vault
-        // if (IsVault)
-        // {
-        //     // Transfer from vault to inventory
-        //     _inventory.TransferFromVault(Slot.Item!.Name, Slot.Item.StackSize);
-        // }
-        // else
-        // {
-        //     // Transfer from inventory to vault (if accessible)
-        //     if (_inventory.Vault.IsAccessible)
-        //     {
-        //         _inventory.TransferToVault(Slot.Item!.Name, Slot.Item.StackSize);
-        //     }
-        // }
+        Clicked?.Invoke(this);
     }
 
     public void SetFocused(bool focused)
@@ -141,33 +118,6 @@ public class UIInventoryItemSlot : UIInventorySlot
             bottomEdge.DesiredSize = new Vector2(_slotSize, 4);
             _focusOverlay.AddChild(bottomEdge);
         }
-
-        // Create popup with instructions
-        if (_focusPopup == null)
-        {
-            var popupContainer = new UIContainer()
-            {
-                AlignmentPoint = Alignment.BottomMiddle,
-                DesiredSize = new Vector2(150, 40),
-                Margin = new Vector4(0, 0, 0, _slotSize + 10)
-            };
-
-            var popupBg = UIVisual.FromColor(new Color(20, 20, 20, 240));
-            popupBg.AlignmentPoint = Alignment.MiddleCenter;
-            popupBg.Padding = new Vector4(6, 4, 6, 4);
-            popupContainer.AddChild(popupBg);
-
-            var popupText = UIVisual.FromText(
-                "Press 1-2 for weapon\nPress 3-7 for hotbar",
-                Resources.TextFont,
-                new Color(200, 200, 200, 255)
-            );
-            popupText.AlignmentPoint = Alignment.MiddleCenter;
-            popupBg.AddChild(popupText);
-
-            _focusPopup = popupBg;
-            AddChild(popupContainer);
-        }
     }
 
     private void RemoveFocusVisuals()
@@ -176,17 +126,6 @@ public class UIInventoryItemSlot : UIInventorySlot
         {
             RemoveChild(_focusOverlay);
             _focusOverlay = null;
-        }
-
-        if (_focusPopup != null)
-        {
-            // The popup is inside a container, we need to remove the parent
-            var parent = _focusPopup.Parent;
-            if (parent != null && parent != this)
-            {
-                RemoveChild((UIElement)parent);
-            }
-            _focusPopup = null;
         }
     }
 }
