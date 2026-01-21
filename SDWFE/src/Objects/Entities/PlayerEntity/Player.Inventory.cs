@@ -1,6 +1,8 @@
-﻿using Engine.Input;
+﻿using Engine;
+using Engine.Input;
 using SDWFE.Objects.Inventory;
 using SDWFE.Objects.Inventory.Item;
+using SDWFE.Scenes.Levels;
 using SDWFE.UI.Inventory2;
 
 namespace SDWFE.Objects.Entities.PlayerEntity;
@@ -18,7 +20,8 @@ public partial class Player
         this.AddChild(Inventory);
         
         // Setup vault access conditions
-        Inventory.Vault.AddAccessCondition(() => true);
+        Inventory.Vault.AddAccessCondition(() => GameState.Instance.CurrentScene?.Name == HubLevel.KEY);
+        
         if (Inventory.IsCompletelyEmpty())
         {
             Inventory.AddWeaponByName(ItemSetup.MELEE);
