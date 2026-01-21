@@ -354,7 +354,7 @@ public sealed class UIShop: UIElement
 
     private void OnPurchased(int itemIndex, string itemName, int price, UIControl buyButton)
     {
-        if (_coins >= price)
+        if (_coins >= price && IsVisible)
         {
             // Use the actual item name from the shop item, not the parameter
             string actualItemName = _shopItems[itemIndex].ItemName;
