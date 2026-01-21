@@ -50,6 +50,8 @@ public class UIElement : GameObject
         
         // Recursively update all descendants' draw layer offsets
         child.UpdateChildDrawLayers();
+        
+        child.MarkLayoutDirty();
     }
 
     /// <summary>
@@ -104,7 +106,10 @@ public class UIElement : GameObject
                 Math.Min(child.MaxSize.Y, childMaxSlot.Height));
 
             */
+            
             child.layoutSlot = ChildSlotWithMargin();
+            child.MarkLayoutDirty();
+            
             /*child.layoutSlot = new Rectangle(
                 (int)(childMaxSlot.X + child.LocalPosition.X),
                 (int)(childMaxSlot.Y + child.LocalPosition.Y),
