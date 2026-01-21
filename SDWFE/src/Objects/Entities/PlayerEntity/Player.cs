@@ -109,7 +109,7 @@ public partial class Player : GameObject
         );
         
         // Animated Sprite Setup
-        Texture2D spriteSheet = ExtendedGame.AssetManager.LoadTexture("16x32 Idle v2-Sheet", "Entities/Player/");
+        Texture2D spriteSheet = ExtendedGame.AssetManager.LoadTexture("32x16 Idle-Sheet", "Entities/Player/");
         Sprite = new AnimatedSprite(spriteSheet, 16, 32)
         {
             SourceRectangle = new Rectangle(new Point(0, 0), new Point(16, 32)),

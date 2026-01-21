@@ -108,7 +108,7 @@ public static class ItemSetup
             PISTOL, new WeaponData
             {
                 Name = PISTOL,
-                Damage = 50f,
+                Damage = 34f,
                 AttackSpeed = 2f,
                 Range = 250f,
                 Velocity = 350f,
@@ -121,7 +121,7 @@ public static class ItemSetup
             ASSAULT_RIFLE, new WeaponData
             {
                 Name = ASSAULT_RIFLE,
-                Damage = 50f,
+                Damage = 34f,
                 AttackSpeed = 5f,
                 Range = 500f,
                 Velocity = 550f,
@@ -148,8 +148,8 @@ public static class ItemSetup
             FIREWORK_LAUNCHER, new WeaponData
             {
                 Name = FIREWORK_LAUNCHER,
-                Damage = 250f,
-                AttackSpeed = .5f,
+                Damage = 150f,
+                AttackSpeed = .3f,
                 Range = 1000f,
                 Velocity = 200f,
                 BulletType = BulletType.FireworkRocket,

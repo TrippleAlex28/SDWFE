@@ -42,8 +42,8 @@ public static class ParticlePresets
             .Build();
 
     public static ParticleEmitter CreateRocketTrail() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
-            .WithMaxParticles(600)
-            .WithEmissionRate(60f)
+            .WithMaxParticles(256)
+            .WithEmissionRate(64f)
             .Continuous()
             .WithSpawnRadius(4f)
             .WithLifetime(0.8f, 1.6f)
@@ -56,30 +56,30 @@ public static class ParticlePresets
                 new Color(255, 140, 40),
                 new Color(100, 100, 100))
             .WithScaleCurve(curve => curve
-                .AddKey(0f, 0.2f)
-                .AddKey(1f, 1.0f))
+                .AddKey(0f, 0.1f)
+                .AddKey(1f, .3f))
             .WithFadeInOut(0.1f, 0.7f)
             .AlphaBlend()
             .Build();   
     
     public static ParticleEmitter CreateRocketImpact() => new ParticleEmitterBuilder(EngineResources.BlankCircle)
-        .WithMaxParticles(200)
-        .WithEmissionRate(400f)
+        .WithMaxParticles(256)
+        .WithEmissionRate(64f)
         .WithDuration(0.15f)                 // Burst explosion
-        .WithSpawnRadius(12f)
+        .WithSpawnRadius(8f)
         .WithLifetime(0.6f, 1.4f)
         .WithVelocity(
-            new Vector2(-180f, -180f),
-            new Vector2(180f, 180f))
+            new Vector2(-64f, -64f),
+            new Vector2(64f, 64f))
         .WithGravity(0f, 60f)                // Smoke falls slightly
         .WithRotationVelocity(-3f, 3f)
         .WithColorRange(
-            new Color(255, 180, 80),
-            new Color(80, 80, 80))           // Fire → smoke
+            new Color(255, 165, 30, 155),
+            new Color(80, 80, 80, 155))           // Fire → smoke
         .WithScaleCurve(curve => curve
-            .AddKey(0f, 0.4f)
-            .AddKey(0.3f, 1.2f)
-            .AddKey(1f, 1.8f))
+            .AddKey(0f, 0.3f)
+            .AddKey(0.3f, .7f)
+            .AddKey(1f, 1f))
         .WithFadeInOut(0.05f, 0.5f)
         .AlphaBlend()
         .Build();
