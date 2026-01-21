@@ -7,6 +7,7 @@ using Engine.Input;
 using Engine.Scene;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.Enemies;
 using SDWFE.Objects.Entities.PlayerEntity;
@@ -47,16 +48,6 @@ public static class ItemSetup
                 IconPath = "Heal",
                 UseActionId = BANDAGE,
                 Price = 30,
-            }
-        },
-        {
-            MEDKIT, new ItemData
-            {
-                Name = MEDKIT,
-                MaxStackSize = 4,
-                IconPath = "Medkit",
-                UseActionId = MEDKIT,
-                Price = 20,
             }
         },
         {
@@ -184,13 +175,11 @@ public static class ItemSetup
 
     public static void Initialize()
     {
+        SoundEffect itemUseSound = ExtendedGame.AssetManager.LoadSoundEffect("AbilityUse", "SFX/");
         ItemActionRegistry.RegisterUse(BANDAGE, (player, data, direction) =>
         {
             player.Stats.CurrentHealth += 100;
-        });
-        ItemActionRegistry.RegisterUse(MEDKIT, (player, data, direction) =>
-        {
-            player.Stats.CurrentHealth += 250;
+            itemUseSound.Play(volume: 0.2f, pitch: 0.0f, pan: 0.0f);
         });
         ItemActionRegistry.RegisterUse(ADRENALINE, (player, data, direction) =>
         {
@@ -263,7 +252,9 @@ public static class ItemSetup
             if (scene == null) return;
             
             if (weaponData!.Name == MELEE)
-            {
+            {   
+                SoundEffect meleeSound = ExtendedGame.AssetManager.LoadSoundEffect("SwordSlash", "SFX/");
+                meleeSound.Play(volume: 0.2f, pitch: 0.5f, pan: 0.8f);
                 // Melee attack
                 const float meleeRange = 80f;
                 const float meleeArc = MathF.PI / 3f; // 60 degrees
@@ -336,6 +327,8 @@ public static class ItemSetup
                 {
                     if (hitbox.Owner is Enemy enemy)
                     {
+                        SoundEffect hitSound = ExtendedGame.AssetManager.LoadSoundEffect("SwordHit", "SFX/");
+                        hitSound.Play(volume: 0.3f, pitch: 0.0f, pan: 0.0f);
                         enemy.TakeDamage((int)(weaponData.Damage * player.DamageMultiplier));
                     }
                 }
@@ -376,6 +369,8 @@ public static class ItemSetup
                     scene.AddObject(new FireworkRocket(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage * player.DamageMultiplier, player, scene.HitboxManager));
                     break;
                 case BulletType.Arrow:
+                    SoundEffect arrowSound = ExtendedGame.AssetManager.LoadSoundEffect("ArrowShot", "SFX/");
+                    arrowSound.Play(volume: 0.1f, pitch: 0.7f, pan: 0.0f);
                     scene.AddObject(new Arrow(player.GlobalPosition + player.CameraOffset, direction, weaponData.Velocity, weaponData.Range, weaponData.Damage * player.DamageMultiplier, player, scene.HitboxManager));
                     break;
                 default:

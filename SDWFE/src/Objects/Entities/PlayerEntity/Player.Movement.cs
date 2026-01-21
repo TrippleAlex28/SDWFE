@@ -11,7 +11,7 @@ namespace SDWFE.Objects.Entities.PlayerEntity;
 
 public partial class Player
 {
-    public const float WALK_VELOCITY = 200f;
+    public const float WALK_VELOCITY = 120f;
 
     public bool CanWalk => !_isLeaping;
 
@@ -29,6 +29,7 @@ public partial class Player
     private bool _isLeaping = false;
     private float _currentLeapTime = 0f;
     private float _currentLeapCooldown = 0f;
+    private Vector2 _leapDirection = Vector2.Zero;
     private Vector2 _currentLeapVelocity = Vector2.Zero;
 
     // Animation State Machine
@@ -68,6 +69,7 @@ public partial class Player
         if (direction.IsApproximatelyZero()) return;
         if (_currentLeapCooldown > 0f) return;
 
+        _leapDirection = Vector2.Normalize(direction);
         Stats.CurrentStamina -= 50f;
         _isLeaping = true;
         _currentLeapCooldown = LEAP_COOLDOWN;
@@ -92,6 +94,7 @@ public partial class Player
         _currentLeapCooldown -= dt;
         _currentLeapTime -= dt;
 
+
         if (_currentLeapTime <= 0f)
         {
             _isLeaping = false;
@@ -99,8 +102,10 @@ public partial class Player
         }
         else
         {
+            this.Direction = _leapDirection;
             // Apply leap movement
-            this.GlobalPosition += _currentLeapVelocity * dt;
+            this.Velocity = LEAP_VELOCITY;
+            //this.GlobalPosition += _currentLeapVelocity * dt;
         }
     }
 
@@ -129,6 +134,7 @@ public partial class Player
     /// </summary>
     private void UpdateAnimationState()
     {
+        if (!IsLocallyOwned()) return;
         // Don't interrupt one-shot animations
         if (Sprite.IsPlayingOneShot) return;
         

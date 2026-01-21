@@ -19,7 +19,7 @@ public static class LootTables
     {
         new (
             null,
-            50
+            80
         ),
         new (
             new LootTableEntry
@@ -28,16 +28,7 @@ public static class LootTables
                 MinStackSize = 1,
                 MaxStackSize = 3
             },
-            40
-        ),
-        new (
-            new LootTableEntry
-            {
-                ItemName = ItemSetup.MEDKIT,
-                MinStackSize = 1,
-                MaxStackSize = 1
-            },
-            10
+            20
         ),
     };
 

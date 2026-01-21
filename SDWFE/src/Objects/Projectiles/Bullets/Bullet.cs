@@ -98,6 +98,9 @@ public abstract class Bullet : Projectile
         if (other is Player player)
         {
             player.Stats.CurrentHealth -= _damage;
+            string[] namesofSound = { "CharacterHurt1", "CharacterHurt2", "CharacterHurt3" };
+            SoundManager.PlaySound(namesofSound[ExtendedGame.Random.Next(0, namesofSound.Length)], volume: 0.3f);
+
         }
         
         base.OnCollision(other);

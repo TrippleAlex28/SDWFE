@@ -19,12 +19,21 @@ public class NPC : Interactable
     public AnimatedSprite? idleSprite;
 
     public string _basenode;
+    public string[] SoundNames = { "NPCTalkFemale1"};
 
 
     public NPC(string base_node, Rectangle interactionBox, Texture2D idleSpritesheet, HitboxManager hitboxManager, int width = 32) : base(interactionBox, hitboxManager)
     {
         _basenode = base_node;
 
+        if (base_node == "anwei_root")
+        {
+            SoundNames = new string[] { "NPCTalkMale1", "NPCTalkMale2" };
+        }
+        else
+        {
+            SoundNames = new string[] { "NPCTalkFemale1", "NPCTalkFemale2" };
+        }
         idleSprite = new AnimatedSprite(idleSpritesheet, width, 32, 200f, true);
         AddChild(idleSprite);
 
@@ -46,6 +55,7 @@ public class NPC : Interactable
     {
         if (player.IsLocallyOwned() && player.DialogueChoice != null)
         {
+            SoundManager.PlaySound(SoundNames[ExtendedGame.Random.Next(0, SoundNames.Length)], volume: 0.3f);
             player.DialogueChoice.Show(_basenode);
         }
     }

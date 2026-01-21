@@ -4,7 +4,9 @@ using Engine.Hitbox;
 using Engine.Input;
 using Engine.Scene;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using SDWFE.Managers;
 using SDWFE.Objects;
 using SDWFE.Objects.Entities.PlayerEntity;
@@ -17,7 +19,7 @@ public abstract class GameplayLevel : Scene
 {
     private string _levelSuffix;
     public GameplayLevelManager LevelManager { get; set; }
-
+    public Song BackgroundMusic { get; protected set; }
     protected Tilemap map;
     protected WaveManager waveManager;
     
@@ -33,7 +35,9 @@ public abstract class GameplayLevel : Scene
     public override void Enter()
     {
         base.Enter();
-        
+        BackgroundMusic = ExtendedGame.AssetManager.LoadSong("AchtergrondMuziek", "SFX/");
+        MediaPlayer.Play(BackgroundMusic);
+        MediaPlayer.IsRepeating = true;
         ExtendedGame.LightShaderInstance.Enabled = true;
         
         #region Tilemap & Hitboxes Loading

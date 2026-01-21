@@ -1,13 +1,17 @@
-﻿using Engine;
+﻿using System;
+using Engine;
 using Engine.Hitbox;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using SDWFE.Objects.Entities.Enemies;
+using SDWFE.Objects.Entities.PlayerEntity;
 
 namespace SDWFE.Objects.Projectiles.Bullets;
 
 public class Arrow : Bullet
 {
     public override uint TypeId => (uint)NetObjects.Arrow;
-
+    private GameObject? _owner;
     /// <summary>
     /// Empty constructor, should ONLY be used for network object instantiation
     /// </summary>
@@ -38,6 +42,18 @@ public class Arrow : Bullet
         new Vector2(4, 4)
     )
     {
+        _owner = owner;
         Sprite.Scale = new Vector2(0.5f);
+    }
+
+    public override void OnCollision(GameObject other)
+    {
+        base.OnCollision(other);
+        if (other is Enemy && _owner is Player player)
+        {
+            player.Stats.CurrentStamina += 5f;
+        }
+        //SoundEffect hitSound = ExtendedGame.AssetManager.LoadSoundEffect("ArrowHit", "SFX/");
+        //hitSound.Play(volume: 0.2f, pitch: 0.0f, pan: 0.0f);
     }
 }

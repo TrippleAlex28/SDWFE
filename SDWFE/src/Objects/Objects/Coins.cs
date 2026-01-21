@@ -2,6 +2,7 @@
 using Engine.Hitbox;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.PlayerEntity;
 using System;
@@ -118,6 +119,9 @@ namespace SDWFE.Objects.Entities.Items
         {
             if (other is Player player)
             {
+                SoundEffect collectSound = ExtendedGame.AssetManager.LoadSoundEffect("CoinPickup", "SFX/");
+                collectSound.Play(volume: 0.5f, pitch: 0.0f, pan: 0.0f);
+                
                 player.Stats.Coins += 1;
                 this.RemoveSelf();
             }

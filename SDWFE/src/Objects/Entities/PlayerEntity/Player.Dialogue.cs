@@ -113,6 +113,7 @@ public partial class Player
             }
             if (InputManager.Instance.IsActionPressed(InputSetup.ACTION_INTERACT))
             {
+                SoundManager.PlaySound(npc.SoundNames[ExtendedGame.Random.Next(0, npc.SoundNames.Length)], volume: 0.3f);
                 ShowChoiceDialogue(npc._basenode);
             }
         }        

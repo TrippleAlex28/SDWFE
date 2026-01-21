@@ -417,6 +417,108 @@
 /processorParam:TextureFormat=Color
 /build:Items/Slam.png
 
+#begin SFX/AbilityUse.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/AbilityUse.wav
+
+#begin SFX/AchtergrondMuziek.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:SFX/AchtergrondMuziek.mp3
+
+#begin SFX/Ambiance1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:SFX/Ambiance1.mp3
+
+#begin SFX/ArrowHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/ArrowHit.wav
+
+#begin SFX/ArrowShot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/ArrowShot.wav
+
+#begin SFX/CharacterHurt1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/CharacterHurt1.wav
+
+#begin SFX/CharacterHurt2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/CharacterHurt2.wav
+
+#begin SFX/CharacterHurt3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/CharacterHurt3.wav
+
+#begin SFX/CharacterRunning.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/CharacterRunning.wav
+
+#begin SFX/CoinPickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/CoinPickup.wav
+
+#begin SFX/EncouragerBuff.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/EncouragerBuff.wav
+
+#begin SFX/NPCTalkFemale1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/NPCTalkFemale1.wav
+
+#begin SFX/NPCTalkFemale2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/NPCTalkFemale2.wav
+
+#begin SFX/NPCTalkMale1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/NPCTalkMale1.wav
+
+#begin SFX/NPCTalkMale2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/NPCTalkMale2.wav
+
+#begin SFX/SwordHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/SwordHit.wav
+
+#begin SFX/SwordSlash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/SwordSlash.wav
+
 #begin Shaders/LightEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor

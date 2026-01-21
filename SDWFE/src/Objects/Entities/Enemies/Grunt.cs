@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using Engine;
 using Engine.Hitbox;
 using Engine.Sprite;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using SDWFE.Objects.Entities.Items;
 using SDWFE.Objects.Entities.PlayerEntity;
@@ -78,7 +80,9 @@ public class Grunt : ChasingEnemy
         if (Target is Player player)
         {
             player.Stats.CurrentHealth -= Damage;
-
+            ExtendedGame.Random.Next(0, 2);
+            string[] namesOfSound = { "CharacterHurt1", "CharacterHurt2", "CharacterHurt3" };
+            SoundManager.PlaySound(namesOfSound[ExtendedGame.Random.Next(0, namesOfSound.Length)], volume: 0.3f);
         }
         // TODO: Play animation or something
         
