@@ -97,7 +97,7 @@ public class FollowCamera
         Vector2 camPos = _position + _shakeOffset;
         camPos = new Vector2(MathF.Round(camPos.X), MathF.Round(camPos.Y)); // Snap to pixel grid to prevent tilemap jittering
         
-        var origin = new Vector2(_viewport.Width / 2f, _viewport.Height / 2f);
+        var origin = new Vector2(ExtendedGame.DrawResolution.X / 2f, ExtendedGame.DrawResolution.Y / 2f);
 
         return Matrix.CreateTranslation(-camPos.X, -camPos.Y, 0) *
                Matrix.CreateTranslation(origin.X, origin.Y, 0) *

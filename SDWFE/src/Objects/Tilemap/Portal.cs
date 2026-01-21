@@ -79,6 +79,7 @@ namespace SDWFE.Objects.Tiles
             if (other is Player player)
             {
                 player.IsVisible = false;
+                player.Stats.CurrentHealth = player.Stats.MaxHealth;
                 InputManager.Instance.SetActiveProfile(InputSetup.PROFILE_UI);
             }
             
